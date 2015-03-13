@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp">
+
+    <TextView
+        android:id="@+id/textView49"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="14dp"
+        android:text="ข้อมูลการสำรวจ"
+        android:textColor="@android:color/holo_green_dark"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+
+    <ImageButton
+        android:id="@+id/btn_upload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/ic_upload" />
+
+
+    <com.hrdi.survey.swipemenu.SwipeMenuListView
+        android:id="@+id/list_survey"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/textView49"
+        android:layout_marginTop="15dp"
+        android:divider="@color/transparent"
+        android:dividerHeight="10dp"
+        android:drawSelectorOnTop="true"
+        android:footerDividersEnabled="false"
+        android:padding="10dp"
+        android:scrollbarStyle="outsideOverlay" />
+
+    <Button
+        android:id="@+id/btn_all"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/textView49"
+        android:layout_marginLeft="20dp"
+        android:layout_toEndOf="@+id/textView49"
+        android:background="@drawable/corner_radius"
+        android:drawableLeft="@android:drawable/ic_menu_view"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:text="ข้อมูลทั้งหมด" />
+
+    <Button
+        android:id="@+id/btn_waiting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/textView49"
+        android:layout_marginLeft="10dp"
+        android:layout_toEndOf="@+id/btn_all"
+        android:background="@drawable/corner_radius"
+        android:drawableLeft="@android:drawable/ic_menu_recent_history"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:text="ค้างส่ง"
+        android:textColor="@android:color/holo_orange_light" />
+
+</RelativeLayout>

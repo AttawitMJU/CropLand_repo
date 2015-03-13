@@ -1,0 +1,419 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="25dp"
+    tools:context="com.hrdi.survey.fragment.SurveyEtcFragment">
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView19"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="25dp"
+                android:text="@string/header"
+                android:textColor="@android:color/holo_green_dark"
+                android:textSize="32dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView23"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="#669999"
+                android:text="การส่งเสริมและสนับสนุนของ สวพส."
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView42"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="กิจกรรม"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/edt_activity1"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="1." />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView44"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="การได้รับ/นำไปใช้ประโยชน์" />
+
+                <EditText
+                    android:id="@+id/edt_outcome1"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView43"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ความถี่" />
+
+                <EditText
+                    android:id="@+id/edt_repeat1"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:inputType="number" />
+
+                <TextView
+                    android:id="@+id/textView45"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:text="อัตราการรอดตาย(กล้าไม้)" />
+
+                <EditText
+                    android:id="@+id/edt_survive1"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView70"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="กิจกรรม"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/edt_activity2"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="2." />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView71"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="การได้รับ/นำไปใช้ประโยชน์" />
+
+                <EditText
+                    android:id="@+id/edt_outcome2"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView72"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ความถี่" />
+
+                <EditText
+                    android:id="@+id/edt_repeat2"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:inputType="number" />
+
+                <TextView
+                    android:id="@+id/textView73"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:text="อัตราการรอดตาย(กล้าไม้)" />
+
+                <EditText
+                    android:id="@+id/edt_survive2"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView74"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="กิจกรรม"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/edt_activity3"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="3." />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView75"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="การได้รับ/นำไปใช้ประโยชน์" />
+
+                <EditText
+                    android:id="@+id/edt_outcome3"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView76"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ความถี่" />
+
+                <EditText
+                    android:id="@+id/edt_repeat3"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:inputType="number" />
+
+                <TextView
+                    android:id="@+id/textView77"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:text="อัตราการรอดตาย(กล้าไม้)" />
+
+                <EditText
+                    android:id="@+id/edt_survive3"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/textView46"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="#669999"
+                android:text="การส่งเสริมและสนับสนุนของหน่วยงานอื่น"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edt_org1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="1." />
+
+            <EditText
+                android:id="@+id/edt_org2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="2." />
+
+            <EditText
+                android:id="@+id/edt_org3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="3." />
+
+
+            <TextView
+                android:id="@+id/textView47"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="#669999"
+                android:text="ปัญหาด้านการเกษตร"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edt_problem1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="1." />
+
+            <EditText
+                android:id="@+id/edt_problem2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="2." />
+
+            <EditText
+                android:id="@+id/edt_problem3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="3." />
+
+
+            <TextView
+                android:id="@+id/textView48"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="#669999"
+                android:text="ความต้องการการส่งเสริมและสนับสนุนจากหน่วยงาน"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edt_request1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="1." />
+
+            <EditText
+                android:id="@+id/edt_request2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="2." />
+
+            <EditText
+                android:id="@+id/edt_request3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="3." />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center_vertical|center_horizontal"
+                android:orientation="horizontal">
+
+                <!-- To display picture taken -->
+                <ImageView
+                    android:id="@+id/img_Preview1"
+                    android:layout_width="380dp"
+                    android:layout_height="380dp"
+                    android:layout_marginRight="20dp"
+                    android:src="@drawable/ic_photo_frame" />
+
+                <ImageButton
+                    android:id="@+id/img_btn_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/transparent"
+                    android:src="@drawable/ic_polaroidcamera" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:gravity="center_vertical|center_horizontal"
+                android:orientation="horizontal">
+
+                <!-- To display picture taken -->
+                <ImageView
+                    android:id="@+id/img_Preview2"
+                    android:layout_width="380dp"
+                    android:layout_height="380dp"
+                    android:layout_marginRight="20dp"
+                    android:src="@drawable/ic_photo_frame" />
+
+                <ImageButton
+                    android:id="@+id/img_btn_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/transparent"
+                    android:src="@drawable/ic_polaroidcamera" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center_vertical|center_horizontal"
+                android:orientation="horizontal">
+
+                <!-- To display picture taken -->
+                <ImageView
+                    android:id="@+id/img_Preview3"
+                    android:layout_width="380dp"
+                    android:layout_height="380dp"
+                    android:layout_marginRight="20dp"
+                    android:src="@drawable/ic_photo_frame" />
+
+                <ImageButton
+                    android:id="@+id/img_btn_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/transparent"
+                    android:src="@drawable/ic_polaroidcamera" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:orientation="horizontal"
+                android:paddingTop="5dp">
+
+
+                <Button
+                    android:id="@+id/btn_next"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/corner_radius"
+                    android:drawableLeft="@android:drawable/ic_menu_slideshow"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:text="@string/next" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

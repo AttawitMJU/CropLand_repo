@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Crop Land</string>
+
+
+    <!-- Nav Drawer Menu Items -->
+    <string-array name="nav_drawer_items">
+        <item>@string/menu1</item>
+        <item>@string/menu2</item>
+        <item>@string/menu3</item>
+        <item>@string/menu4</item>
+        <item>@string/menu5</item>
+        <item>@string/menu6</item>
+        <item>@string/menu7</item>
+        <item>@string/menu8</item>
+        <item>@string/menu9</item>
+    </string-array>
+
+    <!-- Nav Drawer List Item Icons -->
+    <!-- Keep them in order as the titles are in -->
+    <array name="nav_drawer_icons">
+        <item>@drawable/ic_home</item>
+        <item>@drawable/ic_location</item>
+        <item>@drawable/ic_stack</item>
+        <item>@drawable/ic_magicwand</item>
+        <item>@drawable/ic_megaphone</item>
+        <item>@drawable/ic_brightness</item>
+        <item>@drawable/ic_communities</item>
+        <item>@drawable/ic_tools</item>
+        <item>@drawable/ic_power</item>
+    </array>
+
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="drawer_open">Slider Menu Opened</string>
+    <string name="drawer_close">Slider Menu Closed</string>
+
+    <!-- Content Description -->
+    <string name="desc_list_item_icon">Item Icon</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="cancel">ยกเลิก</string>
+    <string name="ok">ตกลง</string>
+    <string name="upload">ส่งข้อมูล</string>
+    <string name="next">ต่อไป</string>
+    <string name="landuse">การใช้ที่ดิน</string>
+    <string name="save">บันทึก</string>
+    <string name="header">บันทึกภาคสนามการเก็บข้อมูลรายแปลง</string>
+
+    <string name="menu1">หน้าหลัก</string>
+    <string name="menu2">เก็บข้อมูลรายแปลง</string>
+    <string name="menu3">ข้อมูลบันทึกภาคสนาม</string>
+    <string name="menu4">ปรับปรุงข้อมูลรายแปลง</string>
+    <string name="menu5">ประชาพิจารณ์</string>
+    <string name="menu6">แนะนำส่งเสริม</string>
+    <string name="menu7">อนุรักษ์และแก้ไขปัญหา</string>
+    <string name="menu8">ตั้งค่าระบบ</string>
+    <string name="menu9">ออกจากระบบ</string>
+
+
+    <string name="add">เพิ่ม</string>
+    <string name="reset">ยกเลิก</string>
+    <string name="title_activity_camera_photo_capture">CameraPhotoCapture</string>
+    <string name="connection_off">ไม่สามารถเชื่อมต่อเครือข่ายได้</string>
+
+    <string name="meta_card">ประเภทบัตร</string>
+    <string name="meta_doc">เอกสารสิทธิ์</string>
+    <string name="meta_water">แหล่งน้ำใช้</string>
+    <string name="meta_unit">หน่วยบรรจุ</string>
+    <string name="meta_market">ตลาด</string>
+    <string name="meta_jobactivity">ลักษณะการจ้างงาน</string>
+    <string name="meta_jobsource">การจ้างงาน</string>
+    <string name="meta_extproject">โครงการขยายผล</string>
+    <string name="meta_province">จังหวัด</string>
+    <string name="meta_amphoe">อำเภอ</string>
+    <string name="meta_tambol">ตำบล</string>
+    <string name="meta_planttype">ประเภทพืช</string>
+    <string name="meta_plant">พืช</string>
+    <string name="meta_plantdetail">พันธุ์</string>
+    <string name="meta_fertilizer">ยี่ห้อปุ๋ย</string>
+    <string name="meta_fertilizercode">สูตรปุ๋ย</string>
+    <string name="meta_hormonetype">ยา/ฮอร์โมน</string>
+    <string name="meta_hormone">ยี่ห้อยา/ฮอร์โมน</string>
+    <string name="selectList">เลือกรายการ</string>
+
+    <!-- Test Server-->
+    <string name="url_get_meta">http://202.28.37.64:8082/hrdi/hrdi_lite/get_meta.php</string>
+    <string name="url_send_survey">http://202.28.37.64:8082/hrdi/hrdi_lite/send_survey.php</string>
+    <string name="url_send_landuse">http://202.28.37.64:8082/hrdi/hrdi_lite/send_landuse.php</string>
+    <string name="url_upload">http://202.28.37.64:8082/hrdi/hrdi_lite/uploadFile.php</string>
+
+    <!-- HRDI Server
+    <string name="url_get_meta">http://growercrops.hrdi.or.th/hrdi_lite/get_meta.php</string>
+    <string name="url_send_survey">http://growercrops.hrdi.or.th/hrdi_lite/send_survey.php</string>
+    <string name="url_send_landuse">http://growercrops.hrdi.or.th/hrdi_lite/send_landuse.php</string>
+    <string name="url_upload">http://growercrops.hrdi.or.th/hrdi_lite/uploadFile.php</string>
+-->
+</resources>

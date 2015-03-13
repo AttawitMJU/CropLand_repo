@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/list_item_bg"
+    android:descendantFocusability="blocksDescendants">
+
+    <RelativeLayout
+        android:id="@+id/layout_item"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/txt_plant_type1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="6dp"
+            android:text="ประเภท:" />
+        <TextView
+            android:id="@+id/txt_plant_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="6dp"
+            android:paddingRight="6dp"
+            android:paddingBottom="6dp"
+            android:textColor="@color/list_item_value"
+            android:layout_toEndOf="@+id/txt_plant_type1"
+            />
+
+        <TextView
+            android:id="@+id/txt_plant_name1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="6dp"
+            android:layout_marginLeft="6dp"
+            android:layout_toEndOf="@+id/txt_plant_type"
+            android:text="พืช:"/>
+        <TextView
+            android:id="@+id/txt_plant_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="6dp"
+            android:paddingRight="6dp"
+            android:paddingBottom="6dp"
+            android:textColor="@color/list_item_value"
+            android:layout_toEndOf="@+id/txt_plant_name1"/>
+
+
+        <TextView
+            android:id="@+id/txt_plant_detail1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/txt_plant_name"
+            android:layout_marginLeft="6dp"
+            android:padding="6dp"
+            android:text="พันธุ์:" />
+        <TextView
+            android:id="@+id/txt_plant_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/txt_plant_detail1"
+            android:textColor="@color/list_item_value"
+            android:paddingTop="6dp"
+            android:paddingRight="6dp"
+            android:paddingBottom="6dp" />
+
+
+        <TextView
+            android:id="@+id/txt_area1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txt_plant_type1"
+            android:padding="6dp"
+            android:text="พื้นที่:"/>
+        <TextView
+            android:id="@+id/txt_area"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txt_plant_type1"
+            android:layout_toEndOf="@+id/txt_area1"
+            android:textColor="@color/list_item_value"
+            android:paddingTop="6dp"
+            android:paddingRight="6dp"
+            android:paddingBottom="6dp" />
+
+        <TextView
+            android:id="@+id/txt_start_crop1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/txt_area"
+            android:layout_below="@+id/txt_plant_type1"
+            android:layout_marginLeft="6dp"
+            android:padding="6dp"
+            android:text="เริ่มเพาะปลูก:"/>
+        <TextView
+            android:id="@+id/txt_start_crop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/txt_start_crop1"
+            android:layout_below="@+id/txt_plant_type1"
+            android:textColor="@color/list_item_value"
+            android:paddingTop="6dp"
+            android:paddingRight="6dp"
+            android:paddingBottom="6dp" />
+
+        <TextView
+            android:id="@+id/txt_end_crop1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/txt_start_crop"
+            android:layout_below="@+id/txt_plant_type1"
+            android:layout_marginLeft="6dp"
+            android:padding="6dp"
+            android:text="เก็บเกี่ยว:"/>
+        <TextView
+            android:id="@+id/txt_end_crop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/txt_end_crop1"
+            android:layout_below="@+id/txt_plant_type1"
+            android:textColor="@color/list_item_value"
+            android:paddingTop="6dp"
+            android:paddingRight="6dp"
+            android:paddingBottom="6dp" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/layout_item"
+        android:background="@color/view_divider_color" />
+
+</RelativeLayout>

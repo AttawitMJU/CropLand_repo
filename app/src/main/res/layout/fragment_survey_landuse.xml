@@ -1,0 +1,54 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp">
+
+    <TextView
+        android:id="@+id/textView49"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:text="ข้อมูลการใช้ประโยชน์ที่ดิน(พืช)"
+        android:textColor="@android:color/holo_green_dark"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/btn_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/corner_radius"
+        android:drawableLeft="@android:drawable/ic_menu_save"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:text="@string/save" />
+
+    <Button
+        android:id="@+id/btn_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:layout_toLeftOf="@id/btn_save"
+        android:background="@drawable/corner_radius_blue"
+        android:drawableLeft="@android:drawable/ic_menu_add"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:text="@string/add" />
+
+
+    <com.hrdi.survey.swipemenu.SwipeMenuListView
+        android:id="@+id/list_landuse"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/textView49"
+        android:layout_marginTop="10dp"
+        android:divider="@color/transparent"
+        android:dividerHeight="10dp"
+        android:drawSelectorOnTop="true"
+        android:footerDividersEnabled="false"
+        android:padding="10dp"
+        android:scrollbarStyle="outsideOverlay" />
+
+
+</RelativeLayout>
