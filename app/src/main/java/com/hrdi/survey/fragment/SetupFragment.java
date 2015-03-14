@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +14,11 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.hrdi.survey.R;
+import com.hrdi.survey.control.AgriculturistDAO;
 import com.hrdi.survey.control.MetaDAO;
+import com.hrdi.survey.model.AgriculturistBean;
 import com.hrdi.survey.model.MetaBean;
+import com.hrdi.survey.modeldb.AgriculturistDB;
 import com.hrdi.survey.modeldb.MetaAmphoeDB;
 import com.hrdi.survey.modeldb.MetaCardDB;
 import com.hrdi.survey.modeldb.MetaDocDB;
@@ -66,7 +70,7 @@ public class SetupFragment extends Fragment implements View.OnClickListener {
             btn_hormone, btn_hormonetype, btn_jobactivity,
             btn_jobsource, btn_extproject,
             btn_province, btn_amphoe, btn_tambol,
-            btn_planttype, btn_plant, btn_plantdetail;
+            btn_planttype, btn_plant, btn_plantdetail, btn_import_agri,btn_upload_agri;
 
     // Creating JSON Parser object
     JSONParser jParser = new JSONParser();
@@ -76,11 +80,13 @@ public class SetupFragment extends Fragment implements View.OnClickListener {
     String metaType;
     private MetaDAO metaDAO;
     private ProgressDialog pDialog;
+    private AgriculturistDAO agriDAO;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         metaDAO = new MetaDAO(getActivity());
+        agriDAO = new AgriculturistDAO(getActivity());
 
     }
 
@@ -114,7 +120,8 @@ public class SetupFragment extends Fragment implements View.OnClickListener {
         btn_planttype.setText(getString(R.string.meta_planttype) + "  (" + metaDAO.countRecord(MetaPlantTypeDB.TABLE_NAME) + ")");
         btn_plant.setText(getString(R.string.meta_plant) + "  (" + metaDAO.countRecord(MetaPlantDB.TABLE_NAME) + ")");
         btn_plantdetail.setText(getString(R.string.meta_plantdetail) + "  (" + metaDAO.countRecord(MetaPlantDetailDB.TABLE_NAME) + ")");
-
+        btn_import_agri.setText("เกษตรกร" + "  (" + metaDAO.countRecord(AgriculturistDB.TABLE_NAME) + ")");
+        btn_upload_agri.setText("เกษตรกรรายใหม่" + "  (" + metaDAO.countRecord(AgriculturistDB.TABLE_NAME, " REMARK1 LIKE 'waiting'") + ")");
     }
 
     private String setMocupData(String source, int total) {
@@ -154,7 +161,8 @@ public class SetupFragment extends Fragment implements View.OnClickListener {
         btn_planttype = (Button) view.findViewById(R.id.btn_planttype);
         btn_plant = (Button) view.findViewById(R.id.btn_plant);
         btn_plantdetail = (Button) view.findViewById(R.id.btn_plantdetail);
-
+        btn_import_agri = (Button) view.findViewById(R.id.btn_import_agri);
+        btn_upload_agri = (Button) view.findViewById(R.id.btn_upload_agri);
     }
 
     private void setListeners() {
@@ -177,7 +185,8 @@ public class SetupFragment extends Fragment implements View.OnClickListener {
         btn_planttype.setOnClickListener(this);
         btn_plant.setOnClickListener(this);
         btn_plantdetail.setOnClickListener(this);
-
+        btn_import_agri.setOnClickListener(this);
+        btn_upload_agri.setOnClickListener(this);
     }
 
     @Override
@@ -261,6 +270,9 @@ public class SetupFragment extends Fragment implements View.OnClickListener {
             } else if (view == btn_plantdetail) {
                 metaType = "plantdetail";
                 LoadMetaTask task = new LoadMetaTask(getActivity());
+                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            } else if (view == btn_import_agri) {
+                LoadAgriTask task = new LoadAgriTask(getActivity());
                 task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         } else {
@@ -418,6 +430,147 @@ public class SetupFragment extends Fragment implements View.OnClickListener {
                 // e.printStackTrace();
             }
             return String.valueOf(count);
+        }
+
+
+    }
+
+
+    /*
+  Background Async Task to Load Agri
+  */
+    class LoadAgriTask extends AsyncTask<String, String, String> {
+        private final WeakReference<Activity> activityWeakRef;
+
+        public LoadAgriTask(Activity context) {
+            this.activityWeakRef = new WeakReference<Activity>(context);
+        }
+
+        /**
+         * Before starting background thread Show Progress Dialog
+         */
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(getActivity());
+            pDialog.setMessage("Loading Data. Please wait...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+            pDialog.show();
+        }
+
+
+        @Override
+        protected String doInBackground(String... params) {
+            String result = updateAgri();
+
+
+            return result;
+        }
+
+        private String updateAgri() {
+            List<NameValuePair> paramsList = new ArrayList<>();
+
+            int count = -1;
+            int statuscode = 0;
+            JSONArray agriJson;
+            ArrayList<AgriculturistBean> agriList;
+            AgriculturistBean bean;
+
+            try {
+                HttpGet httpRequest = new HttpGet(getString(R.string.url_get_agri));
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpResponse response = httpclient.execute(httpRequest);
+
+                statuscode = response.getStatusLine().getStatusCode();
+                //Log.i("HttpResponse status ", String.valueOf(statuscode));
+
+                if (HttpStatus.SC_OK == statuscode) {
+                    // getting JSON string from URL
+                    JSONObject json = jParser.getJSONFromUrl(getString(R.string.url_get_agri), paramsList);
+                    //Log.i("JSONObject url_get_agri", json.toString());
+                    // Checking for SUCCESS TAG
+                    int success = json.getInt(TAG_SUCCESS);
+                    //Log.i("JSONObject status ", String.valueOf(success));
+
+                    if (success == 1) {
+                        // MetaData found
+                        // Getting Array of MetaData
+                        agriJson = json.getJSONArray("agri_s");
+                        agriList = new ArrayList<>();
+
+                        // looping through All MetaData
+                        for (int i = 0; i < agriJson.length(); i++) {
+                            JSONObject c = agriJson.getJSONObject(i);
+
+
+                            bean = new AgriculturistBean();
+                            // Storing each json item in variable
+                            bean.setAgriculturist_id(c.getString("Agriculturist_ID"));
+                            bean.setCard_no(c.getString("Card_no"));
+                            bean.setTitle(c.getString("Title"));
+                            bean.setFirstname(c.getString("FirstName"));
+                            bean.setLastname(c.getString("LastName"));
+                            bean.setHome_no(c.getString("Home_no"));
+                            bean.setMoo_no(c.getString("Moo_no"));
+                            bean.setGroup_no(c.getString("Group_no"));
+                            bean.setVillage_no(c.getString("Village_ID"));
+                            bean.setTambol_id(c.getString("Tambol_ID"));
+                            bean.setAmphur_id(c.getString("Amphoe_ID"));
+                            bean.setProvince_id(c.getString("Province_ID"));
+                            bean.setZipcode(c.getString("Zipcode"));
+                            bean.setOccupation1(c.getString("Occupation1"));
+                            bean.setOccupation2(c.getString("Occupation2"));
+                            bean.setFree_time(c.getString("Free_time"));
+                            bean.setMember_all(c.getString("Member_All"));
+                            bean.setMember_type1(c.getString("Menber_Type1"));
+                            bean.setMember_type2(c.getString("Menber_Type2"));
+                            bean.setMember_type3(c.getString("Menber_Type3"));
+                            bean.setIncome_all(c.getString("Incomes_All"));
+                            bean.setIncomes1(c.getString("Incomes1"));
+                            bean.setIncomes2(c.getString("Incomes2"));
+                            bean.setExpenses_all(c.getString("Expenses_All"));
+                            bean.setExpenses1(c.getString("Expenses1"));
+                            bean.setExpenses2(c.getString("Expenses2"));
+
+                            // adding MetaBean to ArrayList
+                            agriList.add(bean);
+                        }
+
+
+                        agriDAO.cleanAgriculturist();
+                        //Log.i("metaDAO.importMeta -->", source + metaList.size());
+                        count = agriDAO.importAgriculturist(agriList);
+
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return String.valueOf(count);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            // dismiss the dialog after getting all MetaData
+            pDialog.dismiss();
+            if (activityWeakRef.get() != null
+                    && !activityWeakRef.get().isFinishing()) {
+
+                if (!"-1".equals(s)) {
+
+                    //txt_hidden_id.setText(String.valueOf(s));
+                    Toast.makeText(activityWeakRef.get(), "บันทึกข้อมูลเรียบร้อย ",
+                            Toast.LENGTH_LONG).show();
+
+                    btn_import_agri.setText("เกษตร" + "  (" + s + ")");
+
+
+                } else {
+                    Toast.makeText(activityWeakRef.get(), getString(R.string.connection_off),
+                            Toast.LENGTH_LONG).show();
+                }
+            }
         }
 
 

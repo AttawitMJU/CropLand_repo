@@ -9,7 +9,9 @@ import android.view.Window;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.hrdi.survey.control.AgriculturistDAO;
 import com.hrdi.survey.control.MetaDAO;
+import com.hrdi.survey.model.AgriculturistBean;
 import com.hrdi.survey.model.MetaBean;
 import com.hrdi.survey.util.JSONParser;
 
@@ -30,6 +32,7 @@ public class SplashActivity extends Activity {
 
 
     private MetaDAO metaDAO;
+    private AgriculturistDAO agriDAO;
 
     LoadingTask loadingTask;
 
@@ -39,12 +42,14 @@ public class SplashActivity extends Activity {
     private static final String TAG_ID = "meta_id";
     private static final String TAG_NAME = "meta_name";
     private static final String TAG_REF = "meta_ref";
+    private static final String TAG_VAL = "meta_val";
     // Creating JSON Parser object
     JSONParser jParser = new JSONParser();
     ArrayList<MetaBean> metaList;
-    // MetaData JSONArray
+    ArrayList<AgriculturistBean> agriList;
     JSONArray metaJson = null;
-    String metaType;
+    JSONArray agriJson = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +58,7 @@ public class SplashActivity extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.splash);
         metaDAO = new MetaDAO(this);
+        agriDAO = new AgriculturistDAO(this);
 
         ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar3);
         TextView txt_loading = (TextView) findViewById(R.id.txt_loading);
@@ -116,7 +122,7 @@ public class SplashActivity extends Activity {
 
         private void downloadResources() {
             // We are just imitating some process thats takes a bit of time (loading of resources / downloading)
-            int count = 20;
+            int count = 21;
             int i = 1;
             try {
 
@@ -201,6 +207,10 @@ public class SplashActivity extends Activity {
                 progress = (int) ((i++ / (float) count) * 100);
                 publishProgress(progress);
 
+                //Log.i("Start updateAgri","updateAgri();");
+                updateAgri();
+                progress = (int) ((i++ / (float) count) * 100);
+                publishProgress(progress);
 
                 try { Thread.sleep(1000); } catch (InterruptedException ignore) {ignore.printStackTrace();}
 
@@ -236,6 +246,8 @@ public class SplashActivity extends Activity {
             String id = "";
             String name = "";
             String ref = "";
+            String value="";
+
             int count = -1;
             int statuscode = 0;
 
@@ -270,8 +282,8 @@ public class SplashActivity extends Activity {
                             id = c.getString(TAG_ID);
                             name = c.getString(TAG_NAME);
                             ref = c.getString(TAG_REF);
-
-                            metaBean = new MetaBean(Integer.parseInt(id), name, ref, "");
+                            value = c.getString(TAG_VAL);
+                            metaBean = new MetaBean(Integer.parseInt(id), name, ref, value);
 
                             // adding MetaBean to ArrayList
                             metaList.add(metaBean);
@@ -281,6 +293,86 @@ public class SplashActivity extends Activity {
                         metaDAO.cleanMeta(source);
                         //Log.i("metaDAO.importMeta -->", source + metaList.size());
                         count = metaDAO.importMeta(metaList, source);
+
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return String.valueOf(count);
+        }
+
+        private String updateAgri() {
+            List<NameValuePair> paramsList = new ArrayList<>();
+
+            int count = -1;
+            int statuscode = 0;
+
+            AgriculturistBean bean;
+
+            try {
+                HttpGet httpRequest = new HttpGet(getString(R.string.url_get_agri));
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpResponse response = httpclient.execute(httpRequest);
+
+                statuscode = response.getStatusLine().getStatusCode();
+                //Log.i("HttpResponse status ", String.valueOf(statuscode));
+
+                if (HttpStatus.SC_OK == statuscode) {
+                    // getting JSON string from URL
+                    JSONObject json = jParser.getJSONFromUrl(getString(R.string.url_get_agri) , paramsList);
+                    //Log.i("JSONObject url_get_agri", json.toString());
+                    // Checking for SUCCESS TAG
+                    int success = json.getInt(TAG_SUCCESS);
+                    //Log.i("JSONObject status ", String.valueOf(success));
+
+                    if (success == 1) {
+                        // MetaData found
+                        // Getting Array of MetaData
+                        agriJson = json.getJSONArray("agri_s");
+                        agriList = new ArrayList<>();
+
+                        for (int i = 0; i < agriJson.length(); i++) {
+                            JSONObject c = agriJson.getJSONObject(i);
+
+
+                            bean = new AgriculturistBean();
+                            // Storing each json item in variable
+                            bean.setAgriculturist_id(c.getString("Agriculturist_ID"));
+                            bean.setCard_no(c.getString("Card_no"));
+                            bean.setTitle(c.getString("Title"));
+                            bean.setFirstname(c.getString("FirstName"));
+                            bean.setLastname(c.getString("LastName"));
+                            bean.setHome_no(c.getString("Home_no"));
+                            bean.setMoo_no(c.getString("Moo_no"));
+                            bean.setGroup_no(c.getString("Group_no"));
+                            bean.setVillage_no(c.getString("Village_ID"));
+                            bean.setTambol_id(c.getString("Tambol_ID"));
+                            bean.setAmphur_id(c.getString("Amphoe_ID"));
+                            bean.setProvince_id(c.getString("Province_ID"));
+                            bean.setZipcode(c.getString("Zipcode"));
+                            bean.setOccupation1(c.getString("Occupation1"));
+                            bean.setOccupation2(c.getString("Occupation2"));
+                            bean.setFree_time(c.getString("Free_time"));
+                            bean.setMember_all(c.getString("Member_All"));
+                            bean.setMember_type1(c.getString("Menber_Type1"));
+                            bean.setMember_type2(c.getString("Menber_Type2"));
+                            bean.setMember_type3(c.getString("Menber_Type3"));
+                            bean.setIncome_all(c.getString("Incomes_All"));
+                            bean.setIncomes1(c.getString("Incomes1"));
+                            bean.setIncomes2(c.getString("Incomes2"));
+                            bean.setExpenses_all(c.getString("Expenses_All"));
+                            bean.setExpenses1(c.getString("Expenses1"));
+                            bean.setExpenses2(c.getString("Expenses2"));
+
+                            // adding MetaBean to ArrayList
+                            agriList.add(bean);
+                        }
+
+
+                        agriDAO.cleanAgriculturist();
+                        //Log.i("metaDAO.importMeta -->", source + metaList.size());
+                        count = agriDAO.importAgriculturist(agriList);
 
                     }
                 }

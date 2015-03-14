@@ -8,6 +8,7 @@ import android.util.Log;
 import com.hrdi.survey.model.AgriculturistBean;
 import com.hrdi.survey.model.LandUseBean;
 import com.hrdi.survey.model.SurveyBean;
+import com.hrdi.survey.modeldb.AgriculturistDB;
 import com.hrdi.survey.modeldb.LandUseDB;
 import com.hrdi.survey.modeldb.SurveyDB;
 import com.hrdi.survey.util.JSONParser;
@@ -371,9 +372,8 @@ public class SurveyDAO extends HrdiDBDAO {
         try {
             String arrData[] = null;
 
-            String strSQL = "SELECT DISTINCT Card_no FROM " + SurveyDB.TABLE_NAME;
+            String strSQL = "SELECT DISTINCT CARD_NO FROM " + AgriculturistDB.TABLE_NAME + " ORDER BY CARD_NO";
             Cursor cursor = database.rawQuery(strSQL, null);
-
             if(cursor != null)
             {
                 if (cursor.moveToFirst()) {
@@ -398,31 +398,6 @@ public class SurveyDAO extends HrdiDBDAO {
         }
     }
 
-    public AgriculturistBean getFarmerByIDCard(String idcard){
-        AgriculturistBean bean=  new AgriculturistBean();
-        try {
-
-            String strSQL = "SELECT DISTINCT Card_no,FIRSTNAME,LASTNAME,ADDRESS  FROM "
-                    + SurveyDB.TABLE_NAME
-                    +"  WHERE Card_no = '"+idcard+"'";
-
-            Cursor cursor = database.rawQuery(strSQL, null);
-            int i=0;
-            if (cursor.moveToNext()) {
-
-                bean.setCard_no(cursor.getString(i++));
-                bean.setFirstname(cursor.getString(i++));
-                bean.setLastname(cursor.getString(i++));
-                bean.setRemark1(cursor.getString(i++));
-
-            }
-            cursor.close();
-            return bean;
-
-        } catch (Exception e) {
-            return null;
-        }
-    }
 
 
     public long updateSurveyPic(SurveyBean survey) {

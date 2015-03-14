@@ -122,4 +122,88 @@ public class AgriculturistDB {
     public static String getDropSQL() {
         return "DROP TABLE IF EXISTS  " + TABLE_NAME;
     }
+
+    public static String getSelectAllSQL() {
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT ");
+        sql.append(AGRICULTURIST_ID);
+        sql.append(" , ");
+        sql.append(CARD_NO);
+        sql.append(" ,");
+        sql.append(CARD_TYPE);
+        sql.append(" ,");
+        sql.append(TITLE);
+        sql.append(" ,");
+        sql.append(FIRSTNAME);
+        sql.append(" ,");
+        sql.append(LASTNAME);
+        sql.append(" ,");
+        //sql.append(PICTURE);
+        //sql.append(" ,");
+        sql.append(HOME_NO);
+        sql.append(" ,");
+        sql.append(MOO_NO);
+        sql.append(" ,");
+        sql.append(GROUP_NO);
+        sql.append(" ,");
+        sql.append(VILLAGE_NO);
+        sql.append(" ,");
+        sql.append(TAMBOL_ID);
+        sql.append(" ,");
+        sql.append(AMPHUR_ID);
+        sql.append(" ,");
+        sql.append(PROVINCE_ID);
+        sql.append(" ,");
+        sql.append(ZIPCODE);
+
+        sql.append(" FROM ");
+        sql.append(TABLE_NAME);
+        sql.append(" ORDER BY ");
+        sql.append(CARD_NO);
+
+        return sql.toString();
+    }
+    public static String getSelectSQL(String id) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT DISTINCT ");
+        sql.append(AGRICULTURIST_ID);
+        sql.append(" , ");
+        sql.append(CARD_NO);
+        sql.append(" ,");
+        sql.append(CARD_TYPE);
+        sql.append(" ,");
+        sql.append(TITLE);
+        sql.append(" ,");
+        sql.append(FIRSTNAME);
+        sql.append(" ,");
+        sql.append(LASTNAME);
+        sql.append(" ,");
+        //sql.append(PICTURE);
+        //sql.append(" ,");
+        sql.append(HOME_NO);
+        sql.append(" ,");
+        sql.append(MOO_NO);
+        sql.append(" ,");
+        sql.append(GROUP_NO);
+        sql.append(" ,");
+        sql.append(VILLAGE_NO);
+        sql.append(" ,");
+        sql.append(TAMBOL_ID);
+        sql.append(" ,");
+        sql.append(AMPHUR_ID);
+        sql.append(" ,");
+        sql.append(PROVINCE_ID);
+        sql.append(" ,");
+        sql.append(ZIPCODE);
+
+        sql.append(" FROM ");
+        sql.append(TABLE_NAME);
+        sql.append(" WHERE ");
+        sql.append(CARD_NO);
+        sql.append(" = '");
+        sql.append(id);
+        sql.append("'");
+
+        return sql.toString();
+    }
 }

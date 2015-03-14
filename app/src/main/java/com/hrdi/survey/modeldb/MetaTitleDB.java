@@ -3,10 +3,9 @@ package com.hrdi.survey.modeldb;
 /**
  * Created by attawit on 1/19/15 AD.
  */
-public class MetaTambolDB extends MetaDB {
+public class MetaTitleDB extends MetaDB {
 
-    public final static String TABLE_NAME = "META_TAMBOL";
-
+    public final static String TABLE_NAME = "META_TITLE";
 
     public static String getCreateSQL() {
         StringBuilder sql = new StringBuilder();
@@ -55,29 +54,5 @@ public class MetaTambolDB extends MetaDB {
 
     public static String getDropSQL() {
         return "DROP TABLE IF EXISTS  " + TABLE_NAME;
-    }
-
-    public static String getSelectAllSQLRef(int ref) {
-        StringBuilder sql = new StringBuilder();
-        sql.append("SELECT ");
-        sql.append(META_ID);
-        sql.append(",");
-        sql.append(META_NAME);
-        sql.append(",");
-        sql.append(META_REF);
-        sql.append(",");
-        sql.append(META_VALUE);
-        //sql.append(",");
-
-        sql.append(" FROM ");
-        sql.append(TABLE_NAME);
-
-        sql.append(" WHERE  ");
-        sql.append(META_REF);
-        sql.append(" =  ");
-        sql.append(ref);
-
-        // Log.i("getSelectAllSQLRef",sql.toString() );
-        return sql.toString();
     }
 }

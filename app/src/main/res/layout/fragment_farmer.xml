@@ -1,52 +1,251 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp" >
+        android:orientation="vertical"
+        android:layout_margin="15dp">
 
-        <EditText
-            android:id="@+id/etxt_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:nextFocusDown="@+id/etxt_dob"
-            android:singleLine="true" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <EditText
-            android:id="@+id/etxt_dob"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/etxt_name"
-            android:nextFocusDown="@+id/etxt_salary"
-            android:singleLine="true" />
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/edt_cardNo"
+                android:layout_weight="1"
+                android:hint="หมายเลขบัตร" />
 
-        <EditText
-            android:id="@+id/etxt_salary"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/etxt_dob"
-            android:inputType="numberDecimal"
-            android:singleLine="true" />
+            <Spinner
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/spn_cardType"
+                android:layout_weight="1"/>
+        </LinearLayout>
 
-        <Spinner
-            android:id="@+id/spinner_dept"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/etxt_salary" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <Spinner
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/spn_title"
+                android:layout_weight="1" />
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/edt_fname"
+                android:layout_weight="2"
+                android:hint="ชื่อ" />
 
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/edt_lname"
+                android:layout_weight="2"
+                android:hint="นามสกุล" />
+        </LinearLayout>
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:background="@android:color/holo_green_light"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="10dp"/>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/edt_home"
+                android:layout_weight="1"
+                android:hint="บ้านเลขที่" />
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/edt_mooNo"
+                android:layout_weight="1"
+                android:hint="หมู่ที่" />
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/edt_group"
+                android:layout_weight="2"
+                android:hint="กลุ่มหมู่บ้าน" />
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <Spinner
+                android:id="@+id/spn_province"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+            <Spinner
+                android:id="@+id/spn_amphoe"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Spinner
+                android:id="@+id/spn_tambol"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+            <AutoCompleteTextView
+                android:id="@+id/edit_village"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:completionThreshold="1"
+                android:hint="หมู่บ้าน"
+                android:layout_weight="1" />
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/edt_zip"
+                android:layout_weight="1"
+                android:inputType="number"
+                android:hint="รหัสไปรษณีย์" />
+        </LinearLayout>
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:background="@android:color/holo_green_light"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="10dp"/>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/edt_occupation1"
+                android:hint="อาชีพหลัก"
+                android:layout_weight="1" />
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/edt_occupation2"
+                android:hint="อาชีพรอง"
+                android:layout_weight="1" />
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/edt_freetime"
+                android:layout_weight="1"
+                android:hint="เดือนที่ว่างงาน" />
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/edt_memberAll"
+                android:inputType="number"
+                android:layout_weight="1"
+                android:hint="จำนวนสมาชิก" />
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/edt_memberType1"
+                android:inputType="number"
+                android:layout_weight="1"
+                android:hint="(ในภาคเกษตร)" />
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/edt_memberType2"
+                android:inputType="number"
+                android:layout_weight="1"
+                android:hint="(นอกภาคเกษตร)" />
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/edt_memberType3"
+                android:inputType="number"
+                android:layout_weight="1"
+                android:hint="(ไม่เป็นแรงงาน)" />
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/edt_incomeAll"
+                android:inputType="number"
+                android:layout_weight="1"
+                android:hint="รายได้" />
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/edt_income1"
+                android:inputType="number"
+                android:layout_weight="1"
+                android:hint="(ในภาคเกษตร)" />
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/edt_income2"
+                android:inputType="number"
+                android:layout_weight="1"
+                android:hint="(นอกภาคเกษตร)" />
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/edt_expensesAll"
+                android:inputType="number"
+                android:layout_weight="1"
+                android:hint="รายจ่าย" />
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/edt_expenses1"
+                android:inputType="number"
+                android:layout_weight="1"
+                android:hint="(ในภาคเกษตร)" />
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/edt_expenses2"
+                android:inputType="number"
+                android:layout_weight="1"
+                android:hint="(นอกภาคเกษตร)" />
+        </LinearLayout>
         <LinearLayout
             android:id="@+id/layout_submit"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/spinner_dept"
-            android:layout_margin="5dp"
             android:orientation="horizontal"
             android:weightSum="2" >
-
             <Button
                 android:id="@+id/button_add"
                 android:layout_width="0dp"
@@ -62,6 +261,7 @@
                 android:layout_weight="1"
                 android:text="@string/reset" />
         </LinearLayout>
-    </RelativeLayout>
+    </LinearLayout>
+    </ScrollView>
 
-</ScrollView>
+</RelativeLayout>

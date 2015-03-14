@@ -44,6 +44,9 @@ public class MetaDAO extends HrdiDBDAO {
         return DatabaseUtils.queryNumEntries(database, table);
     }
 
+    public long countRecord(String table, String selection) {
+        return DatabaseUtils.queryNumEntries(database, table, selection);
+    }
 
     public void cleanMeta(String metaType) {
         String tableName = "";
@@ -142,6 +145,7 @@ public class MetaDAO extends HrdiDBDAO {
             values.put(MetaDB.META_ID, metaBean.getItemId());
             values.put(MetaDB.META_NAME, metaBean.getItemName());
             values.put(MetaDB.META_REF, metaBean.getItemRef());
+            values.put(MetaDB.META_VALUE, metaBean.getItemValue());
 
             //Log.i("MetaDAO Import = ", tableName);
             // Inserting Row
@@ -152,6 +156,7 @@ public class MetaDAO extends HrdiDBDAO {
 
         return i;
     }
+
 
     public ArrayList<MetaBean> getMetaByType(String sqlSelect) {
         ArrayList<MetaBean> items = new ArrayList<MetaBean>();

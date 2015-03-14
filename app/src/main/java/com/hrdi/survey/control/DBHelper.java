@@ -19,11 +19,15 @@ import com.hrdi.survey.modeldb.MetaHormoneTypeDB;
 import com.hrdi.survey.modeldb.MetaJobActivityDB;
 import com.hrdi.survey.modeldb.MetaJobSourceDB;
 import com.hrdi.survey.modeldb.MetaMarketDB;
+import com.hrdi.survey.modeldb.MetaOccupationDB;
 import com.hrdi.survey.modeldb.MetaPlantDB;
 import com.hrdi.survey.modeldb.MetaPlantDetailDB;
 import com.hrdi.survey.modeldb.MetaPlantTypeDB;
+import com.hrdi.survey.modeldb.MetaProjectAreaDB;
+import com.hrdi.survey.modeldb.MetaProjectMooDB;
 import com.hrdi.survey.modeldb.MetaProvinceDB;
 import com.hrdi.survey.modeldb.MetaTambolDB;
+import com.hrdi.survey.modeldb.MetaTitleDB;
 import com.hrdi.survey.modeldb.MetaUnitDB;
 import com.hrdi.survey.modeldb.MetaWaterResourceDB;
 import com.hrdi.survey.modeldb.SurveyDB;
@@ -73,6 +77,12 @@ public class DBHelper extends SQLiteOpenHelper {
             db.execSQL(SurveyDB.getCreateSQL());
             db.execSQL(UserDB.getCreateSQL());
 
+            db.execSQL(MetaProjectAreaDB.getCreateSQL());
+            db.execSQL(MetaTitleDB.getCreateSQL());
+            db.execSQL(MetaOccupationDB.getCreateSQL());
+            db.execSQL(MetaProjectMooDB.getCreateSQL());
+
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -83,44 +93,20 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // If you need to add a column
-         if (newVersion != oldVersion) {
-             //    db.execSQL("ALTER TABLE foo ADD COLUMN new_column INTEGER DEFAULT 0");
-
-
+         if (newVersion > oldVersion) {
              // Drop older table if existed
              try {
-                 db.execSQL(AgriculturistDB.getDropSQL());
-                 db.execSQL(LandDB.getDropSQL());
-                 db.execSQL(LandUseDB.getDropSQL());
 
-                 db.execSQL(MetaAmphoeDB.getDropSQL());
-                 db.execSQL(MetaCardDB.getDropSQL());
-                 db.execSQL(MetaDocDB.getDropSQL());
-                 db.execSQL(MetaExtProjectDB.getDropSQL());
-                 db.execSQL(MetaFertilizerCodeDB.getDropSQL());
-                 db.execSQL(MetaFertilizerDB.getDropSQL());
-                 db.execSQL(MetaHormoneDB.getDropSQL());
-                 db.execSQL(MetaHormoneTypeDB.getDropSQL());
-                 db.execSQL(MetaJobActivityDB.getDropSQL());
-                 db.execSQL(MetaJobSourceDB.getDropSQL());
-                 db.execSQL(MetaMarketDB.getDropSQL());
-                 db.execSQL(MetaPlantDB.getDropSQL());
-                 db.execSQL(MetaPlantDetailDB.getDropSQL());
-                 db.execSQL(MetaPlantTypeDB.getDropSQL());
-                 db.execSQL(MetaProvinceDB.getDropSQL());
-                 db.execSQL(MetaTambolDB.getDropSQL());
-                 db.execSQL(MetaUnitDB.getDropSQL());
-                 db.execSQL(MetaWaterResourceDB.getDropSQL());
+                 // db.execSQL("ALTER TABLE foo ADD COLUMN new_column INTEGER DEFAULT 0");
+                 //db.execSQL(MetaProjectAreaDB.getCreateSQL());
+                 //db.execSQL(MetaTitleDB.getCreateSQL());
+                 //db.execSQL(MetaOccupationDB.getCreateSQL());
 
-                 db.execSQL(SurveyDB.getDropSQL());
-                 db.execSQL(UserDB.getDropSQL());
 
              } catch (Exception e) {
                  e.printStackTrace();
                  Log.e("Catch Drop Table SQLite", Log.getStackTraceString(e));
              }
-             // Create tables again
-             onCreate(db);
          }
 
     }

@@ -56,4 +56,28 @@ public class MetaAmphoeDB extends MetaDB {
     public static String getDropSQL() {
         return "DROP TABLE IF EXISTS  " + TABLE_NAME;
     }
+
+    public static String getSelectAllSQLRef(int ref) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT ");
+        sql.append(META_ID);
+        sql.append(",");
+        sql.append(META_NAME);
+        sql.append(",");
+        sql.append(META_REF);
+        sql.append(",");
+        sql.append(META_VALUE);
+        //sql.append(",");
+
+        sql.append(" FROM ");
+        sql.append(TABLE_NAME);
+
+        sql.append(" WHERE  ");
+        sql.append(META_REF);
+        sql.append(" =  ");
+        sql.append(ref);
+
+        // Log.i("getSelectAllSQLRef",sql.toString() );
+        return sql.toString();
+    }
 }

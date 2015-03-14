@@ -268,6 +268,17 @@
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="@string/meta_hormone"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:layout_marginStart="5dp"
+                    android:background="@drawable/corner_radius"
+                    android:id="@+id/btn_hormonetype"
+                    android:layout_weight="1"
+                    android:textColor="@android:color/white" />
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="@string/meta_hormonetype"
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
@@ -277,17 +288,7 @@
                     android:layout_weight="1"
                     android:textColor="@android:color/white" />
 
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/meta_hormone"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="10dp"
-                    android:layout_marginStart="5dp"
-                    android:background="@drawable/corner_radius"
-                    android:id="@+id/btn_hormonetype"
-                    android:layout_weight="1"
-                    android:textColor="@android:color/white" />
+
 
             </LinearLayout>
             <LinearLayout
@@ -338,6 +339,36 @@
                     android:layout_height="wrap_content"
                     android:text="ข้อมูลเกษตรกร"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:paddingLeft="40dp"
+                android:layout_marginBottom="80dp"
+                android:gravity="center_horizontal">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="เกษตรกร"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:background="@drawable/corner_radius"
+                    android:id="@+id/btn_import_agri"
+                    android:textColor="@android:color/white" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="เกษตรกรรายใหม่"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:layout_marginStart="20dp"
+                    android:background="@drawable/corner_radius"
+                    android:id="@+id/btn_upload_agri"
+                    android:textColor="@android:color/white"/>
+
             </LinearLayout>
 
 

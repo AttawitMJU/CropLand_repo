@@ -3,10 +3,9 @@ package com.hrdi.survey.modeldb;
 /**
  * Created by attawit on 1/19/15 AD.
  */
-public class MetaTambolDB extends MetaDB {
+public class MetaProjectMooDB extends MetaDB {
 
-    public final static String TABLE_NAME = "META_TAMBOL";
-
+    public final static String TABLE_NAME = "META_PROJECT_MOO";
 
     public static String getCreateSQL() {
         StringBuilder sql = new StringBuilder();
