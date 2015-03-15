@@ -43,13 +43,16 @@ public class SplashActivity extends Activity {
     private static final String TAG_NAME = "meta_name";
     private static final String TAG_REF = "meta_ref";
     private static final String TAG_VAL = "meta_val";
+    private static final String TAG_REMARK = "meta_remark";
+
+
     // Creating JSON Parser object
     JSONParser jParser = new JSONParser();
     ArrayList<MetaBean> metaList;
     ArrayList<AgriculturistBean> agriList;
     JSONArray metaJson = null;
     JSONArray agriJson = null;
-
+    final int total_mata = 21;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +64,8 @@ public class SplashActivity extends Activity {
         agriDAO = new AgriculturistDAO(this);
 
         ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar3);
+        progressBar.setMax(total_mata);
+
         TextView txt_loading = (TextView) findViewById(R.id.txt_loading);
 
 
@@ -122,101 +127,82 @@ public class SplashActivity extends Activity {
 
         private void downloadResources() {
             // We are just imitating some process thats takes a bit of time (loading of resources / downloading)
-            int count = 21;
-            int i = 1;
+            //int count = 22;
+            //int i = 1;
+            int progress =0;
             try {
-
-                // Update the progress bar after every step
-                int progress = (int) ((i++ / (float) count) * 100);
-                publishProgress(progress);
-
-                // Do some long loading things
+                publishProgress(++progress);
                 updateMetaData("card");
-                progress = (int) ((i++ / (float) count) * 100);
-                publishProgress(progress);
 
+                publishProgress(++progress);
                 updateMetaData("doc");
-                progress = (int) ((i++ / (float) count) * 100);
-                publishProgress(progress);
 
+                publishProgress(++progress);
                 updateMetaData("waterresource");
-                progress = (int) ((i++ / (float) count) * 100);
-                publishProgress(progress);
 
 
+                publishProgress(++progress);
                 updateMetaData("unit");
-                progress = (int) ((i++ / (float) count) * 100);
-                publishProgress(progress);
 
+                publishProgress(++progress);
                 updateMetaData("market");
-                progress = (int) ((i++ / (float) count) * 100);
-                publishProgress(progress);
 
+                publishProgress(++progress);
                 updateMetaData("fertilizer");
-                progress = (int) ((i++ / (float) count) * 100);
-                publishProgress(progress);
 
+                publishProgress(++progress);
                 updateMetaData("fertilizercode");
-                progress = (int) ((i++ / (float) count) * 100);
-                publishProgress(progress);
 
+                publishProgress(++progress);
                 updateMetaData("hormone");
-                progress = (int) ((i++ / (float) count) * 100);
-                publishProgress(progress);
 
+                publishProgress(++progress);
                 updateMetaData("hormonetype");
-                progress = (int) ((i++ / (float) count) * 100);
-                publishProgress(progress);
 
+                publishProgress(++progress);
                 updateMetaData("jobactivity");
-                progress = (int) ((i++ / (float) count) * 100);
-                publishProgress(progress);
 
+                publishProgress(++progress);
                 updateMetaData("jobsource");
-                progress = (int) ((i++ / (float) count) * 100);
-                publishProgress(progress);
 
+                publishProgress(++progress);
                 updateMetaData("extproject");
-                progress = (int) ((i++ / (float) count) * 100);
-                publishProgress(progress);
 
+                publishProgress(++progress);
                 updateMetaData("planttype");
-                progress = (int) ((i++ / (float) count) * 100);
-                publishProgress(progress);
 
+                publishProgress(++progress);
                 updateMetaData("plant");
-                progress = (int) ((i++ / (float) count) * 100);
-                publishProgress(progress);
 
+                publishProgress(++progress);
                 updateMetaData("plantdetail");
-                progress = (int) ((i++ / (float) count) * 100);
-                publishProgress(progress);
 
+                publishProgress(++progress);
                 updateMetaData("province");
-                progress = (int) ((i++ / (float) count) * 100);
-                publishProgress(progress);
 
+                publishProgress(++progress);
                 updateMetaData("amphoe");
-                progress = (int) ((i++ / (float) count) * 100);
-                publishProgress(progress);
 
-                progress = (int) ((i++ / (float) count) * 100);
-                publishProgress(progress);
-
+                publishProgress(++progress);
                 updateMetaData("tambol");
-                progress = (int) ((i++ / (float) count) * 100);
-                publishProgress(progress);
+
+                publishProgress(++progress);
+                updateMetaData("mooban");
+
+                publishProgress(++progress);
+                updateMetaData("projectarea");
+
 
                 //Log.i("Start updateAgri","updateAgri();");
+                publishProgress(++progress);
                 updateAgri();
-                progress = (int) ((i++ / (float) count) * 100);
-                publishProgress(progress);
+
 
                 try { Thread.sleep(1000); } catch (InterruptedException ignore) {ignore.printStackTrace();}
 
 
             } catch (Exception e) {
-                Log.e("updateMetaData ", e.toString());
+                Log.e("updateMetaData Error", e.toString());
             }
 
         }
@@ -224,9 +210,9 @@ public class SplashActivity extends Activity {
         @Override
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
-            Log.i("onProgressUpdate", values.toString());
+            //Log.i("onProgressUpdate", values.toString());
             progressBar.setProgress(values[0]); // This is ran on the UI thread so it is ok to update our progress bar ( a UI view ) here
-            txt_loading.setText("กำลัง Load ข้อมูลจาก Server  " + values[0] + "%");
+            txt_loading.setText("กำลัง Load ข้อมูลจาก Server  " + values[0] + "/"+total_mata);
         }
 
         @Override
@@ -247,7 +233,7 @@ public class SplashActivity extends Activity {
             String name = "";
             String ref = "";
             String value="";
-
+            String remark="";
             int count = -1;
             int statuscode = 0;
 
@@ -277,13 +263,14 @@ public class SplashActivity extends Activity {
                         // looping through All MetaData
                         for (int i = 0; i < metaJson.length(); i++) {
                             JSONObject c = metaJson.getJSONObject(i);
-
+                            //Log.i("JSONObject c ", c.toString());
                             // Storing each json item in variable
                             id = c.getString(TAG_ID);
                             name = c.getString(TAG_NAME);
                             ref = c.getString(TAG_REF);
                             value = c.getString(TAG_VAL);
-                            metaBean = new MetaBean(Integer.parseInt(id), name, ref, value);
+                            remark = c.getString(TAG_REMARK);
+                            metaBean = new MetaBean(Integer.parseInt(id), name, ref, value,remark);
 
                             // adding MetaBean to ArrayList
                             metaList.add(metaBean);

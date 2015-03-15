@@ -33,6 +33,7 @@ import com.hrdi.survey.model.SurveyBean;
 import com.hrdi.survey.modeldb.MetaCardDB;
 import com.hrdi.survey.modeldb.MetaDocDB;
 import com.hrdi.survey.modeldb.MetaExtProjectDB;
+import com.hrdi.survey.modeldb.MetaProjectAreaDB;
 import com.hrdi.survey.modeldb.MetaProjectMooDB;
 import com.hrdi.survey.modeldb.MetaWaterResourceDB;
 import com.hrdi.survey.util.GPSTracker;
@@ -330,9 +331,9 @@ public class SurveyFragment extends Fragment implements View.OnClickListener, Ad
 
 
         // Spinner พื้นที่โครงการหลวง
-        List<MetaBean> projectAreaList = metaDAO.getMetaByType(MetaExtProjectDB.getSelectAllSQL());
+        List<MetaBean> projectAreaList = metaDAO.getMetaByType(MetaProjectAreaDB.getSelectAllSQL());
         projectAreaDataAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, projectAreaList);
-        spn_projectArea.setAdapter(extProjectDataAdapter);
+        spn_projectArea.setAdapter(projectAreaDataAdapter);
 
         // Spinner โครงการขยายผลโครงการหลวง
         List<MetaBean> extProjectList = metaDAO.getMetaByType(MetaExtProjectDB.getSelectAllSQL());
@@ -448,7 +449,7 @@ Log.i("bean.getCard_type()",""+bean.getCard_type());
         } else if (spiner.getId() == R.id.spn_extProject) {
             //  ศูนย์ --> หมู่บ้าน
 //Log.i("spn_extProject1",MetaProjectMooDB.getSelectAllSQLRef(metaBean.getItemId()));
-            metaBeanList = metaDAO.getMetaByType(MetaProjectMooDB.getSelectAllSQLRef(metaBean.getItemId()));
+            metaBeanList = metaDAO.getMetaByType(MetaProjectMooDB.getSelectAllSQLRefRemark(String.valueOf(metaBean.getItemId())));
             dataAdapter = new ArrayAdapter<>(getActivity(),
                     android.R.layout.simple_spinner_item, metaBeanList);
             spn_Moo.setAdapter(dataAdapter);

@@ -33,6 +33,8 @@ import com.hrdi.survey.modeldb.MetaMarketDB;
 import com.hrdi.survey.modeldb.MetaPlantDB;
 import com.hrdi.survey.modeldb.MetaPlantDetailDB;
 import com.hrdi.survey.modeldb.MetaPlantTypeDB;
+import com.hrdi.survey.modeldb.MetaProjectAreaDB;
+import com.hrdi.survey.modeldb.MetaProjectMooDB;
 import com.hrdi.survey.modeldb.MetaProvinceDB;
 import com.hrdi.survey.modeldb.MetaTambolDB;
 import com.hrdi.survey.modeldb.MetaUnitDB;
@@ -62,6 +64,8 @@ public class SetupFragment extends Fragment implements View.OnClickListener {
     private static final String TAG_ID = "meta_id";
     private static final String TAG_NAME = "meta_name";
     private static final String TAG_REF = "meta_ref";
+    private static final String TAG_VAL = "meta_val";
+    private static final String TAG_REMARK = "meta_remark";
 
     ImageButton img_btn_loadAllData;
 
@@ -70,7 +74,9 @@ public class SetupFragment extends Fragment implements View.OnClickListener {
             btn_hormone, btn_hormonetype, btn_jobactivity,
             btn_jobsource, btn_extproject,
             btn_province, btn_amphoe, btn_tambol,
-            btn_planttype, btn_plant, btn_plantdetail, btn_import_agri,btn_upload_agri;
+            btn_planttype, btn_plant, btn_plantdetail,
+            btn_import_agri,btn_upload_agri,
+            btn_projectarea, btn_moo;
 
     // Creating JSON Parser object
     JSONParser jParser = new JSONParser();
@@ -122,6 +128,10 @@ public class SetupFragment extends Fragment implements View.OnClickListener {
         btn_plantdetail.setText(getString(R.string.meta_plantdetail) + "  (" + metaDAO.countRecord(MetaPlantDetailDB.TABLE_NAME) + ")");
         btn_import_agri.setText("เกษตรกร" + "  (" + metaDAO.countRecord(AgriculturistDB.TABLE_NAME) + ")");
         btn_upload_agri.setText("เกษตรกรรายใหม่" + "  (" + metaDAO.countRecord(AgriculturistDB.TABLE_NAME, " REMARK1 LIKE 'waiting'") + ")");
+
+        btn_projectarea.setText(getString(R.string.meta_projectarea) + "  (" + metaDAO.countRecord(MetaProjectAreaDB.TABLE_NAME) + ")");
+        btn_moo.setText(getString(R.string.meta_mooban) + "  (" + metaDAO.countRecord(MetaProjectMooDB.TABLE_NAME) + ")");
+
     }
 
     private String setMocupData(String source, int total) {
@@ -163,6 +173,9 @@ public class SetupFragment extends Fragment implements View.OnClickListener {
         btn_plantdetail = (Button) view.findViewById(R.id.btn_plantdetail);
         btn_import_agri = (Button) view.findViewById(R.id.btn_import_agri);
         btn_upload_agri = (Button) view.findViewById(R.id.btn_upload_agri);
+
+        btn_projectarea= (Button) view.findViewById(R.id.btn_projectarea);
+        btn_moo = (Button) view.findViewById(R.id.btn_mooban);
     }
 
     private void setListeners() {
@@ -187,6 +200,8 @@ public class SetupFragment extends Fragment implements View.OnClickListener {
         btn_plantdetail.setOnClickListener(this);
         btn_import_agri.setOnClickListener(this);
         btn_upload_agri.setOnClickListener(this);
+        btn_projectarea.setOnClickListener(this);
+        btn_moo.setOnClickListener(this);
     }
 
     @Override
@@ -271,7 +286,16 @@ public class SetupFragment extends Fragment implements View.OnClickListener {
                 metaType = "plantdetail";
                 LoadMetaTask task = new LoadMetaTask(getActivity());
                 task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            } else if (view == btn_import_agri) {
+            }else if (view == btn_projectarea) {
+                metaType = "projectarea";
+                LoadMetaTask task = new LoadMetaTask(getActivity());
+                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            } else if (view == btn_moo) {
+                metaType = "mooban";
+                LoadMetaTask task = new LoadMetaTask(getActivity());
+                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
+            else if (view == btn_import_agri) {
                 LoadAgriTask task = new LoadAgriTask(getActivity());
                 task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
@@ -363,6 +387,11 @@ public class SetupFragment extends Fragment implements View.OnClickListener {
                     else if ("plantdetail".equals(metaType))
                         btn_plantdetail.setText(getString(R.string.meta_plantdetail) + "  (" + s + ")");
 
+                    else if ("projectarea".equals(metaType))
+                        btn_projectarea.setText(getString(R.string.meta_projectarea) + "  (" + s + ")");
+                    else if ("mooban".equals(metaType))
+                        btn_moo.setText(getString(R.string.meta_mooban) + "  (" + s + ")");
+
                     metaType = "";
 
                 } else {
@@ -381,6 +410,9 @@ public class SetupFragment extends Fragment implements View.OnClickListener {
             String id = "";
             String name = "";
             String ref = "";
+            String value="";
+            String remark="";
+
             int count = -1;
             int statuscode = 0;
 
@@ -413,8 +445,9 @@ public class SetupFragment extends Fragment implements View.OnClickListener {
                             id = c.getString(TAG_ID);
                             name = c.getString(TAG_NAME);
                             ref = c.getString(TAG_REF);
-
-                            metaBean = new MetaBean(Integer.parseInt(id), name, ref, "");
+                            value = c.getString(TAG_VAL);
+                            remark = c.getString(TAG_REMARK);
+                            metaBean = new MetaBean(Integer.parseInt(id), name, ref, value,remark);
 
                             // adding MetaBean to ArrayList
                             metaList.add(metaBean);

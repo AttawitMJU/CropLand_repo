@@ -70,10 +70,12 @@
     <string name="meta_market">ตลาด</string>
     <string name="meta_jobactivity">ลักษณะการจ้างงาน</string>
     <string name="meta_jobsource">การจ้างงาน</string>
-    <string name="meta_extproject">โครงการขยายผล</string>
+    <string name="meta_projectarea">พื้นที่</string>
+    <string name="meta_extproject">ศูนย์</string>
     <string name="meta_province">จังหวัด</string>
     <string name="meta_amphoe">อำเภอ</string>
     <string name="meta_tambol">ตำบล</string>
+    <string name="meta_mooban">หมู่บ้าน</string>
     <string name="meta_planttype">ประเภทพืช</string>
     <string name="meta_plant">พืช</string>
     <string name="meta_plantdetail">พันธุ์</string>

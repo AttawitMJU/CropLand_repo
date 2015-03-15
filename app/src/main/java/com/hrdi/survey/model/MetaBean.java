@@ -31,6 +31,14 @@ public class MetaBean {
         this.itemValue = itemValue;
     }
 
+    public MetaBean(int itemId, String itemName, String itemRef, String itemValue, String remark) {
+        this.itemId = itemId;
+        this.itemName = itemName;
+        this.itemRef = itemRef;
+        this.itemValue = itemValue;
+        this.remark= remark;
+    }
+
     public String getUpdate_by() {
         return update_by;
     }

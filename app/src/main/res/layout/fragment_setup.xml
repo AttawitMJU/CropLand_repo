@@ -149,6 +149,16 @@
                 android:paddingLeft="40dp"
                 android:layout_marginTop="5dp">
 
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/meta_projectarea"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:background="@drawable/corner_radius"
+                    android:id="@+id/btn_projectarea"
+                    android:layout_weight="1"
+                    android:textColor="@android:color/white" />
 
                 <Button
                     android:layout_width="wrap_content"
@@ -156,6 +166,7 @@
                     android:text="@string/meta_extproject"
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
+                    android:layout_marginStart="5dp"
                     android:background="@drawable/corner_radius"
                     android:id="@+id/btn_extproject"
                     android:layout_weight="1"
@@ -191,6 +202,17 @@
                     android:layout_marginStart="5dp"
                     android:background="@drawable/corner_radius"
                     android:id="@+id/btn_tambol"
+                    android:layout_weight="1"
+                    android:textColor="@android:color/white" />
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/meta_mooban"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:layout_marginStart="5dp"
+                    android:background="@drawable/corner_radius"
+                    android:id="@+id/btn_mooban"
                     android:layout_weight="1"
                     android:textColor="@android:color/white" />
             </LinearLayout>

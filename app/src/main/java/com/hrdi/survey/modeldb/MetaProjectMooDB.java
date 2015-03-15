@@ -79,4 +79,29 @@ public class MetaProjectMooDB extends MetaDB {
         // Log.i("getSelectAllSQLRef",sql.toString() );
         return sql.toString();
     }
+
+    public static String getSelectAllSQLRefRemark(String remark) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT ");
+        sql.append(META_ID);
+        sql.append(",");
+        sql.append(META_NAME);
+        sql.append(",");
+        sql.append(META_REF);
+        sql.append(",");
+        sql.append(META_VALUE);
+        //sql.append(",");
+
+        sql.append(" FROM ");
+        sql.append(TABLE_NAME);
+
+        sql.append(" WHERE  ");
+        sql.append(REMARK1);
+        sql.append(" =  '");
+        sql.append(remark);
+        sql.append("'");
+
+        // Log.i("getSelectAllSQLRef",sql.toString() );
+        return sql.toString();
+    }
 }

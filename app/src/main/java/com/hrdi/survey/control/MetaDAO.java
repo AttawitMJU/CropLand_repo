@@ -22,6 +22,8 @@ import com.hrdi.survey.modeldb.MetaMarketDB;
 import com.hrdi.survey.modeldb.MetaPlantDB;
 import com.hrdi.survey.modeldb.MetaPlantDetailDB;
 import com.hrdi.survey.modeldb.MetaPlantTypeDB;
+import com.hrdi.survey.modeldb.MetaProjectAreaDB;
+import com.hrdi.survey.modeldb.MetaProjectMooDB;
 import com.hrdi.survey.modeldb.MetaProvinceDB;
 import com.hrdi.survey.modeldb.MetaTambolDB;
 import com.hrdi.survey.modeldb.MetaUnitDB;
@@ -50,58 +52,12 @@ public class MetaDAO extends HrdiDBDAO {
 
     public void cleanMeta(String metaType) {
         String tableName = "";
-
-        if ("card".equals(metaType)) {
-            tableName = MetaCardDB.TABLE_NAME;
-
-        } else if ("doc".equalsIgnoreCase(metaType)) {
-            tableName = MetaDocDB.TABLE_NAME;
-        } else if ("waterresource".equalsIgnoreCase(metaType)) {
-            tableName = MetaWaterResourceDB.TABLE_NAME;
-        } else if ("unit".equalsIgnoreCase(metaType)) {
-            tableName = MetaUnitDB.TABLE_NAME;
-        } else if ("market".equalsIgnoreCase(metaType)) {
-            tableName = MetaMarketDB.TABLE_NAME;
-        } else if ("fertilizer".equalsIgnoreCase(metaType)) {
-            tableName = MetaFertilizerDB.TABLE_NAME;
-        } else if ("fertilizercode".equalsIgnoreCase(metaType)) {
-            tableName = MetaFertilizerCodeDB.TABLE_NAME;
-        } else if ("hormone".equalsIgnoreCase(metaType)) {
-            tableName = MetaHormoneDB.TABLE_NAME;
-        } else if ("hormonetype".equalsIgnoreCase(metaType)) {
-            tableName = MetaHormoneTypeDB.TABLE_NAME;
-        } else if ("jobactivity".equalsIgnoreCase(metaType)) {
-            tableName = MetaJobActivityDB.TABLE_NAME;
-        } else if ("jobsource".equalsIgnoreCase(metaType)) {
-            tableName = MetaJobSourceDB.TABLE_NAME;
-        } else if ("extproject".equalsIgnoreCase(metaType)) {
-            tableName = MetaExtProjectDB.TABLE_NAME;
-        } else if ("province".equalsIgnoreCase(metaType)) {
-            tableName = MetaProvinceDB.TABLE_NAME;
-        } else if ("amphoe".equalsIgnoreCase(metaType)) {
-            tableName = MetaAmphoeDB.TABLE_NAME;
-        } else if ("tambol".equalsIgnoreCase(metaType)) {
-            tableName = MetaTambolDB.TABLE_NAME;
-        } else if ("planttype".equalsIgnoreCase(metaType)) {
-            tableName = MetaPlantTypeDB.TABLE_NAME;
-        } else if ("plant".equalsIgnoreCase(metaType)) {
-            tableName = MetaPlantDB.TABLE_NAME;
-        } else if ("plantdetail".equalsIgnoreCase(metaType)) {
-            tableName = MetaPlantDetailDB.TABLE_NAME;
-        }
+        tableName = Convert2TableName(metaType);
         database.delete(tableName, "", null);
     }
 
-
-    public int importMeta(ArrayList metaList, String metaType) {
-
-
-        int i = 0;
-        String tableName = "";
-        ContentValues values = new ContentValues();
-        MetaBean metaBean;
-
-
+    private String Convert2TableName(String metaType){
+        String tableName="";
         if ("card".equalsIgnoreCase(metaType)) {
             tableName = MetaCardDB.TABLE_NAME;
         } else if ("doc".equalsIgnoreCase(metaType)) {
@@ -138,7 +94,25 @@ public class MetaDAO extends HrdiDBDAO {
             tableName = MetaPlantDB.TABLE_NAME;
         } else if ("plantdetail".equalsIgnoreCase(metaType)) {
             tableName = MetaPlantDetailDB.TABLE_NAME;
+        }else if ("mooban".equalsIgnoreCase(metaType)) {
+            tableName = MetaProjectMooDB.TABLE_NAME;
+        }else if ("projectarea".equalsIgnoreCase(metaType)) {
+            tableName = MetaProjectAreaDB.TABLE_NAME;
         }
+
+        return tableName;
+    }
+
+    public int importMeta(ArrayList metaList, String metaType) {
+
+
+        int i = 0;
+        String tableName = "";
+        ContentValues values = new ContentValues();
+        MetaBean metaBean;
+
+
+        tableName = Convert2TableName(metaType);
 
         while (i < metaList.size()) {
             metaBean = (MetaBean) metaList.get(i);
@@ -146,6 +120,7 @@ public class MetaDAO extends HrdiDBDAO {
             values.put(MetaDB.META_NAME, metaBean.getItemName());
             values.put(MetaDB.META_REF, metaBean.getItemRef());
             values.put(MetaDB.META_VALUE, metaBean.getItemValue());
+            values.put(MetaDB.REMARK1, metaBean.getRemark());
 
             //Log.i("MetaDAO Import = ", tableName);
             // Inserting Row

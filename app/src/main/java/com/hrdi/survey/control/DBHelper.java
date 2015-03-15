@@ -98,10 +98,36 @@ public class DBHelper extends SQLiteOpenHelper {
              try {
 
                  // db.execSQL("ALTER TABLE foo ADD COLUMN new_column INTEGER DEFAULT 0");
-                 //db.execSQL(MetaProjectAreaDB.getCreateSQL());
-                 //db.execSQL(MetaTitleDB.getCreateSQL());
-                 //db.execSQL(MetaOccupationDB.getCreateSQL());
+                 db.execSQL(AgriculturistDB.getCreateSQL());
+                 db.execSQL(LandDB.getCreateSQL());
+                 db.execSQL(LandUseDB.getCreateSQL());
 
+                 db.execSQL(MetaAmphoeDB.getCreateSQL());
+                 db.execSQL(MetaCardDB.getCreateSQL());
+                 db.execSQL(MetaDocDB.getCreateSQL());
+                 db.execSQL(MetaExtProjectDB.getCreateSQL());
+                 db.execSQL(MetaFertilizerCodeDB.getCreateSQL());
+                 db.execSQL(MetaFertilizerDB.getCreateSQL());
+                 db.execSQL(MetaHormoneDB.getCreateSQL());
+                 db.execSQL(MetaHormoneTypeDB.getCreateSQL());
+                 db.execSQL(MetaJobActivityDB.getCreateSQL());
+                 db.execSQL(MetaJobSourceDB.getCreateSQL());
+                 db.execSQL(MetaMarketDB.getCreateSQL());
+                 db.execSQL(MetaPlantDB.getCreateSQL());
+                 db.execSQL(MetaPlantDetailDB.getCreateSQL());
+                 db.execSQL(MetaPlantTypeDB.getCreateSQL());
+                 db.execSQL(MetaProvinceDB.getCreateSQL());
+                 db.execSQL(MetaTambolDB.getCreateSQL());
+                 db.execSQL(MetaUnitDB.getCreateSQL());
+                 db.execSQL(MetaWaterResourceDB.getCreateSQL());
+
+                 db.execSQL(SurveyDB.getCreateSQL());
+                 db.execSQL(UserDB.getCreateSQL());
+
+                 db.execSQL(MetaProjectAreaDB.getCreateSQL());
+                 db.execSQL(MetaTitleDB.getCreateSQL());
+                 db.execSQL(MetaOccupationDB.getCreateSQL());
+                 db.execSQL(MetaProjectMooDB.getCreateSQL());
 
              } catch (Exception e) {
                  e.printStackTrace();
@@ -110,6 +136,8 @@ public class DBHelper extends SQLiteOpenHelper {
          }
 
     }
+
+
 
 
 }
