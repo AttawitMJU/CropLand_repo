@@ -5,12 +5,17 @@ import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
 
-import com.hrdi.survey.model.AgriculturistBean;
 import com.hrdi.survey.model.LandUseBean;
+import com.hrdi.survey.model.SurveyActivityBean;
 import com.hrdi.survey.model.SurveyBean;
+import com.hrdi.survey.model.SurveyEtcBean;
 import com.hrdi.survey.modeldb.AgriculturistDB;
 import com.hrdi.survey.modeldb.LandUseDB;
+import com.hrdi.survey.modeldb.SurveyActivityDB;
 import com.hrdi.survey.modeldb.SurveyDB;
+import com.hrdi.survey.modeldb.SurveyProblemDB;
+import com.hrdi.survey.modeldb.SurveySupportDB;
+import com.hrdi.survey.modeldb.SurveyWantDB;
 import com.hrdi.survey.util.JSONParser;
 
 import org.apache.http.NameValuePair;
@@ -32,7 +37,7 @@ public class SurveyDAO extends HrdiDBDAO {
     }
 
 
-    public long addSurveySQLite(SurveyBean survey) {
+    public long addSurvey(SurveyBean survey) {
 
         ContentValues values = new ContentValues();
 
@@ -114,6 +119,59 @@ public class SurveyDAO extends HrdiDBDAO {
         // database.close(); // Closing database connection
         return newID;
     }
+
+    public long addSurveyActivity(SurveyActivityBean survey) {
+        ContentValues values = new ContentValues();
+
+        values.put(SurveyActivityDB.SURVEY_ID, survey.getSurvey_id());
+        values.put(SurveyActivityDB.LAND_NO, survey.getLand_No());
+        values.put(SurveyActivityDB.CARD_NO, survey.getCard_no());
+
+        values.put(SurveyActivityDB.ACTIVITY1, survey.getActivity1());
+        values.put(SurveyActivityDB.REPEAT1, survey.getRepeat1());
+        values.put(SurveyActivityDB.OUTCOME1, survey.getOutcome1());
+        values.put(SurveyActivityDB.SURVIVE1, survey.getSurvive1());
+
+        values.put(SurveyActivityDB.UPDATE_BY, survey.getUpdate_By());
+        values.put(SurveyActivityDB.UPDATE_DATE, survey.getUpdate_Date());
+
+        long newID = database.insert(SurveyActivityDB.TABLE_NAME, null, values);
+
+        return newID;
+    }
+
+    public long addSurveyEtc(SurveyEtcBean survey, String etcType) {
+
+        Log.i("addSurveyEtc", "addSurveyEtc...." + etcType);
+        ContentValues values ;
+        long newID =0;
+
+        values = putValue(survey);
+
+        if("support".equals(etcType)){
+            newID = database.insert(SurveySupportDB.TABLE_NAME, null, values);
+        }else if("want".equals(etcType)){
+            newID = database.insert(SurveyWantDB.TABLE_NAME, null, values);
+        }else if("problem".equals(etcType)){
+            newID = database.insert(SurveyProblemDB.TABLE_NAME, null, values);
+        }
+
+        return newID;
+    }
+
+    private ContentValues putValue(SurveyEtcBean survey){
+        ContentValues values =  new ContentValues();
+        values.put(SurveySupportDB.SURVEY_ID, survey.getSurvey_id());
+        values.put(SurveySupportDB.LAND_NO, survey.getLand_No());
+
+        values.put(SurveySupportDB.DETAIL, survey.getDetail());
+
+        values.put(SurveyActivityDB.UPDATE_BY, survey.getUpdate_By());
+        values.put(SurveyActivityDB.UPDATE_DATE, survey.getUpdate_Date());
+        return values;
+    }
+
+
 
     public List<NameValuePair> setLandUse2Parameter(LandUseBean bean) {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -368,20 +426,19 @@ public class SurveyDAO extends HrdiDBDAO {
     }
 
     // TODO: update getID from Agicultirist
-    public String[] getIDCard(){
+    public String[] getIDCard() {
         try {
             String arrData[] = null;
 
             String strSQL = "SELECT DISTINCT CARD_NO FROM " + AgriculturistDB.TABLE_NAME + " ORDER BY CARD_NO";
             Cursor cursor = database.rawQuery(strSQL, null);
-            if(cursor != null)
-            {
+            if (cursor != null) {
                 if (cursor.moveToFirst()) {
                     arrData = new String[cursor.getCount()];
                     /***
                      *  [x] = Name
                      */
-                    int i= 0;
+                    int i = 0;
                     do {
                         arrData[i] = cursor.getString(0);
                         i++;
@@ -397,7 +454,6 @@ public class SurveyDAO extends HrdiDBDAO {
             return null;
         }
     }
-
 
 
     public long updateSurveyPic(SurveyBean survey) {
@@ -446,6 +502,62 @@ public class SurveyDAO extends HrdiDBDAO {
     public int deleteSurvey(SurveyBean sv) {
         return database.delete(SurveyDB.TABLE_NAME, WHERE_ID_EQUALS, new String[]{sv.getSurvey_id() + ""});
     }
+
+    public ArrayList<SurveyActivityBean> getSurveyAcitvity(String surveyID) {
+        ArrayList<SurveyActivityBean> surveyBeanArrayList = new ArrayList<>();
+        String query = SurveyActivityDB.getSelectSQLAllDetail(surveyID);
+        Log.i("query", query);
+        int i;
+        Cursor cursor = database.rawQuery(query, null);
+        while (cursor.moveToNext()) {
+            i = 0;
+            SurveyActivityBean bean = new SurveyActivityBean();
+            bean.setActivity_id(String.valueOf(cursor.getInt(i++)));
+            bean.setSurvey_id(String.valueOf(cursor.getInt(i++)));
+            bean.setLand_No(cursor.getString(i++));
+            bean.setCard_no(cursor.getString(i++));
+            bean.setActivity1(cursor.getString(i++));
+            bean.setRepeat1(cursor.getString(i++));
+            bean.setOutcome1(cursor.getString(i++));
+            bean.setSurvive1(cursor.getString(i++));
+
+            surveyBeanArrayList.add(bean);
+        }
+        cursor.close();
+        return surveyBeanArrayList;
+    }
+
+
+    public ArrayList<SurveyEtcBean> getSurveyEtc(String surveyID, String etcType) {
+        ArrayList<SurveyEtcBean> etcList = new ArrayList<>();
+        String query = "";
+        if("support".equals(etcType)) {
+            query = SurveySupportDB.getSelectSQLAllDetail(surveyID);
+        }else if("problem".equals(etcType)){
+            query = SurveyProblemDB.getSelectSQLAllDetail(surveyID);
+        }else if("want".equals(etcType)) {
+            query = SurveyWantDB.getSelectSQLAllDetail(surveyID);
+        }
+
+        Log.i("query", query);
+        int i;
+        Cursor cursor = database.rawQuery(query, null);
+        while (cursor.moveToNext()) {
+            i = 0;
+            SurveyEtcBean bean = new SurveyEtcBean();
+            bean.setEtc_id(String.valueOf(cursor.getInt(i++)));
+            bean.setSurvey_id(String.valueOf(cursor.getInt(i++)));
+            bean.setLand_No(cursor.getString(i++));
+            //bean.setCard_no(cursor.getString(i++));
+            bean.setDetail(cursor.getString(i++));
+
+            Log.i("SurveyEtcBean", bean.toString());
+            etcList.add(bean);
+        }
+        cursor.close();
+        return etcList;
+    }
+
 
     public ArrayList<SurveyBean> getSurveyList2Show(String status) {
         // status = all, waiting, send

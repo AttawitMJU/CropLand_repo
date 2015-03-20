@@ -291,7 +291,7 @@ public class SurveyDataListFragment extends Fragment
     private void openSurvey(SurveyBean surveyBean) {
 
         Log.i("openSurvey ....", surveyBean.getSurvey_id());
-        Fragment fragment = new SurveyFragment();
+        SurveyFragment fragment = new SurveyFragment();
 
         if (fragment != null) {
             FragmentManager fragmentManager = getFragmentManager();

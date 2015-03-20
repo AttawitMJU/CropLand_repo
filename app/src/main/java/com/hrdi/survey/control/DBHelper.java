@@ -30,12 +30,16 @@ import com.hrdi.survey.modeldb.MetaTambolDB;
 import com.hrdi.survey.modeldb.MetaTitleDB;
 import com.hrdi.survey.modeldb.MetaUnitDB;
 import com.hrdi.survey.modeldb.MetaWaterResourceDB;
+import com.hrdi.survey.modeldb.SurveyActivityDB;
 import com.hrdi.survey.modeldb.SurveyDB;
+import com.hrdi.survey.modeldb.SurveyProblemDB;
+import com.hrdi.survey.modeldb.SurveySupportDB;
+import com.hrdi.survey.modeldb.SurveyWantDB;
 import com.hrdi.survey.modeldb.UserDB;
 
 public class DBHelper extends SQLiteOpenHelper {
     private static final String DB_NAME = "HRDI_Lite";
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 2;
     private static DBHelper instance;
 
     public DBHelper(Context context) {
@@ -82,7 +86,10 @@ public class DBHelper extends SQLiteOpenHelper {
             db.execSQL(MetaOccupationDB.getCreateSQL());
             db.execSQL(MetaProjectMooDB.getCreateSQL());
 
-
+            db.execSQL(SurveyActivityDB.getCreateSQL());
+            db.execSQL(SurveySupportDB.getCreateSQL());
+            db.execSQL(SurveyWantDB.getCreateSQL());
+            db.execSQL(SurveyProblemDB.getCreateSQL());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -128,6 +135,11 @@ public class DBHelper extends SQLiteOpenHelper {
                  db.execSQL(MetaTitleDB.getCreateSQL());
                  db.execSQL(MetaOccupationDB.getCreateSQL());
                  db.execSQL(MetaProjectMooDB.getCreateSQL());
+                 
+                 db.execSQL(SurveyActivityDB.getCreateSQL());
+                 db.execSQL(SurveySupportDB.getCreateSQL());
+                 db.execSQL(SurveyWantDB.getCreateSQL());
+                 db.execSQL(SurveyProblemDB.getCreateSQL());
 
              } catch (Exception e) {
                  e.printStackTrace();

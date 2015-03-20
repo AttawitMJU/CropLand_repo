@@ -26,6 +26,7 @@ import com.hrdi.survey.modeldb.MetaProjectAreaDB;
 import com.hrdi.survey.modeldb.MetaProjectMooDB;
 import com.hrdi.survey.modeldb.MetaProvinceDB;
 import com.hrdi.survey.modeldb.MetaTambolDB;
+import com.hrdi.survey.modeldb.MetaTitleDB;
 import com.hrdi.survey.modeldb.MetaUnitDB;
 import com.hrdi.survey.modeldb.MetaWaterResourceDB;
 
@@ -60,7 +61,10 @@ public class MetaDAO extends HrdiDBDAO {
         String tableName="";
         if ("card".equalsIgnoreCase(metaType)) {
             tableName = MetaCardDB.TABLE_NAME;
-        } else if ("doc".equalsIgnoreCase(metaType)) {
+        }else if ("title".equalsIgnoreCase(metaType)) {
+            tableName = MetaTitleDB.TABLE_NAME;
+        }
+        else if ("doc".equalsIgnoreCase(metaType)) {
             tableName = MetaDocDB.TABLE_NAME;
         } else if ("waterresource".equalsIgnoreCase(metaType)) {
             tableName = MetaWaterResourceDB.TABLE_NAME;

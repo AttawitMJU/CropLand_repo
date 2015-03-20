@@ -14,25 +14,28 @@ import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hrdi.survey.R;
 import com.hrdi.survey.control.AgriculturistDAO;
 import com.hrdi.survey.control.MetaDAO;
 import com.hrdi.survey.model.AgriculturistBean;
 import com.hrdi.survey.model.MetaBean;
-import com.hrdi.survey.model.SurveyBean;
 import com.hrdi.survey.modeldb.MetaAmphoeDB;
 import com.hrdi.survey.modeldb.MetaCardDB;
 import com.hrdi.survey.modeldb.MetaProvinceDB;
 import com.hrdi.survey.modeldb.MetaTambolDB;
+import com.hrdi.survey.modeldb.MetaTitleDB;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
  * Created by attawit on 3/10/15 AD.
  */
-public class FarmerDialog extends DialogFragment implements View.OnClickListener, AdapterView.OnItemSelectedListener{
+public class FarmerDialog extends DialogFragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
     // UI references
     private EditText edt_cardNo, edt_fname, edt_lname, edt_home, edt_mooNo, edt_group, edt_zip,
@@ -46,16 +49,20 @@ public class FarmerDialog extends DialogFragment implements View.OnClickListener
 
     AgriculturistBean agriculturistBean;
     AgriculturistDAO agriculturistDAO;
-
+    String landNo = "";
     public static final String ARG_ITEM_ID = "farmer_dialog_fragment";
 
     public interface FarmerDialogListener {
-        void onFinishDialog();
+        void onFinishDialog(String str);
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         agriculturistDAO = new AgriculturistDAO(getActivity());
+
+        Bundle bundle = this.getArguments();
+        landNo = bundle.getString("landno");
+
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -73,10 +80,18 @@ public class FarmerDialog extends DialogFragment implements View.OnClickListener
         builder.setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // TODO : Create Task for Add New Farmer
                 agriculturistBean = getGUI2Bean();
-                long newID= agriculturistDAO.addPersonSQLite(agriculturistBean);
-Log.i("agriculturist-ID", ""+newID);
+                long newID = agriculturistDAO.addPersonSQLite(agriculturistBean);
+                Log.i("agriculturist-ID", "" + newID);
+                if (newID > 0) {
+                    Toast.makeText(getActivity(),
+                            "เพิ่มข้อมูลเกษตรกรเรียบร้อย",
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getActivity(),
+                            "ไม่สามารถเพิ่มข้อมูลเกษตรกร",
+                            Toast.LENGTH_SHORT).show();
+                }
 
             }
         });
@@ -91,9 +106,14 @@ Log.i("agriculturist-ID", ""+newID);
     }
 
     private void findView(View view) {
+        DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmm");
+        Date date = new Date();
+
         spn_cardType = (Spinner) view.findViewById(R.id.spn_cardType);
         spn_title = (Spinner) view.findViewById(R.id.spn_title);
         edt_cardNo = (EditText) view.findViewById(R.id.edt_cardNo);
+        edt_cardNo.setText(landNo + "_" + dateFormat.format(date));
+
         edt_fname = (EditText) view.findViewById(R.id.edt_fname);
         edt_lname = (EditText) view.findViewById(R.id.edt_lname);
         edt_home = (EditText) view.findViewById(R.id.edt_home);
@@ -138,7 +158,7 @@ Log.i("agriculturist-ID", ""+newID);
         spn_cardType.setAdapter(cardDataAdapter);
 
         // Spinner คำนำหน้า
-        List<MetaBean> titleList = metaDAO.getMetaByType(MetaCardDB.getSelectAllSQL());
+        List<MetaBean> titleList = metaDAO.getMetaByType(MetaTitleDB.getSelectAllSQL());
         titleDataAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, titleList);
         spn_title.setAdapter(titleDataAdapter);
 
@@ -172,8 +192,7 @@ Log.i("agriculturist-ID", ""+newID);
             dataAdapter = new ArrayAdapter<>(getActivity(),
                     android.R.layout.simple_spinner_item, metaBeanList);
             spn_amphoe.setAdapter(dataAdapter);
-        }
-        else if (spiner.getId() == R.id.spn_amphoe) {
+        } else if (spiner.getId() == R.id.spn_amphoe) {
             // อำเภอ --> ตำบล
             metaBeanList = metaDAO.getMetaByType(MetaTambolDB.getSelectAllSQLRef(metaBean.getItemId()));
             dataAdapter = new ArrayAdapter<>(getActivity(),
@@ -220,6 +239,8 @@ Log.i("agriculturist-ID", ""+newID);
         bean.setExpenses_all(edt_expensesAll.getText().toString());
         bean.setExpenses1(edt_expenses1.getText().toString());
         bean.setExpenses2(edt_expenses2.getText().toString());
+
+        bean.setRemark1("waiting");
 
         return bean;
     }

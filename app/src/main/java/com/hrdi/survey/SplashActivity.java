@@ -52,7 +52,7 @@ public class SplashActivity extends Activity {
     ArrayList<AgriculturistBean> agriList;
     JSONArray metaJson = null;
     JSONArray agriJson = null;
-    final int total_mata = 21;
+    final int total_mata = 23;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +105,7 @@ public class SplashActivity extends Activity {
 
         @Override
         protected Integer doInBackground(String... params) {
-            Log.i("Tutorial", "Starting task with url: " + params[0]);
+            //Log.i("Tutorial", "Starting task with url: " + params[0]);
             if (resourcesDontAlreadyExist()) {
                 downloadResources();
             }
@@ -114,7 +114,7 @@ public class SplashActivity extends Activity {
         }
 
         private boolean resourcesDontAlreadyExist() {
-            Log.i("metaDAO.countRecord", "" + metaDAO.countRecord("LAND"));
+            //Log.i("metaDAO.countRecord", "" + metaDAO.countRecord("LAND"));
             if (metaDAO.countRecord("META_CARD") == 0) {
                 // Here you would query your app's internal state to see if this download had been performed before
                 // Perhaps once checked save this in a shared preference for speed of access next time
@@ -131,6 +131,9 @@ public class SplashActivity extends Activity {
             //int i = 1;
             int progress =0;
             try {
+                publishProgress(++progress);
+                updateMetaData("title");
+
                 publishProgress(++progress);
                 updateMetaData("card");
 
@@ -197,6 +200,7 @@ public class SplashActivity extends Activity {
                 publishProgress(++progress);
                 updateAgri();
 
+                publishProgress(++progress);
 
                 try { Thread.sleep(1000); } catch (InterruptedException ignore) {ignore.printStackTrace();}
 
@@ -278,9 +282,9 @@ public class SplashActivity extends Activity {
 
 
                         metaDAO.cleanMeta(source);
-                        //Log.i("metaDAO.importMeta -->", source + metaList.size());
-                        count = metaDAO.importMeta(metaList, source);
 
+                        count = metaDAO.importMeta(metaList, source);
+                        //Log.i("metaDAO.importMeta -->", source + metaList.size());
                     }
                 }
             } catch (Exception e) {

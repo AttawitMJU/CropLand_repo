@@ -24,6 +24,7 @@ import com.hrdi.survey.fragment.SetupFragment;
 import com.hrdi.survey.fragment.StartProjectFragment;
 import com.hrdi.survey.fragment.SuggestFragment;
 import com.hrdi.survey.fragment.SurveyDataListFragment;
+import com.hrdi.survey.fragment.SurveyEtcFragment;
 import com.hrdi.survey.fragment.SurveyFragment;
 import com.hrdi.survey.model.NavDrawerItem;
 
@@ -207,9 +208,10 @@ public class MainActivity extends FragmentActivity {
         if (fragment != null) {
 
             FragmentManager fragmentManager = getSupportFragmentManager();
-
+            //fragmentManager.beginTransaction()
+            //        .replace(R.id.frame_container, fragment, TAG_FRAGMENT).addToBackStack(TAG_FRAGMENT).commit();
             fragmentManager.beginTransaction()
-                    .replace(R.id.frame_container, fragment, TAG_FRAGMENT).addToBackStack(TAG_FRAGMENT).commit();
+                    .replace(R.id.frame_container, fragment).addToBackStack(null).commit();
 
             // update selected item and title, then close the drawer
             mDrawerList.setItemChecked(position, true);
@@ -253,6 +255,7 @@ public class MainActivity extends FragmentActivity {
         if (getFragmentManager().getBackStackEntryCount() > 0) {
             //Log.e("MainActivity", "onBackPressed !=0 "+getFragmentManager().getBackStackEntryCount() );
             getFragmentManager().popBackStack();
+            //super.onBackPressed();
         } else {
             super.finish();
         }
@@ -270,4 +273,6 @@ public class MainActivity extends FragmentActivity {
             displayView(position);
         }
     }
+
+
 }

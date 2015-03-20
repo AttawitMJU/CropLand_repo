@@ -1,7 +1,9 @@
 package com.hrdi.survey.fragment;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -44,7 +46,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-public class SurveyFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
+public class SurveyFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener, FarmerDialog.FarmerDialogListener {
 
 
     final static String TAG_FRAGMENT = "SURVEY_FRAGMENT";
@@ -112,6 +114,7 @@ public class SurveyFragment extends Fragment implements View.OnClickListener, Ad
             btn_Save.setVisibility(View.GONE);
             btn_Next.setVisibility(View.VISIBLE);
         }
+        refreshCardNo();
     }
 
     @Override
@@ -309,6 +312,14 @@ public class SurveyFragment extends Fragment implements View.OnClickListener, Ad
 
     }
 
+    private void refreshCardNo() {
+        String[] idCards = surveyDAO.getIDCard();
+        if (idCards != null) {
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_dropdown_item_1line, idCards);
+            edit_Card_no.setAdapter(adapter);
+        }
+    }
+
     private void setListItemAdapter() {
         MetaDAO metaDAO = new MetaDAO(getActivity());
 
@@ -346,6 +357,9 @@ public class SurveyFragment extends Fragment implements View.OnClickListener, Ad
         spn_water.setAdapter(waterDataAdapter);
 
     }
+    public void hello(){
+        Log.i("hello","hello.................");
+    }
 
     private void setListeners() {
         btn_LandCrop.setOnClickListener(this);
@@ -358,6 +372,7 @@ public class SurveyFragment extends Fragment implements View.OnClickListener, Ad
         spn_projectArea.setOnItemSelectedListener(this);
         spn_extProject.setOnItemSelectedListener(this);
 
+        edit_Card_no.setOnClickListener(this);
 
         edit_Card_no.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -368,7 +383,7 @@ public class SurveyFragment extends Fragment implements View.OnClickListener, Ad
                         if (bean != null) {
                             edit_FirstName.setText(bean.getFirstname());
                             edt_LastName.setText(bean.getLastname());
-Log.i("bean.getCard_type()",""+bean.getCard_type());
+                            Log.i("bean.getCard_type()", "" + bean.getCard_type());
                             if (bean.getCard_type() != null) {
                                 MetaBean metaBean = new MetaBean(Integer.parseInt(bean.getCard_type()), null);
                                 spn_LandDoc_Type.setSelection(docDataAdapter.getPosition(metaBean));
@@ -382,6 +397,8 @@ Log.i("bean.getCard_type()",""+bean.getCard_type());
             }
         });
 
+
+
     }
 
     @Override
@@ -392,10 +409,42 @@ Log.i("bean.getCard_type()",""+bean.getCard_type());
         } else if (view == btn_LatLong) {
             getLATLONG();
 
+        } else if (view == edit_Card_no) {
+            refreshCardNo();
         } else if (view == img_btn_addPerson) {
-            FarmerDialog farmerDialog = new FarmerDialog();
-            farmerDialog.show(getFragmentManager(), FarmerDialog.ARG_ITEM_ID);
+            if (edt_Land_No.getText() != null && edt_Land_No.getText().toString().length() > 3) {
+                Bundle arguments = new Bundle();
+                arguments.putString("landno", edt_Land_No.getText().toString());
 
+                FarmerDialog farmerDialog = new FarmerDialog();
+                farmerDialog.setArguments(arguments);
+                farmerDialog.show(getFragmentManager(), FarmerDialog.ARG_ITEM_ID);
+
+            } else {
+                AlertDialog alertDialog = new AlertDialog.Builder(
+                        getActivity()).create();
+
+                // Setting Dialog Title
+                alertDialog.setTitle("กรุณาป้อนข้อมูล");
+
+                // Setting Dialog Message
+                alertDialog.setMessage("เลขที่แปลง");
+
+                // Setting Icon to Dialog
+                alertDialog.setIcon(R.drawable.ic_whats_hot);
+
+                // Setting OK Button
+                alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Write your code here to execute after dialog closed
+                        //Toast.makeText(getActivity(), "You clicked on OK", Toast.LENGTH_SHORT).show();
+                        edt_Land_No.requestFocus();
+                    }
+                });
+
+                // Showing Alert Message
+                alertDialog.show();
+            }
 
         } else if (view == edt_surveyDate) {
             DatePickerDialog mDatePicker = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
@@ -429,6 +478,7 @@ Log.i("bean.getCard_type()",""+bean.getCard_type());
             // Next Fragment
             goNextPage();
         }
+
     }
 
     @Override
@@ -456,6 +506,9 @@ Log.i("bean.getCard_type()",""+bean.getCard_type());
 //Log.i("spn_extProject2",""+metaBean.getItemValue());
             edt_Land_No.setText(metaBean.getItemValue());
         }
+
+
+
     }
 
     @Override
@@ -540,12 +593,13 @@ Log.i("bean.getCard_type()",""+bean.getCard_type());
     }
 
     private void goNextPage() {
+        // FragmentManager fragmentManager = getSupportFragmentManager();
+        // fragmentManager.beginTransaction()
+        //        .replace(R.id.frame_container, fragment, TAG_FRAGMENT).addToBackStack(TAG_FRAGMENT).commit();
 
         // Change Fragment  การใช้ประโยชน์ที่ดิน
-        Fragment fragment = new SurveyEtcFragment();
-
+        SurveyEtcFragment fragment = new SurveyEtcFragment();
         if (fragment != null) {
-
             // Send parameter surveybaen to next page
             Bundle surveyDataBundle = new Bundle();
             SurveyBean sb;
@@ -566,9 +620,8 @@ Log.i("bean.getCard_type()",""+bean.getCard_type());
 
             fragment.setArguments(surveyDataBundle);
 
-
-            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.frame_container, fragment).addToBackStack(TAG_FRAGMENT).commit();
+            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.frame_container, fragment).addToBackStack(null).commit();
         }
     }
 
@@ -588,6 +641,17 @@ Log.i("bean.getCard_type()",""+bean.getCard_type());
         }
     }
 
+    /*
+         * Callback used to communicate with EmpListFragment to notify the list adapter.
+         * Communication between fragments goes via their Activity class.
+         */
+    @Override
+    public void onFinishDialog(String str) {
+        if (str != null) {
+            edit_Card_no.setText(str);
+            rdb_Owner.setFocusable(true);
+        }
+    }
 
     /*
          Background Async Task to Create new Survey
@@ -621,7 +685,7 @@ Log.i("bean.getCard_type()",""+bean.getCard_type());
         protected String doInBackground(String... params) {
             surveyBean = getGUI2Bean();
             surveyBean.setRemark1("waiting");
-            long result = surveyDAO.addSurveySQLite(surveyBean);
+            long result = surveyDAO.addSurvey(surveyBean);
 
             // Set Last ID to bean
             surveyBean.setSurvey_id("" + result);

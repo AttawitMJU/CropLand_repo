@@ -15,25 +15,34 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hrdi.survey.R;
+import com.hrdi.survey.adapter.ActListAdapter;
+import com.hrdi.survey.adapter.EtcListAdapter;
 import com.hrdi.survey.control.SurveyDAO;
+import com.hrdi.survey.model.SurveyActivityBean;
 import com.hrdi.survey.model.SurveyBean;
+import com.hrdi.survey.model.SurveyEtcBean;
+import com.hrdi.survey.swipemenu.SwipeMenu;
+import com.hrdi.survey.swipemenu.SwipeMenuListView;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
-public class SurveyEtcFragment extends Fragment implements View.OnClickListener {
+public class SurveyEtcFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
 
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
-    final static String TAG_FRAGMENT = "SURVEY_FRAGMENT";
+    final static String TAG_FRAGMENT = "SURVEY_ETC_FRAGMENT";
     // Activity request codes
     private static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE1 = 101;
     private static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE2 = 102;
@@ -46,26 +55,43 @@ public class SurveyEtcFragment extends Fragment implements View.OnClickListener 
     private static final String IMAGE_DIRECTORY_NAME = "HRDI_Pic";
     private static String landcode;
     private Uri fileUri; // file url to store image/video
-    private EditText edt_activity1, edt_outcome1, edt_survive1, edt_repeat1;
-    private EditText edt_activity2, edt_outcome2, edt_survive2, edt_repeat2;
-    private EditText edt_activity3, edt_outcome3, edt_survive3, edt_repeat3;
-    private EditText edt_org1, edt_org2, edt_org3;
-    private EditText edt_problem1, edt_problem2, edt_problem3;
-    private EditText edt_request1, edt_request2, edt_request3;
+
+    //private EditText edt_org1, edt_org2, edt_org3;
+    //private EditText edt_problem1, edt_problem2, edt_problem3;
+    // private EditText edt_request1, edt_request2, edt_request3;
     private ImageView img_Preview1, img_Preview2, img_Preview3;
-    private ImageButton img_btn_1, img_btn_2, img_btn_3;
+    private ImageButton img_btn_1, img_btn_2, img_btn_3,
+            btn_addActivity, btn_support, btn_problem, btn_want;
+    private TextView txt_activity;
     private Button btn_next;
+    private LinearLayout linearLayout1, linearLayout2, linearLayout3, linearLayout4;
+
+    Activity activity;
+    private SwipeMenuListView act_Swipe, support_Swipe, want_Swipe, problem_Swipe;
+    ArrayList<SurveyBean> actListShow, supportListShow, wantListShow, problemListShow;
+    ActListAdapter actListAdapter;
+    EtcListAdapter supportAdapter, wantAdapter, problemAdapter;
+
     private SurveyBean surveyBean;
     private SurveyBean surveyBeanUpdate;
     private SurveyDAO surveyDAO;
     private UpdateSurveyTask task;
 
+    SurveyActFragment activity_showDialog;
+
     public SurveyEtcFragment() {
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        activity = getActivity();
+        surveyDAO = new SurveyDAO(activity);
+    }
+
     /*
-     * returning image / video
-     */
+             * returning image / video
+             */
     private static File getOutputMediaFile(int type, int i) {
 
         // External sdcard location
@@ -102,11 +128,11 @@ public class SurveyEtcFragment extends Fragment implements View.OnClickListener 
         return mediaFile;
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        surveyDAO = new SurveyDAO(getActivity());
 
         Bundle bundle = this.getArguments();
         surveyBean = bundle.getParcelable("surveyBean");
@@ -134,38 +160,86 @@ public class SurveyEtcFragment extends Fragment implements View.OnClickListener 
             setUpdateData(surveyBeanUpdate);
         }
 
+        showSurveyActivityList(surveyBean.getSurvey_id());
+        showSurveyRemarkList(surveyBean.getSurvey_id(), "support");
+        showSurveyRemarkList(surveyBean.getSurvey_id(), "problem");
+        showSurveyRemarkList(surveyBean.getSurvey_id(), "want");
+
+
         return rootView;
     }
 
+    private int showSurveyRemarkList(String surveyID, String etc) {
+        int i = 0;
+        Log.i("surveyID", "showSurveyRemarkList....." + surveyID);
+        ArrayList<SurveyEtcBean> etcList = surveyDAO.getSurveyEtc(surveyID, etc);
+        Log.i("surveyList", "showSurveyRemarkList....." + etcList.size());
+        if (etcList != null) {
+            if (etcList.size() != 0) {
+                i = etcList.size();
+                if("support".equals(etc)) {
+                    supportAdapter = new EtcListAdapter(activity, etcList);
+                    support_Swipe.setAdapter(supportAdapter);
+
+                    if (i > 1) {
+                        LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, i * 80);
+                        linearLayout2.setLayoutParams(parms);
+                    }
+                }
+                else if("problem".equals(etc)) {
+                    problemAdapter = new EtcListAdapter(activity, etcList);
+                    problem_Swipe.setAdapter(problemAdapter);
+
+                    if (i > 1) {
+                        LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, i * 80);
+                        linearLayout3.setLayoutParams(parms);
+                    }
+                }else if("want".equals(etc)) {
+                    wantAdapter = new EtcListAdapter(activity, etcList);
+                    want_Swipe.setAdapter(wantAdapter);
+
+                    if (i > 1) {
+                        LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, i * 80);
+                        linearLayout4.setLayoutParams(parms);
+                    }
+                }
+            } else {
+
+                //Toast.makeText(activity, "No Survey Records",
+                //        Toast.LENGTH_LONG).show();
+            }
+
+        }
+        return i;
+    }
+
+    private int showSurveyActivityList(String surveyID) {
+
+        int i = 0;
+        Log.i("surveyID", "showSurveyActivityList....." + surveyID);
+        ArrayList<SurveyActivityBean> surveyList = surveyDAO.getSurveyAcitvity(surveyID);
+        Log.i("surveyList", "showSurveyActivityList....." + surveyList.size());
+        if (surveyList != null) {
+            if (surveyList.size() != 0) {
+                i = surveyList.size();
+                actListAdapter = new ActListAdapter(activity, surveyList);
+                act_Swipe.setAdapter(actListAdapter);
+
+                if (i > 1) {
+                    LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, i * 130);
+                    linearLayout1.setLayoutParams(parms);
+                }
+            } else {
+
+                //Toast.makeText(activity, "No Survey Records",
+                //        Toast.LENGTH_LONG).show();
+            }
+
+        }
+        return i;
+    }
+
     private void setUpdateData(SurveyBean bean) {
-
-        edt_activity1.setText(bean.getActivity1());
-        edt_outcome1.setText(bean.getOutcome1());
-        edt_survive1.setText(bean.getSurvive1());
-        edt_repeat1.setText(bean.getRepeat1());
-
-        edt_activity2.setText(bean.getActivity2());
-        edt_outcome2.setText(bean.getOutcome2());
-        edt_survive2.setText(bean.getSurvive2());
-        edt_repeat2.setText(bean.getRepeat2());
-
-        edt_activity3.setText(bean.getActivity3());
-        edt_outcome3.setText(bean.getOutcome3());
-        edt_survive3.setText(bean.getSurvive3());
-        edt_repeat3.setText(bean.getRepeat3());
-
-        edt_org1.setText(bean.getOrg1());
-        edt_org2.setText(bean.getOrg2());
-        edt_org3.setText(bean.getOrg3());
-
-        edt_problem1.setText(bean.getProblem1());
-        edt_problem2.setText(bean.getProblem2());
-        edt_problem3.setText(bean.getProblem3());
-
-        edt_request1.setText(bean.getRequest1());
-        edt_request2.setText(bean.getRequest2());
-        edt_request3.setText(bean.getRequest3());
-
 
         if (bean.getPicture1() != null) {
             fileUri = getOutputMediaFileUri(MEDIA_TYPE_IMAGE, 1);
@@ -182,43 +256,96 @@ public class SurveyEtcFragment extends Fragment implements View.OnClickListener 
     }
 
     private void setListeners() {
+        txt_activity.setOnClickListener(this);
         img_btn_1.setOnClickListener(this);
         img_btn_2.setOnClickListener(this);
         img_btn_3.setOnClickListener(this);
         btn_next.setOnClickListener(this);
+        btn_addActivity.setOnClickListener(this);
+        btn_support.setOnClickListener(this);
+        btn_problem.setOnClickListener(this);
+        btn_want.setOnClickListener(this);
+
+
+        // step 2. listener item click event
+        act_Swipe.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
+                Log.i("position   ....", "" + position);
+                SurveyBean item = actListShow.get(position);
+
+                switch (index) {
+                    case 0:     // open button
+                        // openSurvey(item);
+                        break;
+                    case 1:     // delete button
+                        //deleteSurvey(item);
+                        actListShow.remove(position);
+                        actListAdapter.notifyDataSetChanged();
+                        break;
+                }
+                return false;
+            }
+        });
+
+        act_Swipe.setOnSwipeListener(new SwipeMenuListView.OnSwipeListener() {
+
+            @Override
+            public void onSwipeStart(int position) {
+                // swipe start
+            }
+
+            @Override
+            public void onSwipeEnd(int position) {
+                // swipe end
+            }
+        });
+
+        act_Swipe.setOnItemClickListener(this);
+        act_Swipe.setOnItemLongClickListener(this);
+
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        //SurveyBean item = actListShow.get(position);
+        // openSurvey(item);
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        //SurveyBean surveyBean = (SurveyBean) parent.getItemAtPosition(position);
+        // Use AsyncTask to delete from database
+        //surveyDAO.deleteSurvey(surveyBean);
+        //actListAdapter.remove(surveyBean);
+
+        return true;
     }
 
     /**
      * Map Input UI to Java Code
      */
     private void findViewsById(View rootView) {
+        linearLayout1 = (LinearLayout) rootView.findViewById(R.id.linearLayout1);
+        linearLayout2 = (LinearLayout) rootView.findViewById(R.id.linearLayout2);
+        linearLayout3 = (LinearLayout) rootView.findViewById(R.id.linearLayout3);
+        linearLayout4 = (LinearLayout) rootView.findViewById(R.id.linearLayout4);
 
-        edt_activity1 = (EditText) rootView.findViewById(R.id.edt_activity1);
-        edt_outcome1 = (EditText) rootView.findViewById(R.id.edt_outcome1);
-        edt_survive1 = (EditText) rootView.findViewById(R.id.edt_survive1);
-        edt_repeat1 = (EditText) rootView.findViewById(R.id.edt_repeat1);
 
-        edt_activity2 = (EditText) rootView.findViewById(R.id.edt_activity2);
-        edt_outcome2 = (EditText) rootView.findViewById(R.id.edt_outcome2);
-        edt_survive2 = (EditText) rootView.findViewById(R.id.edt_survive2);
-        edt_repeat2 = (EditText) rootView.findViewById(R.id.edt_repeat2);
 
-        edt_activity3 = (EditText) rootView.findViewById(R.id.edt_activity3);
-        edt_outcome3 = (EditText) rootView.findViewById(R.id.edt_outcome3);
-        edt_survive3 = (EditText) rootView.findViewById(R.id.edt_survive3);
-        edt_repeat3 = (EditText) rootView.findViewById(R.id.edt_repeat3);
+        txt_activity = (TextView) rootView.findViewById(R.id.txt_activity);
 
-        edt_org1 = (EditText) rootView.findViewById(R.id.edt_org1);
-        edt_org2 = (EditText) rootView.findViewById(R.id.edt_org2);
-        edt_org3 = (EditText) rootView.findViewById(R.id.edt_org3);
+        btn_addActivity = (ImageButton) rootView.findViewById(R.id.btn_addActivity);
+        btn_support = (ImageButton) rootView.findViewById(R.id.btn_support);
+        btn_problem = (ImageButton) rootView.findViewById(R.id.btn_problem);
+        btn_want = (ImageButton) rootView.findViewById(R.id.btn_want);
 
-        edt_problem1 = (EditText) rootView.findViewById(R.id.edt_problem1);
-        edt_problem2 = (EditText) rootView.findViewById(R.id.edt_problem2);
-        edt_problem3 = (EditText) rootView.findViewById(R.id.edt_problem3);
+        act_Swipe = (SwipeMenuListView) rootView.findViewById(R.id.list_activity);
 
-        edt_request1 = (EditText) rootView.findViewById(R.id.edt_request1);
-        edt_request2 = (EditText) rootView.findViewById(R.id.edt_request2);
-        edt_request3 = (EditText) rootView.findViewById(R.id.edt_request3);
+        support_Swipe= (SwipeMenuListView) rootView.findViewById(R.id.list_support);
+        problem_Swipe= (SwipeMenuListView) rootView.findViewById(R.id.list_problem);
+        want_Swipe= (SwipeMenuListView) rootView.findViewById(R.id.list_want);
+
 
         // ภาพ1
         img_Preview1 = (ImageView) rootView.findViewById(R.id.img_Preview1);
@@ -239,6 +366,7 @@ public class SurveyEtcFragment extends Fragment implements View.OnClickListener 
 
     }
 
+
     @Override
     public void onClick(View view) {
         if (view == img_btn_1) {
@@ -254,6 +382,60 @@ public class SurveyEtcFragment extends Fragment implements View.OnClickListener 
         } else if (view == btn_next) {
             updateSurveyEtc();
             goNextPage();
+        } else if (view == txt_activity) {
+            showSurveyActivityList(surveyBean.getSurvey_id());
+
+        } else if (view == btn_addActivity) {
+            SurveyActFragment fragment = new SurveyActFragment();
+            FragmentManager fragmentManager = getFragmentManager();
+
+            // Send parameter surveybaen to next page
+            Bundle surveyDataBundle = new Bundle();
+            surveyDataBundle.putParcelable("surveyBean", surveyBean);
+            fragment.setArguments(surveyDataBundle);
+
+            fragmentManager.beginTransaction()
+                    .replace(R.id.frame_container, fragment).addToBackStack(null).commit();
+
+        } else if (view == btn_support) {
+            SurveyRemarkFragment fragment = new SurveyRemarkFragment();
+            FragmentManager fragmentManager = getFragmentManager();
+
+            // Send parameter surveybaen to next page
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("surveyBean", surveyBean);
+            bundle.putString("action", "support");
+            fragment.setArguments(bundle);
+
+            fragmentManager.beginTransaction()
+                    .replace(R.id.frame_container, fragment).addToBackStack(null).commit();
+
+        } else if (view == btn_problem) {
+            SurveyRemarkFragment fragment = new SurveyRemarkFragment();
+            FragmentManager fragmentManager = getFragmentManager();
+
+            // Send parameter surveybaen to next page
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("surveyBean", surveyBean);
+            bundle.putString("action", "problem");
+            fragment.setArguments(bundle);
+
+            fragmentManager.beginTransaction()
+                    .replace(R.id.frame_container, fragment).addToBackStack(null).commit();
+
+        } else if (view == btn_want) {
+            SurveyRemarkFragment fragment = new SurveyRemarkFragment();
+            FragmentManager fragmentManager = getFragmentManager();
+
+            // Send parameter surveybaen to next page
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("surveyBean", surveyBean);
+            bundle.putString("action", "want");
+            fragment.setArguments(bundle);
+
+            fragmentManager.beginTransaction()
+                    .replace(R.id.frame_container, fragment).addToBackStack(null).commit();
+
         }
     }
 
@@ -267,17 +449,13 @@ public class SurveyEtcFragment extends Fragment implements View.OnClickListener 
     private void goNextPage() {
         // Popup Insert complete
         // Add to SQLite
-        Fragment fragment = new SurveyLandUseFragment();
-
+        SurveyLandUseFragment fragment = new SurveyLandUseFragment();
         FragmentManager fragmentManager = getFragmentManager();
-
 
         // Send parameter surveybaen to next page
         Bundle surveyDataBundle = new Bundle();
 
         surveyDataBundle.putParcelable("surveyBean", surveyBean);
-        Log.i("surveyBean #3", surveyBean.toString());
-
         fragment.setArguments(surveyDataBundle);
 
         fragmentManager.beginTransaction()
@@ -470,45 +648,19 @@ public class SurveyEtcFragment extends Fragment implements View.OnClickListener 
         update SurveyBean Attribute with new GUI value
      */
     private void getGUI2Bean() {
-        surveyBean.setActivity1(edt_activity1.getText().toString());
-        surveyBean.setOutcome1(edt_outcome1.getText().toString());
-        surveyBean.setSurvive1(edt_survive1.getText().toString());
-        surveyBean.setRepeat1(edt_repeat1.getText().toString());
-
-        surveyBean.setActivity2(edt_activity2.getText().toString());
-        surveyBean.setOutcome2(edt_outcome2.getText().toString());
-        surveyBean.setSurvive2(edt_survive2.getText().toString());
-        surveyBean.setRepeat2(edt_repeat2.getText().toString());
-
-        surveyBean.setActivity3(edt_activity3.getText().toString());
-        surveyBean.setOutcome3(edt_outcome3.getText().toString());
-        surveyBean.setSurvive3(edt_survive3.getText().toString());
-        surveyBean.setRepeat3(edt_repeat3.getText().toString());
-
-        surveyBean.setOrg1(edt_org1.getText().toString());
-        surveyBean.setOrg2(edt_org2.getText().toString());
-        surveyBean.setOrg3(edt_org3.getText().toString());
-
-        surveyBean.setProblem1(edt_problem1.getText().toString());
-        surveyBean.setProblem2(edt_problem2.getText().toString());
-        surveyBean.setProblem3(edt_problem3.getText().toString());
-
-        surveyBean.setRequest1(edt_request1.getText().toString());
-        surveyBean.setRequest2(edt_request2.getText().toString());
-        surveyBean.setRequest3(edt_request3.getText().toString());
 
 
         if (img_Preview1.getTag() != null) {
-           // surveyBean.setPicture1(img_Preview1.getTag().toString());
-            surveyBean.setPicture1("IMG_" + landcode + "_1"  + ".jpg");
+            // surveyBean.setPicture1(img_Preview1.getTag().toString());
+            surveyBean.setPicture1("IMG_" + landcode + "_1" + ".jpg");
         }
         if (img_Preview2.getTag() != null) {
             //surveyBean.setPicture2(img_Preview2.getTag().toString());
-            surveyBean.setPicture1("IMG_" + landcode + "_2"  + ".jpg");
+            surveyBean.setPicture1("IMG_" + landcode + "_2" + ".jpg");
         }
         if (img_Preview3.getTag() != null) {
             //surveyBean.setPicture3(img_Preview3.getTag().toString());
-            surveyBean.setPicture1("IMG_" + landcode + "_3"  + ".jpg");
+            surveyBean.setPicture1("IMG_" + landcode + "_3" + ".jpg");
         }
 
     }
@@ -551,4 +703,5 @@ public class SurveyEtcFragment extends Fragment implements View.OnClickListener 
             return String.valueOf(result);
         }
     }
+
 }

@@ -222,7 +222,7 @@ public class SurveyLandUseFragment extends Fragment implements AdapterView.OnIte
 
     private void goSurveyPlantPage() {
         // Change Fragment
-        Fragment fragment = new SurveyPlantFragment();
+        SurveyPlantFragment fragment = new SurveyPlantFragment();
         FragmentManager fragmentManager = getFragmentManager();
 
         // Send parameter surveybaen to next page

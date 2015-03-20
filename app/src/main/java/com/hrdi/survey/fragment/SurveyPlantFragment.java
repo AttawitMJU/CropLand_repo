@@ -441,7 +441,7 @@ public class SurveyPlantFragment extends Fragment implements View.OnClickListene
 
     private void backToLandUseFragment() {
         // Change Fragment
-        Fragment fragment = new SurveyLandUseFragment();
+        SurveyLandUseFragment fragment = new SurveyLandUseFragment();
         FragmentManager fragmentManager = getFragmentManager();
 
         // Send parameter surveybaen to next page

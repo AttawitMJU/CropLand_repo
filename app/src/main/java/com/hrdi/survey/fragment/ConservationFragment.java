@@ -453,7 +453,7 @@ public class ConservationFragment extends Fragment implements View.OnClickListen
         protected String doInBackground(String... params) {
             long result = 0;
             //SurveyBean sb = getGUI2Bean();
-            //long result = surveyDAO.addSurveySQLite(sb);
+            //long result = surveyDAO.add...(sb);
 
             return String.valueOf(result);
         }
