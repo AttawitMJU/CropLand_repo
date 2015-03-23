@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,6 +27,7 @@ import android.widget.TextClock;
 import android.widget.Toast;
 
 import com.hrdi.survey.R;
+import com.hrdi.survey.adapter.FarmerListAdapter;
 import com.hrdi.survey.control.AgriculturistDAO;
 import com.hrdi.survey.control.MetaDAO;
 import com.hrdi.survey.control.SurveyDAO;
@@ -42,6 +44,7 @@ import com.hrdi.survey.util.GPSTracker;
 
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -62,10 +65,10 @@ public class SurveyFragment extends Fragment implements View.OnClickListener, Ad
 
     // UI references
     EditText edt_Land_No, edt_Area, edt_LATITUDE,
-            edit_Do_Year, edit_FirstName, edt_LastName, edit_Address,
+            edit_Do_Year, edit_FirstName, edt_LastName, edit_Address, edt_CardType,
             edt_Owner_Type, edt_LandUse_History, edt_Staff, edt_surveyDate;
     ImageButton btn_LandCrop, btn_LatLong, img_btn_addPerson;
-    Spinner spn_projectArea, spn_extProject, spn_LandDoc_Type, spn_CardType, spn_Moo, spn_water;
+    Spinner spn_projectArea, spn_extProject, spn_LandDoc_Type, spn_Moo, spn_water;
     RadioButton rdb_Do_Current_Year, rdb_Empty, rdb_Owner, rdb_Rent, rdb_Other_Owner_Type;
     RadioGroup rdb_group_Owner;
     Button btn_Save, btn_Next;
@@ -75,6 +78,7 @@ public class SurveyFragment extends Fragment implements View.OnClickListener, Ad
 
     private SurveyDAO surveyDAO;
     private AgriculturistDAO agriculturistDAO;
+    private MetaDAO metaDAO;
     private SurveyBean surveyBeanUpdate, surveyBean;
     private String surveyBeanUpdateID;
     private String action;
@@ -91,17 +95,27 @@ public class SurveyFragment extends Fragment implements View.OnClickListener, Ad
 
         surveyDAO = new SurveyDAO(getActivity());
         agriculturistDAO = new AgriculturistDAO(getActivity());
+        metaDAO = new MetaDAO(getActivity());
+
         //if (getArguments() != null) {
         //    survey_id = getArguments().getString("survey_id");
         //}
 
+        //super.onCreate(savedInstanceState);
+        FragmentManager fm = getFragmentManager();
+        fm.addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+                if (getFragmentManager().getBackStackEntryCount() == 0) {
+                    //getFragmentManager.finish();
+                }
+            }
+        });
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-
         super.onSaveInstanceState(outState);
-
     }
 
     @Override
@@ -140,7 +154,6 @@ public class SurveyFragment extends Fragment implements View.OnClickListener, Ad
 
         // set Button Listeners
         setListeners();
-
 
         // Get parameter from Survey Data List
         if (bundle != null) {
@@ -202,12 +215,13 @@ public class SurveyFragment extends Fragment implements View.OnClickListener, Ad
         // นามสกุล        edt_LastName
         edt_LastName.setText(surveyBean.getLastName());
 
+        edt_CardType.setText(surveyBean.getCard_type_name());
         // ประเภทบัตร        spn_CardType
         //Log.i("getCard_type", surveyBean.getCard_type());
-        if (surveyBean.getCard_type() != null) {
-            metaBean = new MetaBean(Integer.parseInt(surveyBean.getCard_type()), surveyBean.getCard_type_name());
-            spn_CardType.setSelection(cardDataAdapter.getPosition(metaBean));
-        }
+        //if (surveyBean.getCard_type() != null) {
+        //    metaBean = new MetaBean(Integer.parseInt(surveyBean.getCard_type()), surveyBean.getCard_type_name());
+        //    spn_CardType.setSelection(cardDataAdapter.getPosition(metaBean));
+        //}
 
         // ที่อยู่        edit_Address
         edit_Address.setText(surveyBean.getAddress());
@@ -231,7 +245,6 @@ public class SurveyFragment extends Fragment implements View.OnClickListener, Ad
 
         // Update Date
         surveyBean.setUpdate_Date(txt_DataTime.getText().toString());
-
 
     }
 
@@ -275,7 +288,7 @@ public class SurveyFragment extends Fragment implements View.OnClickListener, Ad
         // นามสกุล
         edt_LastName = (EditText) rootView.findViewById(R.id.edt_LastName);
         // ประเภทบัตร
-        spn_CardType = (Spinner) rootView.findViewById(R.id.spn_CardType);
+        edt_CardType = (EditText) rootView.findViewById(R.id.edt_CardType);
         // ที่อยู่
         edit_Address = (EditText) rootView.findViewById(R.id.edit_Address);
 
@@ -313,9 +326,11 @@ public class SurveyFragment extends Fragment implements View.OnClickListener, Ad
     }
 
     private void refreshCardNo() {
-        String[] idCards = surveyDAO.getIDCard();
-        if (idCards != null) {
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_dropdown_item_1line, idCards);
+        String[] list = agriculturistDAO.getIDCard();
+        //Log.i("refreshCardNo", " " +list.length());
+        if (list != null) {
+            ArrayAdapter adapter = new ArrayAdapter(getActivity(),android.R.layout.simple_dropdown_item_1line,list);
+               Log.i("adapter", "" + adapter.getCount());
             edit_Card_no.setAdapter(adapter);
         }
     }
@@ -323,16 +338,12 @@ public class SurveyFragment extends Fragment implements View.OnClickListener, Ad
     private void setListItemAdapter() {
         MetaDAO metaDAO = new MetaDAO(getActivity());
 
-        String[] idCards = surveyDAO.getIDCard();
-        if (idCards != null) {
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_dropdown_item_1line, idCards);
-            edit_Card_no.setAdapter(adapter);
-        }
+        refreshCardNo();
 
         // Spinner ประเภทบัตร
-        List<MetaBean> cardTypes = metaDAO.getMetaByType(MetaCardDB.getSelectAllSQL());
-        cardDataAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, cardTypes);
-        spn_CardType.setAdapter(cardDataAdapter);
+        //List<MetaBean> cardTypes = metaDAO.getMetaByType(MetaCardDB.getSelectAllSQL());
+        //cardDataAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, cardTypes);
+        //spn_CardType.setAdapter(cardDataAdapter);
 
 
         // Spinner เอกสารสิทธิ์
@@ -357,9 +368,6 @@ public class SurveyFragment extends Fragment implements View.OnClickListener, Ad
         spn_water.setAdapter(waterDataAdapter);
 
     }
-    public void hello(){
-        Log.i("hello","hello.................");
-    }
 
     private void setListeners() {
         btn_LandCrop.setOnClickListener(this);
@@ -373,30 +381,56 @@ public class SurveyFragment extends Fragment implements View.OnClickListener, Ad
         spn_extProject.setOnItemSelectedListener(this);
 
         edit_Card_no.setOnClickListener(this);
-
-        edit_Card_no.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        edit_Card_no.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    if (edit_Card_no.getText() != null) {
-                        AgriculturistBean bean = agriculturistDAO.getPerson(edit_Card_no.getText().toString());
-                        if (bean != null) {
-                            edit_FirstName.setText(bean.getFirstname());
-                            edt_LastName.setText(bean.getLastname());
-                            Log.i("bean.getCard_type()", "" + bean.getCard_type());
-                            if (bean.getCard_type() != null) {
-                                MetaBean metaBean = new MetaBean(Integer.parseInt(bean.getCard_type()), null);
-                                spn_LandDoc_Type.setSelection(docDataAdapter.getPosition(metaBean));
-                            }
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                            //TODO: Complete Adrress Data
-                            //edit_Address.setText(bean.getRemark1());
+                //Log.i("arg0)", parent.getItemAtPosition(position).toString());
+
+                if (edit_Card_no.getText() != null) {
+                    String idcard= parent.getItemAtPosition(position).toString().split(" ")[0];
+                    //Log.i("idcard",idcard);
+                    AgriculturistBean bean = agriculturistDAO.getPerson(idcard);
+                    if (bean != null) {
+                        edit_FirstName.setText(bean.getFirstname());
+                        edt_LastName.setText(bean.getLastname());
+                        //Log.i("bean.getCard_type()", "" + bean.getCard_type());
+                        if (bean.getCard_type() != null) {
+                            //MetaBean metaBean = new MetaBean(Integer.parseInt(bean.getCard_type()), null);
+                            MetaBean metaBean = metaDAO.getMetaByType(bean.getCard_type(), MetaCardDB.TABLE_NAME);
+
+                            //Log.i("metaBean", "" + metaBean.toString());
+
+                            edt_CardType.setText(metaBean.toString());
                         }
+                        StringBuilder address = new StringBuilder();
+                        address.append(bean.getHome_no());
+                        if (bean.getMoo_no() != null && "".equals(bean.getMoo_no().trim())) {
+                            address.append("  หมู่ ");
+                            address.append(bean.getMoo_no());
+                        }
+                        if (bean.getGroup_no() != null && "".equals(bean.getGroup_no().trim())) {
+                            address.append("  กลุ่มหมู่ ");
+                            address.append(bean.getGroup_no());
+                        }
+                        if (bean.getTambol_name() != null) {
+                            address.append("  ตำบล ");
+                            address.append(bean.getTambol_name());
+                        }
+                        if (bean.getAmphur_name() != null) {
+                            address.append("  อำเภอ ");
+                            address.append(bean.getAmphur_name());
+                        }
+                        if (bean.getProvince_name() != null) {
+                            address.append("  จังหวัด ");
+                            address.append(bean.getProvince_name());
+                        }
+                        edit_Address.setText(address.toString());
+
                     }
                 }
             }
         });
-
 
 
     }
@@ -508,7 +542,6 @@ public class SurveyFragment extends Fragment implements View.OnClickListener, Ad
         }
 
 
-
     }
 
     @Override
@@ -519,22 +552,24 @@ public class SurveyFragment extends Fragment implements View.OnClickListener, Ad
     private SurveyBean getGUI2Bean() {
         SurveyBean surveyBean = new SurveyBean();
 
-        //surveyBean.setSurvey_id(txt_hidden_id.getText().toString());
+        surveyBean.setProject_Area(String.valueOf(((MetaBean) spn_projectArea.getSelectedItem()).getItemId()));
+        surveyBean.setExt_Project(String.valueOf(((MetaBean) spn_extProject.getSelectedItem()).getItemId()));
+        surveyBean.setProject_MooBan(String.valueOf(((MetaBean) spn_Moo.getSelectedItem()).getItemId()));
 
         // แปลงเลขที่  edt_Land_No
         surveyBean.setLand_No(edt_Land_No.getText().toString());
-        // ปุ่มค้นหาข้อมูลแปลง  btn_LandCrop
-        // โครงการขยายผลฯ   edt_extProject
-        surveyBean.setExt_Project(String.valueOf(((MetaBean) spn_extProject.getSelectedItem()).getItemId()));
+
         //่ หมู่บ้าน    edit_Moo
         // surveyBean.setMooban(edit_Moo.getText().toString());
 
-        // พื้นที่  edt_Area
+
         // พิกัด    edt_LATITUDE
         surveyBean.setLatlong(edt_LATITUDE.getText().toString());
         // ปุ่มค้นหาพิกัด   btn_LatLong
         // เอกสารสิทธิ์     spn_LandDoc_Type
         surveyBean.setLand_doc_type(String.valueOf(((MetaBean) spn_LandDoc_Type.getSelectedItem()).getItemId()));
+        // พื้นที่  edt_Area
+        surveyBean.setWater(String.valueOf(((MetaBean) spn_water.getSelectedItem()).getItemId()));
 
         // สภาพพื้นที่ - ทำปีปัจจุบัน        rdb_Do_Current_Year
         // สภาพพื้นที่ - พื้นที่ท้ิงไว้        rdb_Empty
@@ -548,15 +583,16 @@ public class SurveyFragment extends Fragment implements View.OnClickListener, Ad
         // สภาพพื้นที่ - ปี        edit_Do_Year
         surveyBean.setArea_status_year(edit_Do_Year.getText().toString());
         // หมายเลขบัตร        edit_Card_no
-        surveyBean.setCard_no(edit_Card_no.getText().toString());
+        String idcard= edit_Card_no.getText().toString().split(" ")[0];
+        surveyBean.setCard_no(idcard);
         // ชื่อ        edit_FirstName
-        surveyBean.setFirstName(edit_FirstName.getText().toString());
+        //surveyBean.setFirstName(edit_FirstName.getText().toString());
         // นามสกุล        edt_LastName
-        surveyBean.setLastName(edt_LastName.getText().toString());
+        //surveyBean.setLastName(edt_LastName.getText().toString());
         // ประเภทบัตร        spn_CardType
-        surveyBean.setCard_type(String.valueOf(((MetaBean) spn_CardType.getSelectedItem()).getItemId()));
+        //surveyBean.setCard_type(String.valueOf(((MetaBean) spn_CardType.getSelectedItem()).getItemId()));
         // ที่อยู่        edit_Address
-        surveyBean.setAddress(edit_Address.getText().toString());
+        //surveyBean.setAddress(edit_Address.getText().toString());
 
         String owner_status = "";
         // สิทธิการถือครอง - ตนเอง        rdb_Owner
@@ -588,7 +624,7 @@ public class SurveyFragment extends Fragment implements View.OnClickListener, Ad
         surveyBean.setRemark2(edt_Staff.getText().toString());
         // ปุ่มต่อไป        btn_Next
 
-        Log.i("surveyBean", surveyBean.toString());
+        Log.i("surveyBean Save**", surveyBean.toString());
         return surveyBean;
     }
 
@@ -614,7 +650,9 @@ public class SurveyFragment extends Fragment implements View.OnClickListener, Ad
                 sb = surveyBean;
             }
 
-            surveyDataBundle.putParcelable("surveyBean", sb);
+            surveyDataBundle.putString("surveyID", sb.getSurvey_id());
+            surveyDataBundle.putString("landcode", sb.getLand_No());
+            surveyDataBundle.putString("cardno", sb.getCard_no());
             surveyDataBundle.putString("action", "update");
             Log.i("surveyBean #1", sb.toString());
 
@@ -731,7 +769,7 @@ public class SurveyFragment extends Fragment implements View.OnClickListener, Ad
             sb.setSurvey_id(surveyBeanUpdate.getSurvey_id());
             sb.setRemark1("waiting");
             //Log.i(" Update doInBackground", sb.toString());
-            long result = surveyDAO.updateSurvey1(sb);
+            long result = surveyDAO.updateSurvey(sb);
 
             return String.valueOf(result);
         }

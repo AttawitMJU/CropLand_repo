@@ -21,8 +21,7 @@
             android:id="@+id/txt_ext_project1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="6dp"
-            android:layout_toEndOf="@+id/txt_survey_date"
+            android:layout_below="@+id/txt_survey_date"
             android:padding="6dp"
             android:text="โครงการขยายผลฯ:" />
 
@@ -30,6 +29,7 @@
             android:id="@+id/txt_ext_project"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/txt_survey_date"
             android:layout_toEndOf="@+id/txt_ext_project1"
             android:paddingBottom="6dp"
             android:paddingRight="6dp"
@@ -40,7 +40,7 @@
             android:id="@+id/txt_moo1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/txt_survey_date"
+            android:layout_below="@+id/txt_ext_project1"
             android:padding="6dp"
             android:text="หมู่บ้าน:" />
 
@@ -48,7 +48,7 @@
             android:id="@+id/txt_moo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/txt_survey_date"
+            android:layout_below="@+id/txt_ext_project1"
             android:layout_toEndOf="@+id/txt_moo1"
             android:paddingBottom="6dp"
             android:paddingRight="6dp"
@@ -60,7 +60,7 @@
             android:id="@+id/txt_area1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/txt_survey_date"
+            android:layout_below="@+id/txt_ext_project1"
             android:layout_marginLeft="6dp"
             android:layout_toEndOf="@+id/txt_moo"
             android:padding="6dp"
@@ -70,7 +70,7 @@
             android:id="@+id/txt_area"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/txt_survey_date"
+            android:layout_below="@+id/txt_ext_project1"
             android:layout_toEndOf="@+id/txt_area1"
             android:paddingBottom="6dp"
             android:paddingRight="6dp"

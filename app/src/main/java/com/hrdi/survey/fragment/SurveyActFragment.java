@@ -33,6 +33,8 @@ public class SurveyActFragment extends Fragment implements View.OnClickListener{
     SurveyActivityBean activityBean;
     Activity activity;
 
+    String surveyID, landcode, cardno;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,11 +46,11 @@ public class SurveyActFragment extends Fragment implements View.OnClickListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         Bundle bundle = this.getArguments();
-        surveyBean = bundle.getParcelable("surveyBean");
 
-        Log.i("Parcelable", surveyBean.getSurvey_id());
-        Log.i("Parcelable", surveyBean.getLand_No());
-        Log.i("Parcelable", surveyBean.getCard_no());
+        surveyID = bundle.getString("surveyID");
+        landcode= bundle.getString("landcode");
+        cardno= bundle.getString("cardno");
+
 
         View rootView = inflater.inflate(R.layout.layout_survey_activitys, container, false);
 
@@ -66,9 +68,9 @@ public class SurveyActFragment extends Fragment implements View.OnClickListener{
             backToSurveyEtc();
         }else if(v == button_ok){
             activityBean = getGUI2Bean();
-            activityBean.setSurvey_id(surveyBean.getSurvey_id());
-            activityBean.setLand_No(surveyBean.getLand_No());
-            activityBean.setCard_no(surveyBean.getCard_no());
+            activityBean.setSurvey_id(surveyID);
+            activityBean.setLand_No(landcode);
+            activityBean.setCard_no(cardno);
 
             Log.i("----getGUI2Bean---", "" + activityBean.toString());
             long newID = surveyDAO.addSurveyActivity(activityBean);
@@ -97,10 +99,11 @@ public class SurveyActFragment extends Fragment implements View.OnClickListener{
         // Send parameter surveybaen to next page
         Bundle surveyDataBundle = new Bundle();
 
-        surveyDataBundle.putParcelable("surveyBean", surveyBean);
         surveyDataBundle.putString("action","update");
 
-        Log.i("surveyBean #3", surveyBean.toString());
+        surveyDataBundle.putString("surveyID", surveyID);
+        surveyDataBundle.putString("landcode", landcode);
+        surveyDataBundle.putString("cardno", cardno);
 
         fragment.setArguments(surveyDataBundle);
 

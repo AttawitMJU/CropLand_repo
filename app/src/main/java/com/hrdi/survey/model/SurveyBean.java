@@ -8,24 +8,22 @@ import java.util.ArrayList;
 /**
  * Created by attawit on 1/19/15 AD.
  */
-public class SurveyBean implements Parcelable {
+public class SurveyBean  {
 
 
-    public static final Parcelable.Creator<SurveyBean> CREATOR = new Parcelable.Creator<SurveyBean>() {
-        public SurveyBean createFromParcel(Parcel in) {
-            return new SurveyBean(in);
-        }
-
-        public SurveyBean[] newArray(int size) {
-            return new SurveyBean[size];
-        }
-    };
 
     // Attribute
     private String survey_id;
     private String land_No;
+
+    private String project_Area;
+    private String project_Area_Name;
     private String ext_Project;
     private String ext_Project_name;
+    private String project_MooBan;
+    private String project_MooBan_Name;
+
+
     private String latlong;
     private String card_no;
     private String land_doc_type;
@@ -83,75 +81,42 @@ public class SurveyBean implements Parcelable {
     private String remark2;
     private String mooban;
     private String staff;
-    private AgriculturistBean agriculturistBean;
-    private ArrayList<LandUseBean> landuseList = new ArrayList<>();
+
 
     public SurveyBean() {
         super();
     }
 
-    public SurveyBean(Parcel in) {
-        super();
-        this.survey_id = in.readString();
-        this.land_No = in.readString();
-        this.ext_Project = in.readString();
-        this.latlong = in.readString();
-        this.card_no = in.readString();
-        this.land_doc_type = in.readString();
-        this.area_status = in.readString();
-        this.area_status_year = in.readString();
-        this.firstName = in.readString();
-        this.lastName = in.readString();
-        this.card_type = in.readString();
-        this.survey_Date = in.readString();
-        this.owner_Type = in.readString();
-        this.owner_Type_Detail = in.readString();
-        this.institute_Support = in.readString();
-        this.water = in.readString();
-        this.water_Period = in.readString();
-        this.water_Use = in.readString();
-        this.soil_moisture = in.readString();
-        this.temperature = in.readString();
-        this.hasActivity = in.readString();
-        this.activity1 = in.readString();
-        this.repeat1 = in.readString();
-        this.outcome1 = in.readString();
-        this.survive1 = in.readString();
-        this.activity2 = in.readString();
-        this.repeat2 = in.readString();
-        this.outcome2 = in.readString();
-        this.survive2 = in.readString();
-        this.activity3 = in.readString();
-        this.repeat3 = in.readString();
-        this.outcome3 = in.readString();
-        this.survive3 = in.readString();
-        this.activity4 = in.readString();
-        this.repeat4 = in.readString();
-        this.outcome4 = in.readString();
-        this.survive4 = in.readString();
-        this.hasOtherSupport = in.readString();
-        this.org1 = in.readString();
-        this.org2 = in.readString();
-        this.org3 = in.readString();
-        this.problem1 = in.readString();
-        this.problem2 = in.readString();
-        this.problem3 = in.readString();
-        this.request1 = in.readString();
-        this.request2 = in.readString();
-        this.request3 = in.readString();
-        this.history = in.readString();
-        this.picture1 = in.readString();
-        this.picture2 = in.readString();
-        this.picture3 = in.readString();
-        this.update_Date = in.readString();
-        this.update_By = in.readString();
-        this.remark1 = in.readString();
-        this.remark2 = in.readString();
+    public String getProject_Area_Name() {
+        return project_Area_Name;
+    }
 
-        this.mooban = in.readString();
+    public void setProject_Area_Name(String project_Area_Name) {
+        this.project_Area_Name = project_Area_Name;
+    }
 
-        this.landuseList = in.readArrayList(LandUseBean.class.getClassLoader());
+    public String getProject_MooBan_Name() {
+        return project_MooBan_Name;
+    }
 
+    public void setProject_MooBan_Name(String project_MooBan_Name) {
+        this.project_MooBan_Name = project_MooBan_Name;
+    }
+
+    public String getProject_Area() {
+        return project_Area;
+    }
+
+    public void setProject_Area(String project_Area) {
+        this.project_Area = project_Area;
+    }
+
+    public String getProject_MooBan() {
+        return project_MooBan;
+    }
+
+    public void setProject_MooBan(String project_MooBan) {
+        this.project_MooBan = project_MooBan;
     }
 
     public String getStaff() {
@@ -202,13 +167,6 @@ public class SurveyBean implements Parcelable {
         this.mooban = mooban;
     }
 
-    public AgriculturistBean getAgriculturistBean() {
-        return agriculturistBean;
-    }
-
-    public void setAgriculturistBean(AgriculturistBean agriculturistBean) {
-        this.agriculturistBean = agriculturistBean;
-    }
 
     public String getPicture3() {
         return picture3;
@@ -242,73 +200,6 @@ public class SurveyBean implements Parcelable {
         this.picture2 = picture2;
     }
 
-    @Override
-    public String toString() {
-        final StringBuffer sb = new StringBuffer("SurveyBean{");
-        sb.append("survey_id='").append(survey_id).append('\'');
-        sb.append(", land_No='").append(land_No).append('\'');
-        sb.append(", ext_Project='").append(ext_Project).append('\'');
-        sb.append(", ext_Project_name='").append(ext_Project_name).append('\'');
-        sb.append(", latlong='").append(latlong).append('\'');
-        sb.append(", card_no='").append(card_no).append('\'');
-        sb.append(", land_doc_type='").append(land_doc_type).append('\'');
-        sb.append(", land_doc_type_name='").append(land_doc_type_name).append('\'');
-        sb.append(", area_status='").append(area_status).append('\'');
-        sb.append(", area_status_year='").append(area_status_year).append('\'');
-        sb.append(", firstName='").append(firstName).append('\'');
-        sb.append(", lastName='").append(lastName).append('\'');
-        sb.append(", card_type='").append(card_type).append('\'');
-        sb.append(", card_type_name='").append(card_type_name).append('\'');
-        sb.append(", address='").append(address).append('\'');
-        sb.append(", survey_Date='").append(survey_Date).append('\'');
-        sb.append(", owner_Type='").append(owner_Type).append('\'');
-        sb.append(", owner_Type_Detail='").append(owner_Type_Detail).append('\'');
-        sb.append(", institute_Support='").append(institute_Support).append('\'');
-        sb.append(", water='").append(water).append('\'');
-        sb.append(", water_Period='").append(water_Period).append('\'');
-        sb.append(", water_Use='").append(water_Use).append('\'');
-        sb.append(", soil_moisture='").append(soil_moisture).append('\'');
-        sb.append(", temperature='").append(temperature).append('\'');
-        sb.append(", hasActivity='").append(hasActivity).append('\'');
-        sb.append(", activity1='").append(activity1).append('\'');
-        sb.append(", repeat1='").append(repeat1).append('\'');
-        sb.append(", outcome1='").append(outcome1).append('\'');
-        sb.append(", survive1='").append(survive1).append('\'');
-        sb.append(", activity2='").append(activity2).append('\'');
-        sb.append(", repeat2='").append(repeat2).append('\'');
-        sb.append(", outcome2='").append(outcome2).append('\'');
-        sb.append(", survive2='").append(survive2).append('\'');
-        sb.append(", activity3='").append(activity3).append('\'');
-        sb.append(", repeat3='").append(repeat3).append('\'');
-        sb.append(", outcome3='").append(outcome3).append('\'');
-        sb.append(", survive3='").append(survive3).append('\'');
-        sb.append(", activity4='").append(activity4).append('\'');
-        sb.append(", repeat4='").append(repeat4).append('\'');
-        sb.append(", outcome4='").append(outcome4).append('\'');
-        sb.append(", survive4='").append(survive4).append('\'');
-        sb.append(", hasOtherSupport='").append(hasOtherSupport).append('\'');
-        sb.append(", org1='").append(org1).append('\'');
-        sb.append(", org2='").append(org2).append('\'');
-        sb.append(", org3='").append(org3).append('\'');
-        sb.append(", problem1='").append(problem1).append('\'');
-        sb.append(", problem2='").append(problem2).append('\'');
-        sb.append(", problem3='").append(problem3).append('\'');
-        sb.append(", request1='").append(request1).append('\'');
-        sb.append(", request2='").append(request2).append('\'');
-        sb.append(", request3='").append(request3).append('\'');
-        sb.append(", history='").append(history).append('\'');
-        sb.append(", picture1='").append(picture1).append('\'');
-        sb.append(", picture2='").append(picture2).append('\'');
-        sb.append(", picture3='").append(picture3).append('\'');
-        sb.append(", update_Date='").append(update_Date).append('\'');
-        sb.append(", update_By='").append(update_By).append('\'');
-        sb.append(", remark1='").append(remark1).append('\'');
-        sb.append(", remark2='").append(remark2).append('\'');
-        sb.append(", mooban='").append(mooban).append('\'');
-        sb.append(", staff='").append(staff).append('\'');
-        sb.append('}');
-        return sb.toString();
-    }
 
     @Override
     public boolean equals(Object obj) {
@@ -322,75 +213,6 @@ public class SurveyBean implements Parcelable {
         if (survey_id != other.survey_id)
             return false;
         return true;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int flags) {
-
-        parcel.writeString(this.survey_id);
-        parcel.writeString(this.land_No);
-        parcel.writeString(this.ext_Project);
-        parcel.writeString(this.latlong);
-        parcel.writeString(this.card_no);
-        parcel.writeString(this.land_doc_type);
-        parcel.writeString(this.area_status);
-        parcel.writeString(this.area_status_year);
-        parcel.writeString(this.firstName);
-        parcel.writeString(this.lastName);
-        parcel.writeString(this.card_type);
-        parcel.writeString(this.survey_Date);
-        parcel.writeString(this.owner_Type);
-        parcel.writeString(this.owner_Type_Detail);
-        parcel.writeString(this.institute_Support);
-        parcel.writeString(this.water);
-        parcel.writeString(this.water_Period);
-        parcel.writeString(this.water_Use);
-        parcel.writeString(this.soil_moisture);
-        parcel.writeString(this.temperature);
-        parcel.writeString(this.hasActivity);
-        parcel.writeString(this.activity1);
-        parcel.writeString(this.repeat1);
-        parcel.writeString(this.outcome1);
-        parcel.writeString(this.survive1);
-        parcel.writeString(this.activity2);
-        parcel.writeString(this.repeat2);
-        parcel.writeString(this.outcome2);
-        parcel.writeString(this.survive2);
-        parcel.writeString(this.activity3);
-        parcel.writeString(this.repeat3);
-        parcel.writeString(this.outcome3);
-        parcel.writeString(this.survive3);
-        parcel.writeString(this.activity4);
-        parcel.writeString(this.repeat4);
-        parcel.writeString(this.outcome4);
-        parcel.writeString(this.survive4);
-        parcel.writeString(this.hasOtherSupport);
-        parcel.writeString(this.org1);
-        parcel.writeString(this.org2);
-        parcel.writeString(this.org3);
-        parcel.writeString(this.problem1);
-        parcel.writeString(this.problem2);
-        parcel.writeString(this.problem3);
-        parcel.writeString(this.request1);
-        parcel.writeString(this.request2);
-        parcel.writeString(this.request3);
-        parcel.writeString(this.history);
-        parcel.writeString(this.picture1);
-        parcel.writeString(this.picture2);
-        parcel.writeString(this.picture3);
-        parcel.writeString(this.update_Date);
-        parcel.writeString(this.update_By);
-        parcel.writeString(this.remark1);
-        parcel.writeString(this.remark2);
-
-        parcel.writeString(this.mooban);
-
-        // parcel.writeParcelable(getDepartment(), flags);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
     }
 
     public String getCard_type() {
@@ -830,13 +652,73 @@ public class SurveyBean implements Parcelable {
         this.remark2 = remark2;
     }
 
-    public ArrayList<LandUseBean> getLanduseList() {
-        return landuseList;
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("SurveyBean{");
+        sb.append("survey_id='").append(survey_id).append('\'');
+        sb.append(", land_No='").append(land_No).append('\'');
+        sb.append(", project_Area='").append(project_Area).append('\'');
+        sb.append(", ext_Project='").append(ext_Project).append('\'');
+        sb.append(", project_MooBan='").append(project_MooBan).append('\'');
+        sb.append(", ext_Project_name='").append(ext_Project_name).append('\'');
+        sb.append(", latlong='").append(latlong).append('\'');
+        sb.append(", card_no='").append(card_no).append('\'');
+        sb.append(", land_doc_type='").append(land_doc_type).append('\'');
+        sb.append(", land_doc_type_name='").append(land_doc_type_name).append('\'');
+        sb.append(", area_status='").append(area_status).append('\'');
+        sb.append(", area_status_year='").append(area_status_year).append('\'');
+        sb.append(", firstName='").append(firstName).append('\'');
+        sb.append(", lastName='").append(lastName).append('\'');
+        sb.append(", card_type='").append(card_type).append('\'');
+        sb.append(", card_type_name='").append(card_type_name).append('\'');
+        sb.append(", address='").append(address).append('\'');
+        sb.append(", survey_Date='").append(survey_Date).append('\'');
+        sb.append(", owner_Type='").append(owner_Type).append('\'');
+        sb.append(", owner_Type_Detail='").append(owner_Type_Detail).append('\'');
+        sb.append(", institute_Support='").append(institute_Support).append('\'');
+        sb.append(", water='").append(water).append('\'');
+        sb.append(", water_Period='").append(water_Period).append('\'');
+        sb.append(", water_Use='").append(water_Use).append('\'');
+        sb.append(", soil_moisture='").append(soil_moisture).append('\'');
+        sb.append(", temperature='").append(temperature).append('\'');
+        sb.append(", hasActivity='").append(hasActivity).append('\'');
+        sb.append(", activity1='").append(activity1).append('\'');
+        sb.append(", repeat1='").append(repeat1).append('\'');
+        sb.append(", outcome1='").append(outcome1).append('\'');
+        sb.append(", survive1='").append(survive1).append('\'');
+        sb.append(", activity2='").append(activity2).append('\'');
+        sb.append(", repeat2='").append(repeat2).append('\'');
+        sb.append(", outcome2='").append(outcome2).append('\'');
+        sb.append(", survive2='").append(survive2).append('\'');
+        sb.append(", activity3='").append(activity3).append('\'');
+        sb.append(", repeat3='").append(repeat3).append('\'');
+        sb.append(", outcome3='").append(outcome3).append('\'');
+        sb.append(", survive3='").append(survive3).append('\'');
+        sb.append(", activity4='").append(activity4).append('\'');
+        sb.append(", repeat4='").append(repeat4).append('\'');
+        sb.append(", outcome4='").append(outcome4).append('\'');
+        sb.append(", survive4='").append(survive4).append('\'');
+        sb.append(", hasOtherSupport='").append(hasOtherSupport).append('\'');
+        sb.append(", org1='").append(org1).append('\'');
+        sb.append(", org2='").append(org2).append('\'');
+        sb.append(", org3='").append(org3).append('\'');
+        sb.append(", problem1='").append(problem1).append('\'');
+        sb.append(", problem2='").append(problem2).append('\'');
+        sb.append(", problem3='").append(problem3).append('\'');
+        sb.append(", request1='").append(request1).append('\'');
+        sb.append(", request2='").append(request2).append('\'');
+        sb.append(", request3='").append(request3).append('\'');
+        sb.append(", history='").append(history).append('\'');
+        sb.append(", picture1='").append(picture1).append('\'');
+        sb.append(", picture2='").append(picture2).append('\'');
+        sb.append(", picture3='").append(picture3).append('\'');
+        sb.append(", update_Date='").append(update_Date).append('\'');
+        sb.append(", update_By='").append(update_By).append('\'');
+        sb.append(", remark1='").append(remark1).append('\'');
+        sb.append(", remark2='").append(remark2).append('\'');
+        sb.append(", mooban='").append(mooban).append('\'');
+        sb.append(", staff='").append(staff).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
-
-    public void setLanduseList(ArrayList<LandUseBean> landuseList) {
-        this.landuseList = landuseList;
-    }
-
-
 }

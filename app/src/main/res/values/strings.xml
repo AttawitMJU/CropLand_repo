@@ -85,6 +85,11 @@
     <string name="meta_hormone">ยี่ห้อยา/ฮอร์โมน</string>
     <string name="selectList">เลือกรายการ</string>
 
+    <string name="act_support">ข้อมูลการส่งเสริมและสนับสนุนของหน่วยงานอื่น</string>
+    <string name="act_problem">ข้อมูลปัญหาด้านการเกษตร</string>
+    <string name="act_want">ข้อมูลความต้องการการส่งเสริมและสนับสนุนจากหน่วยงานอื่น</string>
+
+
     <!-- Test Server-->
     <string name="url_get_meta">http://202.28.37.64:8082/hrdi/hrdi_lite/get_meta.php</string>
     <string name="url_get_agri">http://202.28.37.64:8082/hrdi/hrdi_lite/get_agri.php</string>

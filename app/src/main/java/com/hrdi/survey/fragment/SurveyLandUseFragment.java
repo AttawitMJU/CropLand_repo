@@ -43,8 +43,9 @@ public class SurveyLandUseFragment extends Fragment implements AdapterView.OnIte
     SwipeMenuListView landUseListView;
     Button btn_save, btn_add;
 
+    String surveyID, landcode, cardno;
 
-    private SurveyBean surveyBean;
+    //private SurveyBean surveyBean;
 
     private GetLandUseTask task;
 
@@ -74,8 +75,12 @@ public class SurveyLandUseFragment extends Fragment implements AdapterView.OnIte
         landUseDAO = new LandUseDAO(getActivity());
 
         Bundle bundle = this.getArguments();
-        surveyBean = bundle.getParcelable("surveyBean");
+        //surveyBean = bundle.getParcelable("surveyBean");
         //Log.i("surveyBean -> Landuse", surveyBean.toString());
+        surveyID = bundle.getString("surveyID");
+        landcode= bundle.getString("landcode");
+        cardno= bundle.getString("cardno");
+
 
         findViewsById(rootView);
 
@@ -228,8 +233,10 @@ public class SurveyLandUseFragment extends Fragment implements AdapterView.OnIte
         // Send parameter surveybaen to next page
         Bundle surveyDataBundle = new Bundle();
 
-        surveyDataBundle.putParcelable("surveyBean", surveyBean);
-        Log.i("surveyBean-->Plant", surveyBean.toString());
+        surveyDataBundle.putString("surveyID", surveyID);
+        surveyDataBundle.putString("landcode", landcode);
+        surveyDataBundle.putString("cardno", cardno);
+        //Log.i("surveyBean-->Plant", surveyBean.toString());
         fragment.setArguments(surveyDataBundle);
 
         fragmentManager.beginTransaction()
@@ -290,7 +297,7 @@ public class SurveyLandUseFragment extends Fragment implements AdapterView.OnIte
         @Override
         protected ArrayList<LandUseBean> doInBackground(Void... params) {
             //Log.i("doInBackground -->", "Start" + surveyBean.getSurvey_id());
-            ArrayList<LandUseBean> landUseList = landUseDAO.getLandUseList(surveyBean.getSurvey_id());
+            ArrayList<LandUseBean> landUseList = landUseDAO.getLandUseList(surveyID);
             //Log.i("doInBackground -->", "Start" + landUseList.size());
             return landUseList;
         }

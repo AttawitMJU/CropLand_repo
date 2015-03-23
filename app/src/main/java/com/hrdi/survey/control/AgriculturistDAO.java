@@ -48,18 +48,50 @@ public class AgriculturistDAO extends HrdiDBDAO {
                 bean.setProvince_id(cursor.getString(i++));
                 bean.setZipcode(cursor.getString(i++));
 
+                bean.setProvince_name(cursor.getString(i++));
+                bean.setAmphur_name(cursor.getString(i++));
+                bean.setTambol_name(cursor.getString(i++));
+
                 //TODO: Complete Adrress Data
                 //bean.setRemark1(cursor.getString(i++));
 
             }
             cursor.close();
+            Log.i("AgriculturistBean", bean.toString());
             return bean;
 
         } catch (Exception e) {
             return null;
         }
     }
+    public String[] getIDCard() {
+        try {
+            String arrData[] = null;
 
+            String strSQL = "SELECT DISTINCT CARD_NO , FIRSTNAME, LASTNAME FROM " + AgriculturistDB.TABLE_NAME + " ORDER BY CARD_NO";
+            Cursor cursor = database.rawQuery(strSQL, null);
+            if (cursor != null) {
+                if (cursor.moveToFirst()) {
+                    arrData = new String[cursor.getCount()];
+                    /***
+                     *  [x] = Name
+                     */
+                    int i = 0;
+                    do {
+                        arrData[i] = cursor.getString(0) + "    "+cursor.getString(1) + "  "+cursor.getString(2);
+                        i++;
+                    } while (cursor.moveToNext());
+
+                }
+            }
+            cursor.close();
+
+            return arrData;
+
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
     public ArrayList<AgriculturistBean> getAllAgriculturist() {
         ArrayList<AgriculturistBean> items = new ArrayList<AgriculturistBean>();
@@ -71,6 +103,7 @@ public class AgriculturistDAO extends HrdiDBDAO {
             int i=0;
             while (cursor.moveToNext()) {
                 bean = new AgriculturistBean();
+                i=0;
                 bean.setAgriculturist_id(cursor.getString(i++));
                 bean.setCard_no(cursor.getString(i++));
                 bean.setCard_type(cursor.getString(i++));

@@ -39,7 +39,7 @@ import com.hrdi.survey.modeldb.UserDB;
 
 public class DBHelper extends SQLiteOpenHelper {
     private static final String DB_NAME = "HRDI_Lite";
-    private static final int DB_VERSION = 2;
+    private static final int DB_VERSION = 3;
     private static DBHelper instance;
 
     public DBHelper(Context context) {
@@ -55,41 +55,7 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         try {
-            db.execSQL(AgriculturistDB.getCreateSQL());
-            db.execSQL(LandDB.getCreateSQL());
-            db.execSQL(LandUseDB.getCreateSQL());
-
-            db.execSQL(MetaAmphoeDB.getCreateSQL());
-            db.execSQL(MetaCardDB.getCreateSQL());
-            db.execSQL(MetaDocDB.getCreateSQL());
-            db.execSQL(MetaExtProjectDB.getCreateSQL());
-            db.execSQL(MetaFertilizerCodeDB.getCreateSQL());
-            db.execSQL(MetaFertilizerDB.getCreateSQL());
-            db.execSQL(MetaHormoneDB.getCreateSQL());
-            db.execSQL(MetaHormoneTypeDB.getCreateSQL());
-            db.execSQL(MetaJobActivityDB.getCreateSQL());
-            db.execSQL(MetaJobSourceDB.getCreateSQL());
-            db.execSQL(MetaMarketDB.getCreateSQL());
-            db.execSQL(MetaPlantDB.getCreateSQL());
-            db.execSQL(MetaPlantDetailDB.getCreateSQL());
-            db.execSQL(MetaPlantTypeDB.getCreateSQL());
-            db.execSQL(MetaProvinceDB.getCreateSQL());
-            db.execSQL(MetaTambolDB.getCreateSQL());
-            db.execSQL(MetaUnitDB.getCreateSQL());
-            db.execSQL(MetaWaterResourceDB.getCreateSQL());
-
-            db.execSQL(SurveyDB.getCreateSQL());
-            db.execSQL(UserDB.getCreateSQL());
-
-            db.execSQL(MetaProjectAreaDB.getCreateSQL());
-            db.execSQL(MetaTitleDB.getCreateSQL());
-            db.execSQL(MetaOccupationDB.getCreateSQL());
-            db.execSQL(MetaProjectMooDB.getCreateSQL());
-
-            db.execSQL(SurveyActivityDB.getCreateSQL());
-            db.execSQL(SurveySupportDB.getCreateSQL());
-            db.execSQL(SurveyWantDB.getCreateSQL());
-            db.execSQL(SurveyProblemDB.getCreateSQL());
+            createAllTable(db);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -105,41 +71,8 @@ public class DBHelper extends SQLiteOpenHelper {
              try {
 
                  // db.execSQL("ALTER TABLE foo ADD COLUMN new_column INTEGER DEFAULT 0");
-                 db.execSQL(AgriculturistDB.getCreateSQL());
-                 db.execSQL(LandDB.getCreateSQL());
-                 db.execSQL(LandUseDB.getCreateSQL());
-
-                 db.execSQL(MetaAmphoeDB.getCreateSQL());
-                 db.execSQL(MetaCardDB.getCreateSQL());
-                 db.execSQL(MetaDocDB.getCreateSQL());
-                 db.execSQL(MetaExtProjectDB.getCreateSQL());
-                 db.execSQL(MetaFertilizerCodeDB.getCreateSQL());
-                 db.execSQL(MetaFertilizerDB.getCreateSQL());
-                 db.execSQL(MetaHormoneDB.getCreateSQL());
-                 db.execSQL(MetaHormoneTypeDB.getCreateSQL());
-                 db.execSQL(MetaJobActivityDB.getCreateSQL());
-                 db.execSQL(MetaJobSourceDB.getCreateSQL());
-                 db.execSQL(MetaMarketDB.getCreateSQL());
-                 db.execSQL(MetaPlantDB.getCreateSQL());
-                 db.execSQL(MetaPlantDetailDB.getCreateSQL());
-                 db.execSQL(MetaPlantTypeDB.getCreateSQL());
-                 db.execSQL(MetaProvinceDB.getCreateSQL());
-                 db.execSQL(MetaTambolDB.getCreateSQL());
-                 db.execSQL(MetaUnitDB.getCreateSQL());
-                 db.execSQL(MetaWaterResourceDB.getCreateSQL());
-
-                 db.execSQL(SurveyDB.getCreateSQL());
-                 db.execSQL(UserDB.getCreateSQL());
-
-                 db.execSQL(MetaProjectAreaDB.getCreateSQL());
-                 db.execSQL(MetaTitleDB.getCreateSQL());
-                 db.execSQL(MetaOccupationDB.getCreateSQL());
-                 db.execSQL(MetaProjectMooDB.getCreateSQL());
-                 
-                 db.execSQL(SurveyActivityDB.getCreateSQL());
-                 db.execSQL(SurveySupportDB.getCreateSQL());
-                 db.execSQL(SurveyWantDB.getCreateSQL());
-                 db.execSQL(SurveyProblemDB.getCreateSQL());
+                 dropAllTable(db);
+                 createAllTable(db);
 
              } catch (Exception e) {
                  e.printStackTrace();
@@ -149,7 +82,81 @@ public class DBHelper extends SQLiteOpenHelper {
 
     }
 
+    private void createAllTable(SQLiteDatabase db) {
+        db.execSQL(AgriculturistDB.getCreateSQL());
+        db.execSQL(LandDB.getCreateSQL());
+        db.execSQL(LandUseDB.getCreateSQL());
 
+        db.execSQL(MetaAmphoeDB.getCreateSQL());
+        db.execSQL(MetaCardDB.getCreateSQL());
+        db.execSQL(MetaDocDB.getCreateSQL());
+        db.execSQL(MetaExtProjectDB.getCreateSQL());
+        db.execSQL(MetaFertilizerCodeDB.getCreateSQL());
+        db.execSQL(MetaFertilizerDB.getCreateSQL());
+        db.execSQL(MetaHormoneDB.getCreateSQL());
+        db.execSQL(MetaHormoneTypeDB.getCreateSQL());
+        db.execSQL(MetaJobActivityDB.getCreateSQL());
+        db.execSQL(MetaJobSourceDB.getCreateSQL());
+        db.execSQL(MetaMarketDB.getCreateSQL());
+        db.execSQL(MetaPlantDB.getCreateSQL());
+        db.execSQL(MetaPlantDetailDB.getCreateSQL());
+        db.execSQL(MetaPlantTypeDB.getCreateSQL());
+        db.execSQL(MetaProvinceDB.getCreateSQL());
+        db.execSQL(MetaTambolDB.getCreateSQL());
+        db.execSQL(MetaUnitDB.getCreateSQL());
+        db.execSQL(MetaWaterResourceDB.getCreateSQL());
+
+        db.execSQL(SurveyDB.getCreateSQL());
+        db.execSQL(UserDB.getCreateSQL());
+
+        db.execSQL(MetaProjectAreaDB.getCreateSQL());
+        db.execSQL(MetaTitleDB.getCreateSQL());
+        db.execSQL(MetaOccupationDB.getCreateSQL());
+        db.execSQL(MetaProjectMooDB.getCreateSQL());
+
+        db.execSQL(SurveyActivityDB.getCreateSQL());
+        db.execSQL(SurveySupportDB.getCreateSQL());
+        db.execSQL(SurveyWantDB.getCreateSQL());
+        db.execSQL(SurveyProblemDB.getCreateSQL());
+    }
+
+    private void dropAllTable(SQLiteDatabase db) {
+        db.execSQL(AgriculturistDB.getDropSQL());
+        db.execSQL(LandDB.getDropSQL());
+        db.execSQL(LandUseDB.getDropSQL());
+
+        db.execSQL(MetaAmphoeDB.getDropSQL());
+        db.execSQL(MetaCardDB.getDropSQL());
+        db.execSQL(MetaDocDB.getDropSQL());
+        db.execSQL(MetaExtProjectDB.getDropSQL());
+        db.execSQL(MetaFertilizerCodeDB.getDropSQL());
+        db.execSQL(MetaFertilizerDB.getDropSQL());
+        db.execSQL(MetaHormoneDB.getDropSQL());
+        db.execSQL(MetaHormoneTypeDB.getDropSQL());
+        db.execSQL(MetaJobActivityDB.getDropSQL());
+        db.execSQL(MetaJobSourceDB.getDropSQL());
+        db.execSQL(MetaMarketDB.getDropSQL());
+        db.execSQL(MetaPlantDB.getDropSQL());
+        db.execSQL(MetaPlantDetailDB.getDropSQL());
+        db.execSQL(MetaPlantTypeDB.getDropSQL());
+        db.execSQL(MetaProvinceDB.getDropSQL());
+        db.execSQL(MetaTambolDB.getDropSQL());
+        db.execSQL(MetaUnitDB.getDropSQL());
+        db.execSQL(MetaWaterResourceDB.getDropSQL());
+
+        db.execSQL(SurveyDB.getDropSQL());
+        db.execSQL(UserDB.getDropSQL());
+
+        db.execSQL(MetaProjectAreaDB.getDropSQL());
+        db.execSQL(MetaTitleDB.getDropSQL());
+        db.execSQL(MetaOccupationDB.getDropSQL());
+        db.execSQL(MetaProjectMooDB.getDropSQL());
+
+        db.execSQL(SurveyActivityDB.getDropSQL());
+        db.execSQL(SurveySupportDB.getDropSQL());
+        db.execSQL(SurveyWantDB.getDropSQL());
+        db.execSQL(SurveyProblemDB.getDropSQL());
+    }
 
 
 }

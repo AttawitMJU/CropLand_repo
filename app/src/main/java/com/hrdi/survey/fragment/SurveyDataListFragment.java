@@ -420,7 +420,7 @@ public class SurveyDataListFragment extends Fragment
                         Log.i("surveyListSend i=", " " + count + "   id=" + sb.getSurvey_id());
                         Log.i("SurveyBean", sb.toString());
 
-                        params = surveyDAO.setBean2Parameter(sb);
+                        params = surveyDAO.setSuevey2Parameter(sb);
                         //Log.i("params sb", sb.toString());
 
                         httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
@@ -428,7 +428,7 @@ public class SurveyDataListFragment extends Fragment
                         HttpResponse response = httpclient.execute(httpPost);
 
                         String line = httpResponse2String(response);
-
+Log.e("HttpResponse Line", line);
                         // getting JSON string from URL
                         JSONObject json = new JSONObject(line);
 

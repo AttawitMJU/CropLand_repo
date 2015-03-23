@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hrdi.survey.R;
@@ -27,14 +28,17 @@ import com.hrdi.survey.model.SurveyEtcBean;
 public class SurveyRemarkFragment extends Fragment implements View.OnClickListener{
 
     EditText edt_remark;
+    TextView txt_title;
     Button button_cancel, button_ok;
 
-    SurveyBean surveyBean;
+    //SurveyBean surveyBean;
     SurveyEtcBean bean;
 
     SurveyDAO surveyDAO;
     String etcType;
     Activity activity;
+
+    String surveyID, landcode, cardno;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,13 +52,12 @@ public class SurveyRemarkFragment extends Fragment implements View.OnClickListen
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         Bundle bundle = this.getArguments();
-        surveyBean = bundle.getParcelable("surveyBean");
+        //surveyBean = bundle.getParcelable("surveyBean");
         etcType = bundle.getString("action");
 
-
-        Log.i("Parcelable", surveyBean.getSurvey_id());
-        Log.i("Parcelable", surveyBean.getLand_No());
-        Log.i("Parcelable", surveyBean.getCard_no());
+        surveyID = bundle.getString("surveyID");
+        landcode= bundle.getString("landcode");
+        cardno= bundle.getString("cardno");
 
         View rootView = inflater.inflate(R.layout.layout_remark, container, false);
 
@@ -68,9 +71,20 @@ public class SurveyRemarkFragment extends Fragment implements View.OnClickListen
 
 
     private void findView(View view) {
+        txt_title = (TextView)view.findViewById(R.id.txt_title);
         edt_remark = (EditText) view.findViewById(R.id.edt_remark);
         button_cancel = (Button) view.findViewById(R.id.button_cancel);
         button_ok = (Button) view.findViewById(R.id.button_ok);
+
+        String str = "";
+        if("support".equals(etcType))
+            str= getString(R.string.act_support);
+        else if("problem".equals(etcType))
+            str= getString(R.string.act_problem);
+        else if("want".equals(etcType))
+            str= getString(R.string.act_want);
+
+        txt_title.setText(str);
 
     }
 
@@ -88,10 +102,13 @@ public class SurveyRemarkFragment extends Fragment implements View.OnClickListen
         // Send parameter surveybaen to next page
         Bundle surveyDataBundle = new Bundle();
 
-        surveyDataBundle.putParcelable("surveyBean", surveyBean);
         surveyDataBundle.putString("action", "update");
 
-        Log.i("surveyBean #3", surveyBean.toString());
+        surveyDataBundle.putString("surveyID", surveyID);
+        surveyDataBundle.putString("landcode", landcode);
+        surveyDataBundle.putString("cardno", cardno);
+
+        //Log.i("surveyBean #3", surveyBean.toString());
 
         fragment.setArguments(surveyDataBundle);
 
@@ -107,9 +124,9 @@ public class SurveyRemarkFragment extends Fragment implements View.OnClickListen
         }else if(v == button_ok){
             bean = new SurveyEtcBean();
 
-            bean.setSurvey_id(surveyBean.getSurvey_id());
-            bean.setLand_No(surveyBean.getLand_No());
-            bean.setCard_no(surveyBean.getCard_no());
+            bean.setSurvey_id(surveyID);
+            bean.setLand_No(landcode);
+            bean.setCard_no(cardno);
             bean.setDetail(edt_remark.getText().toString());
 
 

@@ -42,6 +42,35 @@ public class AgriculturistBean implements Parcelable {
     private String remark1;
     private String remark2;
 
+    private String tambol_name;
+    private String amphur_name;
+
+    public String getProvince_name() {
+        return province_name;
+    }
+
+    public void setProvince_name(String province_name) {
+        this.province_name = province_name;
+    }
+
+    public String getAmphur_name() {
+        return amphur_name;
+    }
+
+    public void setAmphur_name(String amphur_name) {
+        this.amphur_name = amphur_name;
+    }
+
+    public String getTambol_name() {
+        return tambol_name;
+    }
+
+    public void setTambol_name(String tambol_name) {
+        this.tambol_name = tambol_name;
+    }
+
+    private String province_name;
+
     public AgriculturistBean() {
         super();
     }
@@ -95,6 +124,48 @@ public class AgriculturistBean implements Parcelable {
         if (agriculturist_id != other.agriculturist_id)
             return false;
         return true;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("AgriculturistBean{");
+        sb.append("agriculturist_id='").append(agriculturist_id).append('\'');
+        sb.append(", card_no='").append(card_no).append('\'');
+        sb.append(", card_type='").append(card_type).append('\'');
+        sb.append(", title='").append(title).append('\'');
+        sb.append(", firstname='").append(firstname).append('\'');
+        sb.append(", lastname='").append(lastname).append('\'');
+        sb.append(", picture='").append(picture).append('\'');
+        sb.append(", home_no='").append(home_no).append('\'');
+        sb.append(", moo_no='").append(moo_no).append('\'');
+        sb.append(", group_no='").append(group_no).append('\'');
+        sb.append(", village_no='").append(village_no).append('\'');
+        sb.append(", tambol_id='").append(tambol_id).append('\'');
+        sb.append(", amphur_id='").append(amphur_id).append('\'');
+        sb.append(", province_id='").append(province_id).append('\'');
+        sb.append(", zipcode='").append(zipcode).append('\'');
+        sb.append(", occupation1='").append(occupation1).append('\'');
+        sb.append(", occupation2='").append(occupation2).append('\'');
+        sb.append(", free_time='").append(free_time).append('\'');
+        sb.append(", member_all='").append(member_all).append('\'');
+        sb.append(", member_type1='").append(member_type1).append('\'');
+        sb.append(", member_type2='").append(member_type2).append('\'');
+        sb.append(", member_type3='").append(member_type3).append('\'');
+        sb.append(", income_all='").append(income_all).append('\'');
+        sb.append(", incomes1='").append(incomes1).append('\'');
+        sb.append(", incomes2='").append(incomes2).append('\'');
+        sb.append(", expenses_all='").append(expenses_all).append('\'');
+        sb.append(", expenses1='").append(expenses1).append('\'');
+        sb.append(", expenses2='").append(expenses2).append('\'');
+        sb.append(", update_date='").append(update_date).append('\'');
+        sb.append(", update_by='").append(update_by).append('\'');
+        sb.append(", remark1='").append(remark1).append('\'');
+        sb.append(", remark2='").append(remark2).append('\'');
+        sb.append(", tambol_name='").append(tambol_name).append('\'');
+        sb.append(", amphur_name='").append(amphur_name).append('\'');
+        sb.append(", province_name='").append(province_name).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
 
     @Override

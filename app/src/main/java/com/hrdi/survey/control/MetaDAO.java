@@ -192,4 +192,27 @@ public class MetaDAO extends HrdiDBDAO {
     }
 
 
+    public MetaBean getMetaByType(String id, String type) {
+        MetaBean metaBean=null;
+        try {
+            String sql  = "SELECT * FROM "+ type+" WHERE META_ID = "+id;
+
+            Cursor cursor = database.rawQuery(sql, null);
+
+
+            if (cursor.moveToNext()) {
+                metaBean = new MetaBean();
+                metaBean.setItemId(cursor.getInt(0));
+                metaBean.setItemName(cursor.getString(1));
+                metaBean.setItemRef(cursor.getString(2));
+                metaBean.setItemValue(cursor.getString(3));
+
+            }
+        } catch (Exception e) {
+            Log.e("Error getCardType", e.getMessage());
+        }
+        return metaBean;
+
+    }
+
 }

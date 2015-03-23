@@ -53,7 +53,9 @@ public class SurveyEtcFragment extends Fragment implements View.OnClickListener,
     private static final int CAMERA_CAPTURE_VIDEO_REQUEST_CODE3 = 203;
     // directory name to store captured images and videos
     private static final String IMAGE_DIRECTORY_NAME = "HRDI_Pic";
-    private static String landcode;
+
+    private static String surveyID, landcode, cardno;
+
     private Uri fileUri; // file url to store image/video
 
     //private EditText edt_org1, edt_org2, edt_org3;
@@ -73,7 +75,6 @@ public class SurveyEtcFragment extends Fragment implements View.OnClickListener,
     EtcListAdapter supportAdapter, wantAdapter, problemAdapter;
 
     private SurveyBean surveyBean;
-    private SurveyBean surveyBeanUpdate;
     private SurveyDAO surveyDAO;
     private UpdateSurveyTask task;
 
@@ -135,11 +136,10 @@ public class SurveyEtcFragment extends Fragment implements View.OnClickListener,
 
 
         Bundle bundle = this.getArguments();
-        surveyBean = bundle.getParcelable("surveyBean");
+        surveyID = bundle.getString("surveyID");
         String action = bundle.getString("action");
-
-        Log.i("surveyBean #2", surveyBean.toString());
-        landcode = surveyBean.getLand_No();
+        landcode= bundle.getString("landcode");
+        cardno= bundle.getString("cardno");
 
 
         View rootView = inflater.inflate(R.layout.fragment_survey_etc, container, false);
@@ -155,15 +155,15 @@ public class SurveyEtcFragment extends Fragment implements View.OnClickListener,
         setListeners();
 
         if ("update".equals(action)) {
-            surveyBeanUpdate = surveyDAO.getSurveyEtcByID(surveyBean.getSurvey_id());
-            Log.i("getSurveyEtcByID *** ", surveyBeanUpdate.toString());
-            setUpdateData(surveyBeanUpdate);
+            surveyBean = surveyDAO.getSurveyByID(surveyID);
+            Log.i("getSurveyEtcByID *** ", surveyBean.toString());
+            setUpdateData(surveyBean);
         }
 
-        showSurveyActivityList(surveyBean.getSurvey_id());
-        showSurveyRemarkList(surveyBean.getSurvey_id(), "support");
-        showSurveyRemarkList(surveyBean.getSurvey_id(), "problem");
-        showSurveyRemarkList(surveyBean.getSurvey_id(), "want");
+        showSurveyActivityList(surveyID);
+        showSurveyRemarkList(surveyID, "support");
+        showSurveyRemarkList(surveyID, "problem");
+        showSurveyRemarkList(surveyID, "want");
 
 
         return rootView;
@@ -226,7 +226,7 @@ public class SurveyEtcFragment extends Fragment implements View.OnClickListener,
                 act_Swipe.setAdapter(actListAdapter);
 
                 if (i > 1) {
-                    LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, i * 130);
+                    LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, i * 140);
                     linearLayout1.setLayoutParams(parms);
                 }
             } else {
@@ -383,7 +383,7 @@ public class SurveyEtcFragment extends Fragment implements View.OnClickListener,
             updateSurveyEtc();
             goNextPage();
         } else if (view == txt_activity) {
-            showSurveyActivityList(surveyBean.getSurvey_id());
+            showSurveyActivityList(surveyID);
 
         } else if (view == btn_addActivity) {
             SurveyActFragment fragment = new SurveyActFragment();
@@ -391,7 +391,9 @@ public class SurveyEtcFragment extends Fragment implements View.OnClickListener,
 
             // Send parameter surveybaen to next page
             Bundle surveyDataBundle = new Bundle();
-            surveyDataBundle.putParcelable("surveyBean", surveyBean);
+            surveyDataBundle.putString("surveyID", surveyID);
+            surveyDataBundle.putString("landcode", landcode);
+            surveyDataBundle.putString("cardno", cardno);
             fragment.setArguments(surveyDataBundle);
 
             fragmentManager.beginTransaction()
@@ -403,8 +405,10 @@ public class SurveyEtcFragment extends Fragment implements View.OnClickListener,
 
             // Send parameter surveybaen to next page
             Bundle bundle = new Bundle();
-            bundle.putParcelable("surveyBean", surveyBean);
+            bundle.putString("surveyID", surveyID);
             bundle.putString("action", "support");
+            bundle.putString("landcode", landcode);
+            bundle.putString("cardno", cardno);
             fragment.setArguments(bundle);
 
             fragmentManager.beginTransaction()
@@ -416,8 +420,10 @@ public class SurveyEtcFragment extends Fragment implements View.OnClickListener,
 
             // Send parameter surveybaen to next page
             Bundle bundle = new Bundle();
-            bundle.putParcelable("surveyBean", surveyBean);
+            bundle.putString("surveyID", surveyID);
             bundle.putString("action", "problem");
+            bundle.putString("landcode", landcode);
+            bundle.putString("cardno", cardno);
             fragment.setArguments(bundle);
 
             fragmentManager.beginTransaction()
@@ -429,8 +435,10 @@ public class SurveyEtcFragment extends Fragment implements View.OnClickListener,
 
             // Send parameter surveybaen to next page
             Bundle bundle = new Bundle();
-            bundle.putParcelable("surveyBean", surveyBean);
+            bundle.putString("surveyID", surveyID);
             bundle.putString("action", "want");
+            bundle.putString("landcode", landcode);
+            bundle.putString("cardno", cardno);
             fragment.setArguments(bundle);
 
             fragmentManager.beginTransaction()
@@ -455,7 +463,9 @@ public class SurveyEtcFragment extends Fragment implements View.OnClickListener,
         // Send parameter surveybaen to next page
         Bundle surveyDataBundle = new Bundle();
 
-        surveyDataBundle.putParcelable("surveyBean", surveyBean);
+        surveyDataBundle.putString("surveyID", surveyID);
+        surveyDataBundle.putString("landcode", landcode);
+        surveyDataBundle.putString("cardno",cardno);
         fragment.setArguments(surveyDataBundle);
 
         fragmentManager.beginTransaction()
@@ -648,7 +658,7 @@ public class SurveyEtcFragment extends Fragment implements View.OnClickListener,
         update SurveyBean Attribute with new GUI value
      */
     private void getGUI2Bean() {
-
+        surveyBean.setSurvey_id(surveyID);
 
         if (img_Preview1.getTag() != null) {
             // surveyBean.setPicture1(img_Preview1.getTag().toString());
@@ -698,8 +708,9 @@ public class SurveyEtcFragment extends Fragment implements View.OnClickListener,
 
 
             Log.i("before update ", surveyBean.toString());
-            long result = surveyDAO.updateSurveyEtc(surveyBean);
 
+            long result = surveyDAO.updateSurveyEtc(surveyBean);
+            Log.i("after update ", ""+result );
             return String.valueOf(result);
         }
     }

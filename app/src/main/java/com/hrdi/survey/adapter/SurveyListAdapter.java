@@ -9,7 +9,10 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.hrdi.survey.R;
+import com.hrdi.survey.control.MetaDAO;
 import com.hrdi.survey.model.SurveyBean;
+import com.hrdi.survey.modeldb.MetaExtProjectDB;
+import com.hrdi.survey.modeldb.MetaProjectMooDB;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -25,10 +28,12 @@ public class SurveyListAdapter extends ArrayAdapter<SurveyBean> {
     List<SurveyBean> surveyBeans;
     private Context context;
 
+
     public SurveyListAdapter(Context context, List<SurveyBean> surveyBeans) {
         super(context, R.layout.list_survey_item, surveyBeans);
         this.context = context;
         this.surveyBeans = surveyBeans;
+
     }
 
     @Override
@@ -80,9 +85,12 @@ public class SurveyListAdapter extends ArrayAdapter<SurveyBean> {
         holder.txt_land_code.setText(surveyBean.getLand_No() );
 //        holder.txt_agri_name.setText(surveyBean.getAgriculturistBean().getFirstname() + "  " + surveyBean.getAgriculturistBean().getLastname());
         holder.txt_agri_name.setText(surveyBean.getFirstName() + "  " + surveyBean.getLastName());
-        holder.txt_moo.setText(surveyBean.getMooban() );
+
+        holder.txt_moo.setText(surveyBean.getProject_MooBan_Name());
         holder.txt_area.setText(surveyBean.getArea_status());
+
         holder.txt_ext_project.setText(surveyBean.getExt_Project_name());
+
         holder.txt_status.setText(surveyBean.getRemark1());
 
         return convertView;

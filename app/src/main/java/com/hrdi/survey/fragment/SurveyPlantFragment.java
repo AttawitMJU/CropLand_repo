@@ -48,7 +48,7 @@ public class SurveyPlantFragment extends Fragment implements View.OnClickListene
     Button btn_ok;
     CreateSurveyPlantsTask task;
     int mYear, mMonth, mDay;
-    private SurveyBean surveyBean;
+    //private SurveyBean surveyBean;
     private LandUseBean landUseBean;
     // UI references
     private EditText edt_seed, edt_unit_price, edt_sum_seed, edt_crop_area, edt_crop_time1, edt_crop_time2,
@@ -67,6 +67,7 @@ public class SurveyPlantFragment extends Fragment implements View.OnClickListene
             spn_hormonetype2, spn_hormone2,
             spn_hormonetype3, spn_hormone3;
 
+    private static String surveyID, landcode, cardno;
 
     public SurveyPlantFragment() {
 
@@ -91,8 +92,11 @@ public class SurveyPlantFragment extends Fragment implements View.OnClickListene
 
         // Get parameter
         Bundle bundle = this.getArguments();
-        surveyBean = bundle.getParcelable("surveyBean");
-        Log.i("surveyBean Plant", surveyBean.toString());
+        surveyID = bundle.getString("surveyID");
+        landcode= bundle.getString("landcode");
+        cardno= bundle.getString("cardno");
+        //surveyBean = bundle.getParcelable("surveyBean");
+        //Log.i("surveyBean Plant", surveyBean.toString());
         //-----------------
 
         landUseDAO = new LandUseDAO(getActivity());
@@ -334,7 +338,7 @@ public class SurveyPlantFragment extends Fragment implements View.OnClickListene
     @Override
     public void onClick(View view) {
         if (view == btn_ok) {
-            Log.e("getGUI2Bean", surveyBean.toString());
+            //Log.e("getGUI2Bean", surveyBean.toString());
 
             landUseBean = getGUI2Bean();
             Log.e("landUseBean", landUseBean.toString());
@@ -369,10 +373,11 @@ public class SurveyPlantFragment extends Fragment implements View.OnClickListene
     private LandUseBean getGUI2Bean() {
         LandUseBean landUse = new LandUseBean();
 
-        landUse.setSurvey_ID(surveyBean.getSurvey_id());
-        landUse.setLand_No(surveyBean.getLand_No());
-        landUse.setCard_no(surveyBean.getCard_no());
-        landUse.setSurvey_Date(surveyBean.getSurvey_Date());
+        landUse.setSurvey_ID(surveyID);
+        landUse.setLand_No(landcode);
+        landUse.setCard_no(cardno);
+        //landUse.setSurvey_Date(surveyBean.getSurvey_Date());
+
         //landUse.setPlant_Year(  );
         landUse.setArea(edt_crop_area.getText().toString());
         //landUse.setHarvest_Status();
@@ -447,8 +452,9 @@ public class SurveyPlantFragment extends Fragment implements View.OnClickListene
         // Send parameter surveybaen to next page
         Bundle dataBundle = new Bundle();
 
-        dataBundle.putParcelable("surveyBean", surveyBean);
-        Log.i("surveyBean +Plant", surveyBean.toString());
+        dataBundle.putString("surveyID", surveyID);
+        dataBundle.putString("landcode", landcode);
+        dataBundle.putString("cardno", cardno);
 
         dataBundle.putParcelable("landuseBean", landUseBean);
         Log.i("landuseBean +Plant", landUseBean.toString());

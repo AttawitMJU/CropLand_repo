@@ -195,9 +195,61 @@ public class AgriculturistDB {
         sql.append(PROVINCE_ID);
         sql.append(" ,");
         sql.append(ZIPCODE);
+        sql.append(" ,");
+
+        sql.append(MetaProvinceDB.TABLE_NAME);
+        sql.append(".");
+        sql.append(MetaProvinceDB.META_NAME);
+        sql.append(" as Province_Name");
+        sql.append(" ,");
+
+        sql.append(MetaAmphoeDB.TABLE_NAME);
+        sql.append(".");
+        sql.append(MetaAmphoeDB.META_NAME);
+        sql.append(" as Amphoe_Name");
+        sql.append(" ,");
+
+        sql.append(MetaTambolDB.TABLE_NAME);
+        sql.append(".");
+        sql.append(MetaTambolDB.META_NAME);
+        sql.append(" as Tambol_Name");
 
         sql.append(" FROM ");
         sql.append(TABLE_NAME);
+
+        sql.append(" LEFT JOIN ");
+        sql.append(MetaProvinceDB.TABLE_NAME);
+        sql.append(" ON ");
+        sql.append(TABLE_NAME);
+        sql.append(".");
+        sql.append(PROVINCE_ID);
+        sql.append("=");
+        sql.append(MetaProvinceDB.TABLE_NAME);
+        sql.append(".");
+        sql.append(MetaProvinceDB.META_ID);
+
+        sql.append(" LEFT JOIN ");
+        sql.append(MetaAmphoeDB.TABLE_NAME);
+        sql.append(" ON ");
+        sql.append(TABLE_NAME);
+        sql.append(".");
+        sql.append(AMPHUR_ID);
+        sql.append("=");
+        sql.append(MetaAmphoeDB.TABLE_NAME);
+        sql.append(".");
+        sql.append(MetaAmphoeDB.META_ID);
+
+        sql.append(" LEFT JOIN ");
+        sql.append(MetaTambolDB.TABLE_NAME);
+        sql.append(" ON ");
+        sql.append(TABLE_NAME);
+        sql.append(".");
+        sql.append(TAMBOL_ID);
+        sql.append("=");
+        sql.append(MetaTambolDB.TABLE_NAME);
+        sql.append(".");
+        sql.append(MetaTambolDB.META_ID);
+
         sql.append(" WHERE ");
         sql.append(CARD_NO);
         sql.append(" = '");
