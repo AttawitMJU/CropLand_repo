@@ -95,12 +95,20 @@
     <string name="url_get_agri">http://202.28.37.64:8082/hrdi/hrdi_lite/get_agri.php</string>
     <string name="url_send_survey">http://202.28.37.64:8082/hrdi/hrdi_lite/send_survey.php</string>
     <string name="url_send_landuse">http://202.28.37.64:8082/hrdi/hrdi_lite/send_landuse.php</string>
+    <string name="url_send_activity">http://202.28.37.64:8082/hrdi/hrdi_lite/send_act.php</string>
+    <string name="url_send_detailetc">http://202.28.37.64:8082/hrdi/hrdi_lite/send_detailetc.php</string>
+
     <string name="url_upload">http://202.28.37.64:8082/hrdi/hrdi_lite/uploadFile.php</string>
 
     <!-- HRDI Server
     <string name="url_get_meta">http://growercrops.hrdi.or.th/hrdi_lite/get_meta.php</string>
+    <string name="url_get_agri">http://growercrops.hrdi.or.th/hrdi_lite/get_agri.php</string>
     <string name="url_send_survey">http://growercrops.hrdi.or.th/hrdi_lite/send_survey.php</string>
     <string name="url_send_landuse">http://growercrops.hrdi.or.th/hrdi_lite/send_landuse.php</string>
+    <string name="url_send_activity">http://growercrops.hrdi.or.th/hrdi_lite/send_act.php</string>
+    <string name="url_send_detailetc">http://growercrops.hrdi.or.th/hrdi_lite/send_detailetc.php</string>
+
+
     <string name="url_upload">http://growercrops.hrdi.or.th/hrdi_lite/uploadFile.php</string>
 -->
 </resources>

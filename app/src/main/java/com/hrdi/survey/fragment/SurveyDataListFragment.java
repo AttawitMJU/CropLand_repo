@@ -23,7 +23,9 @@ import com.hrdi.survey.R;
 import com.hrdi.survey.adapter.SurveyListAdapter;
 import com.hrdi.survey.control.SurveyDAO;
 import com.hrdi.survey.model.LandUseBean;
+import com.hrdi.survey.model.SurveyActivityBean;
 import com.hrdi.survey.model.SurveyBean;
+import com.hrdi.survey.model.SurveyDetailEtcBean;
 import com.hrdi.survey.swipemenu.SwipeMenu;
 import com.hrdi.survey.swipemenu.SwipeMenuCreator;
 import com.hrdi.survey.swipemenu.SwipeMenuItem;
@@ -313,8 +315,10 @@ public class SurveyDataListFragment extends Fragment
     public class SendSurveyTask extends AsyncTask<Void, Void, String> {
 
         private final WeakReference<Activity> activityWeakRef;
-        private List<NameValuePair> params;
+        private List<NameValuePair> paramsSurvey;
         private List<NameValuePair> paramsLandUse;
+        private List<NameValuePair> paramsActivity;
+        private List<NameValuePair> paramsDetailEtc;
 
         public SendSurveyTask(Activity context) {
             this.activityWeakRef = new WeakReference<Activity>(context);
@@ -396,6 +400,14 @@ public class SurveyDataListFragment extends Fragment
             return line;
         }
 
+        /*
+         *   Main Send Survey Data to Server call inner methods
+         *   1. Survey data
+         *   2. Land Use data
+         *   3. Activity Data
+         *   4. Support Data
+         *   5. Picture
+        */
         private String sendData() {
             jsonParser = new JSONParser();
             int count = 0;
@@ -413,28 +425,31 @@ public class SurveyDataListFragment extends Fragment
                     HttpClient httpclient = new DefaultHttpClient();
                     HttpPost httpPost = new HttpPost(getString(R.string.url_send_survey));
 
-
+                    //********************
+                    // 1. Survey data
+                    //********************
                     for (SurveyBean sb : surveyListSend) {
 
                         Log.i("========", "================");
                         Log.i("surveyListSend i=", " " + count + "   id=" + sb.getSurvey_id());
                         Log.i("SurveyBean", sb.toString());
 
-                        params = surveyDAO.setSuevey2Parameter(sb);
-                        //Log.i("params sb", sb.toString());
+                        paramsSurvey = surveyDAO.setSurvey2Parameter(sb);
+                        //Log.i("paramsSurvey sb", sb.toString());
 
-                        httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
+                        httpPost.setEntity(new UrlEncodedFormEntity(paramsSurvey, "UTF-8"));
 
                         HttpResponse response = httpclient.execute(httpPost);
 
                         String line = httpResponse2String(response);
-Log.e("HttpResponse Line", line);
+                        Log.e("HttpResponse Line", line);
                         // getting JSON string from URL
                         JSONObject json = new JSONObject(line);
 
-                        // jsonParser.getJSONFromUrl(getString(R.string.url_send_survey), params);
+                        // jsonParser.getJSONFromUrl(getString(R.string.url_send_survey), paramsSurvey);
+                        Log.i("========", "================");
                         Log.i("json-->", "" + json.toString());
-
+                        Log.i("========", "================");
                         // Checking for SUCCESS TAG
                         if (json.getString(KEY_SUCCESS) != null) {
                             String res = json.getString(KEY_SUCCESS);
@@ -446,7 +461,24 @@ Log.e("HttpResponse Line", line);
                                 surveyDAO.updateStatus(sb, KEY_SUCCESS);
 
                                 Log.i("sendLandUseData", "  " + lastID);
+                                //********************
+                                // 2. Land Use data
+                                //********************
                                 sendLandUseData(lastID, sb.getSurvey_id());
+
+
+                                //********************
+                                // 3. Activity Data
+                                //********************
+                                sendActivityData(lastID, sb.getSurvey_id());
+
+
+                                //********************
+                                // 4. Support Data
+                                //********************
+                                sendDetailEtcData(lastID, sb.getSurvey_id(), "support");
+                                sendDetailEtcData(lastID, sb.getSurvey_id(), "want");
+                                sendDetailEtcData(lastID, sb.getSurvey_id(), "problem");
                             }
                         }
 
@@ -553,8 +585,8 @@ Log.e("HttpResponse Line", line);
 
                     }
 
-                    Log.i("resCode=", Integer.toString(resCode));
-                    Log.i("resMessage=", resMessage.toString());
+                    Log.i("**** resCode=", Integer.toString(resCode));
+                    Log.i("**** resMessage=", resMessage.toString());
 
                     fileInputStream.close();
                     outputStream.flush();
@@ -604,7 +636,9 @@ Log.e("HttpResponse Line", line);
             return mediaFile;
         }
 
-
+        //********************
+        // 2. Land Use data Inner Method
+        //********************
         private void sendLandUseData(String lastID, String surveyID) {
             JSONParser jsonParser = new JSONParser();
             int statuscode;
@@ -656,8 +690,118 @@ Log.e("HttpResponse Line", line);
                 e.printStackTrace();
             }
         }
-    }
 
+        //********************
+        // 3. Activity data Inner Method
+        //********************
+        private void sendActivityData(String lastID, String surveyID) {
+            JSONParser jsonParser = new JSONParser();
+            int statuscode;
+            ArrayList<SurveyActivityBean> beans = surveyDAO.getSurveyAcitvity(surveyID);
+            Log.i("---", "---");
+            Log.i("<SurveyActivityBean>", "" + beans.size());
+            try {
+
+                statuscode = checkServerStatus(getString(R.string.url_send_activity));
+                // Log.i("statuscode", "" + statuscode+" "+getString(R.string.url_send_survey));
+                if (HttpStatus.SC_OK == statuscode) {
+
+                    HttpClient httpclient = new DefaultHttpClient();
+                    HttpPost httpPost = new HttpPost(getString(R.string.url_send_activity));
+
+
+                    for (SurveyActivityBean bean : beans) {
+
+                        bean.setSurvey_id(lastID);      // Update new ID  from MSSQL
+
+                        paramsActivity = surveyDAO.setActivity2Parameter(bean);
+                        Log.i("paramsActivity", paramsActivity.toString());
+
+
+                        httpPost.setEntity(new UrlEncodedFormEntity(paramsActivity, "UTF-8"));
+
+                        HttpResponse response = httpclient.execute(httpPost);
+
+                        String line = httpResponse2String(response);
+                        Log.i("httpResponse2String -->", line);
+
+                        // getting JSON string from URL
+                        JSONObject json = new JSONObject(line);
+
+
+                        // Checking for SUCCESS TAG
+                        if (json.getString(KEY_SUCCESS) != null) {
+                            String res = json.getString(KEY_SUCCESS);
+                            if (Integer.parseInt(res) == 1) {
+                                // send data success
+
+                            }
+                        }
+                    }
+
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+
+        //********************
+        // 4. Support data Inner Method
+        //********************
+        private void sendDetailEtcData(String lastID, String surveyID, String etcType) {
+            JSONParser jsonParser = new JSONParser();
+            int statuscode;
+            ArrayList<SurveyDetailEtcBean> beans = surveyDAO.getSurveyEtc(surveyID, etcType);
+            Log.i("---", "---");
+            Log.i("<SurveyDetailEtcBean>", "" + beans.size());
+            try {
+
+                statuscode = checkServerStatus(getString(R.string.url_send_detailetc));
+                // Log.i("statuscode", "" + statuscode+" "+getString(R.string.url_send_survey));
+                if (HttpStatus.SC_OK == statuscode) {
+
+                    HttpClient httpclient = new DefaultHttpClient();
+                    HttpPost httpPost = new HttpPost(getString(R.string.url_send_detailetc) + "?etctype=" + etcType);
+
+
+                    for (SurveyDetailEtcBean bean : beans) {
+
+                        bean.setSurvey_id(lastID);      // Update new ID  from MSSQL
+
+                        paramsDetailEtc = surveyDAO.setDetailEtc2Parameter(bean);
+                        Log.i("paramsDetailEtc", paramsDetailEtc.toString());
+
+
+                        httpPost.setEntity(new UrlEncodedFormEntity(paramsDetailEtc, "UTF-8"));
+
+                        HttpResponse response = httpclient.execute(httpPost);
+
+                        String line = httpResponse2String(response);
+                        Log.i("httpResponse2String -->", line);
+
+                        // getting JSON string from URL
+                        JSONObject json = new JSONObject(line);
+
+
+                        // Checking for SUCCESS TAG
+                        if (json.getString(KEY_SUCCESS) != null) {
+                            String res = json.getString(KEY_SUCCESS);
+                            if (Integer.parseInt(res) == 1) {
+                                // send data success
+
+                            }
+                        }
+                    }
+
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+    }
 
     public class GetSurveyTask extends AsyncTask<Void, Void, ArrayList<SurveyBean>> {
 

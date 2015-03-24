@@ -433,8 +433,8 @@ public class LandUseDB {
         sql.append(",");
         sql.append(LandUseDB.HORMONE_SUM3);
         sql.append(",");
-        sql.append(LandUseDB.UPDATE_DATE);
-        sql.append(",");
+        //sql.append(LandUseDB.UPDATE_DATE);
+        //sql.append(",");
         sql.append(LandUseDB.UPDATE_BY);
         sql.append(",");
         sql.append(LandUseDB.REMARK1);

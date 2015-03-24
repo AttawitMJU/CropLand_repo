@@ -9,21 +9,20 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.hrdi.survey.R;
-import com.hrdi.survey.model.SurveyActivityBean;
-import com.hrdi.survey.model.SurveyEtcBean;
+import com.hrdi.survey.model.SurveyDetailEtcBean;
 
 import java.util.List;
 
 /**
  * Created by attawit on 2/1/15 AD.
  */
-public class EtcListAdapter extends ArrayAdapter<SurveyEtcBean> {
+public class EtcListAdapter extends ArrayAdapter<SurveyDetailEtcBean> {
 
 
-    List<SurveyEtcBean> surveyEtcList;
+    List<SurveyDetailEtcBean> surveyEtcList;
     private Context context;
 
-    public EtcListAdapter(Context context, List<SurveyEtcBean> beans) {
+    public EtcListAdapter(Context context, List<SurveyDetailEtcBean> beans) {
         super(context, R.layout.list_survey_activity, beans);
         this.context = context;
         this.surveyEtcList = beans;
@@ -35,7 +34,7 @@ public class EtcListAdapter extends ArrayAdapter<SurveyEtcBean> {
     }
 
     @Override
-    public SurveyEtcBean getItem(int position) {
+    public SurveyDetailEtcBean getItem(int position) {
         return surveyEtcList.get(position);
     }
 
@@ -62,7 +61,7 @@ public class EtcListAdapter extends ArrayAdapter<SurveyEtcBean> {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        SurveyEtcBean bean = (SurveyEtcBean) getItem(position);
+        SurveyDetailEtcBean bean = (SurveyDetailEtcBean) getItem(position);
         holder.txt_detail.setText(bean.getDetail());
 
 
@@ -71,14 +70,14 @@ public class EtcListAdapter extends ArrayAdapter<SurveyEtcBean> {
     }
 
     @Override
-    public void add(SurveyEtcBean surveyBean) {
+    public void add(SurveyDetailEtcBean surveyBean) {
         surveyEtcList.add(surveyBean);
         notifyDataSetChanged();
         super.add(surveyBean);
     }
 
     @Override
-    public void remove(SurveyEtcBean surveyBean) {
+    public void remove(SurveyDetailEtcBean surveyBean) {
         surveyEtcList.remove(surveyBean);
         notifyDataSetChanged();
         super.remove(surveyBean);

@@ -3,7 +3,7 @@ package com.hrdi.survey.model;
 /**
  * Created by attawit on 1/19/15 AD.
  */
-public class SurveyEtcBean {
+public class SurveyDetailEtcBean {
 
 
     // Attribute
@@ -15,7 +15,7 @@ public class SurveyEtcBean {
     private String update_Date;
     private String update_By;
 
-    public SurveyEtcBean() {
+    public SurveyDetailEtcBean() {
 
     }
 
@@ -28,7 +28,7 @@ public class SurveyEtcBean {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        SurveyEtcBean other = (SurveyEtcBean) obj;
+        SurveyDetailEtcBean other = (SurveyDetailEtcBean) obj;
         if (etc_id != other.etc_id)
             return false;
         return true;

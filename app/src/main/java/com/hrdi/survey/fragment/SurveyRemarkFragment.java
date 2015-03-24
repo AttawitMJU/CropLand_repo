@@ -1,11 +1,7 @@
 package com.hrdi.survey.fragment;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -19,8 +15,7 @@ import android.widget.Toast;
 
 import com.hrdi.survey.R;
 import com.hrdi.survey.control.SurveyDAO;
-import com.hrdi.survey.model.SurveyBean;
-import com.hrdi.survey.model.SurveyEtcBean;
+import com.hrdi.survey.model.SurveyDetailEtcBean;
 
 /**
  * Created by attawit on 3/16/15 AD.
@@ -32,7 +27,7 @@ public class SurveyRemarkFragment extends Fragment implements View.OnClickListen
     Button button_cancel, button_ok;
 
     //SurveyBean surveyBean;
-    SurveyEtcBean bean;
+    SurveyDetailEtcBean bean;
 
     SurveyDAO surveyDAO;
     String etcType;
@@ -122,7 +117,7 @@ public class SurveyRemarkFragment extends Fragment implements View.OnClickListen
         if(v == button_cancel){
             backToSurveyEtc();
         }else if(v == button_ok){
-            bean = new SurveyEtcBean();
+            bean = new SurveyDetailEtcBean();
 
             bean.setSurvey_id(surveyID);
             bean.setLand_No(landcode);

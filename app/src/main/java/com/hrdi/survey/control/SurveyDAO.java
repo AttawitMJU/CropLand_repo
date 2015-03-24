@@ -8,7 +8,7 @@ import android.util.Log;
 import com.hrdi.survey.model.LandUseBean;
 import com.hrdi.survey.model.SurveyActivityBean;
 import com.hrdi.survey.model.SurveyBean;
-import com.hrdi.survey.model.SurveyEtcBean;
+import com.hrdi.survey.model.SurveyDetailEtcBean;
 import com.hrdi.survey.modeldb.LandUseDB;
 import com.hrdi.survey.modeldb.MetaExtProjectDB;
 import com.hrdi.survey.modeldb.MetaProjectAreaDB;
@@ -121,7 +121,7 @@ public class SurveyDAO extends HrdiDBDAO {
         return newID;
     }
 
-    public long addSurveyEtc(SurveyEtcBean survey, String etcType) {
+    public long addSurveyEtc(SurveyDetailEtcBean survey, String etcType) {
 
         Log.i("addSurveyEtc", "addSurveyEtc...." + etcType);
         ContentValues values;
@@ -140,7 +140,7 @@ public class SurveyDAO extends HrdiDBDAO {
         return newID;
     }
 
-    private ContentValues putValueSurveyEtc(SurveyEtcBean survey) {
+    private ContentValues putValueSurveyEtc(SurveyDetailEtcBean survey) {
         ContentValues values = new ContentValues();
         values.put(SurveySupportDB.SURVEY_ID, survey.getSurvey_id());
         values.put(SurveySupportDB.LAND_NO, survey.getLand_No());
@@ -152,6 +152,56 @@ public class SurveyDAO extends HrdiDBDAO {
         return values;
     }
 
+
+    public List<NameValuePair> setSurvey2Parameter(SurveyBean survey) {
+        // Building Parameters
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("tag", "AddSurvey"));
+
+        params.add(new BasicNameValuePair(SurveyDB.SURVEY_ID, survey.getSurvey_id()));
+        params.add(new BasicNameValuePair(SurveyDB.LAND_NO, survey.getLand_No()));
+        params.add(new BasicNameValuePair(SurveyDB.CARD_NO, survey.getCard_no()));
+
+        params.add(new BasicNameValuePair(SurveyDB.SURVEY_DATE, survey.getSurvey_Date()));
+        params.add(new BasicNameValuePair(SurveyDB.LATLONG, survey.getLatlong()));
+
+        params.add(new BasicNameValuePair(SurveyDB.PROJECT_AREA, survey.getProject_Area()));
+        params.add(new BasicNameValuePair(SurveyDB.EXT_PROJECT, survey.getExt_Project()));
+        params.add(new BasicNameValuePair(SurveyDB.PROJECT_MOOBAN, survey.getProject_MooBan()));
+
+        params.add(new BasicNameValuePair(SurveyDB.LAND_DOC_TYPE, survey.getLand_doc_type()));
+        params.add(new BasicNameValuePair(SurveyDB.AREA_STATUS, survey.getArea_status()));
+        params.add(new BasicNameValuePair(SurveyDB.AREA_STATUS_YEAR, survey.getArea_status_year()));
+
+
+        params.add(new BasicNameValuePair(SurveyDB.HISTORY, survey.getHistory()));
+
+        params.add(new BasicNameValuePair(SurveyDB.OWNER_TYPE, survey.getOwner_Type()));
+        params.add(new BasicNameValuePair(SurveyDB.OWNER_TYPE_DETAIL, survey.getOwner_Type_Detail()));
+
+        params.add(new BasicNameValuePair(SurveyDB.INSTITUTE_SUPPORT, survey.getInstitute_Support()));
+        params.add(new BasicNameValuePair(SurveyDB.WATER, survey.getWater()));
+        params.add(new BasicNameValuePair(SurveyDB.WATER_PERIOD, survey.getWater_Period()));
+        params.add(new BasicNameValuePair(SurveyDB.WATER_USE, survey.getWater_Use()));
+        params.add(new BasicNameValuePair(SurveyDB.SOIL_MOISTURE, survey.getSoil_moisture()));
+        params.add(new BasicNameValuePair(SurveyDB.TEMPERATURE, survey.getTemperature()));
+        params.add(new BasicNameValuePair(SurveyDB.HASACTIVITY, survey.getHasActivity()));
+
+        params.add(new BasicNameValuePair(SurveyDB.HASOTHERSUPPORT, survey.getHasOtherSupport()));
+
+        params.add(new BasicNameValuePair(SurveyDB.PICTURE1, survey.getPicture1()));
+        params.add(new BasicNameValuePair(SurveyDB.PICTURE2, survey.getPicture2()));
+        params.add(new BasicNameValuePair(SurveyDB.PICTURE3, survey.getPicture3()));
+
+        params.add(new BasicNameValuePair(SurveyDB.UPDATE_BY, survey.getUpdate_By()));
+        params.add(new BasicNameValuePair(SurveyDB.UPDATE_DATE, survey.getUpdate_Date()));
+        params.add(new BasicNameValuePair(SurveyDB.REMARK1, survey.getRemark1()));
+        params.add(new BasicNameValuePair(SurveyDB.REMARK2, survey.getRemark2()));
+
+        Log.i("params", params.toString());
+
+        return params;
+    }
 
     public List<NameValuePair> setLandUse2Parameter(LandUseBean bean) {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -227,52 +277,30 @@ public class SurveyDAO extends HrdiDBDAO {
         return params;
     }
 
-    public List<NameValuePair> setSuevey2Parameter(SurveyBean survey) {
-        // Building Parameters
+    public List<NameValuePair> setActivity2Parameter(SurveyActivityBean bean) {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
-        params.add(new BasicNameValuePair("tag", "AddSurvey"));
+        params.add(new BasicNameValuePair("tag", "AddActivity"));
 
-        params.add(new BasicNameValuePair(SurveyDB.SURVEY_ID, survey.getSurvey_id()));
-        params.add(new BasicNameValuePair(SurveyDB.LAND_NO, survey.getLand_No()));
-        params.add(new BasicNameValuePair(SurveyDB.CARD_NO, survey.getCard_no()));
+        params.add(new BasicNameValuePair(SurveyActivityDB.SURVEY_ID, bean.getSurvey_id()));
+        params.add(new BasicNameValuePair(SurveyActivityDB.LAND_NO, bean.getLand_No()));
+        params.add(new BasicNameValuePair(SurveyActivityDB.CARD_NO, bean.getCard_no()));
+        params.add(new BasicNameValuePair(SurveyActivityDB.ACTIVITY1, bean.getActivity1()));
+        params.add(new BasicNameValuePair(SurveyActivityDB.REPEAT1, bean.getRepeat1()));
+        params.add(new BasicNameValuePair(SurveyActivityDB.OUTCOME1, bean.getOutcome1()));
+        params.add(new BasicNameValuePair(SurveyActivityDB.SURVIVE1, bean.getSurvive1()));
+        params.add(new BasicNameValuePair(SurveyActivityDB.UPDATE_DATE, bean.getUpdate_Date()));
 
-        params.add(new BasicNameValuePair(SurveyDB.SURVEY_DATE, survey.getSurvey_Date()));
-        params.add(new BasicNameValuePair(SurveyDB.LATLONG, survey.getLatlong()));
+        return params;
+    }
 
-        params.add(new BasicNameValuePair(SurveyDB.PROJECT_AREA, survey.getProject_Area()));
-        params.add(new BasicNameValuePair(SurveyDB.EXT_PROJECT, survey.getExt_Project()));
-        params.add(new BasicNameValuePair(SurveyDB.PROJECT_MOOBAN, survey.getProject_MooBan()));
+    public List<NameValuePair> setDetailEtc2Parameter(SurveyDetailEtcBean bean) {
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("tag", "AddActivity"));
 
-        params.add(new BasicNameValuePair(SurveyDB.LAND_DOC_TYPE, survey.getLand_doc_type()));
-        params.add(new BasicNameValuePair(SurveyDB.AREA_STATUS, survey.getArea_status()));
-        params.add(new BasicNameValuePair(SurveyDB.AREA_STATUS_YEAR, survey.getArea_status_year()));
-
-
-        params.add(new BasicNameValuePair(SurveyDB.HISTORY, survey.getHistory()));
-
-        params.add(new BasicNameValuePair(SurveyDB.OWNER_TYPE, survey.getOwner_Type()));
-        params.add(new BasicNameValuePair(SurveyDB.OWNER_TYPE_DETAIL, survey.getOwner_Type_Detail()));
-
-        params.add(new BasicNameValuePair(SurveyDB.INSTITUTE_SUPPORT, survey.getInstitute_Support()));
-        params.add(new BasicNameValuePair(SurveyDB.WATER, survey.getWater()));
-        params.add(new BasicNameValuePair(SurveyDB.WATER_PERIOD, survey.getWater_Period()));
-        params.add(new BasicNameValuePair(SurveyDB.WATER_USE, survey.getWater_Use()));
-        params.add(new BasicNameValuePair(SurveyDB.SOIL_MOISTURE, survey.getSoil_moisture()));
-        params.add(new BasicNameValuePair(SurveyDB.TEMPERATURE, survey.getTemperature()));
-        params.add(new BasicNameValuePair(SurveyDB.HASACTIVITY, survey.getHasActivity()));
-
-        params.add(new BasicNameValuePair(SurveyDB.HASOTHERSUPPORT, survey.getHasOtherSupport()));
-
-        params.add(new BasicNameValuePair(SurveyDB.PICTURE1, survey.getPicture1()));
-        params.add(new BasicNameValuePair(SurveyDB.PICTURE2, survey.getPicture2()));
-        params.add(new BasicNameValuePair(SurveyDB.PICTURE3, survey.getPicture3()));
-
-        params.add(new BasicNameValuePair(SurveyDB.UPDATE_BY, survey.getUpdate_By()));
-        params.add(new BasicNameValuePair(SurveyDB.UPDATE_DATE, survey.getUpdate_Date()));
-        params.add(new BasicNameValuePair(SurveyDB.REMARK1, survey.getRemark1()));
-        params.add(new BasicNameValuePair(SurveyDB.REMARK2, survey.getRemark2()));
-
-        Log.i("params", params.toString());
+        params.add(new BasicNameValuePair(SurveySupportDB.SURVEY_ID, bean.getSurvey_id()));
+        params.add(new BasicNameValuePair(SurveySupportDB.LAND_NO, bean.getLand_No()));
+        params.add(new BasicNameValuePair(SurveySupportDB.DETAIL, bean.getDetail()));
+        params.add(new BasicNameValuePair(SurveyActivityDB.UPDATE_DATE, bean.getUpdate_Date()));
 
         return params;
     }
@@ -383,6 +411,10 @@ public class SurveyDAO extends HrdiDBDAO {
             bean.setOutcome1(cursor.getString(i++));
             bean.setSurvive1(cursor.getString(i++));
 
+            Date date = new Date();
+            bean.setUpdate_Date(dateTimeFormatter.format(date));
+
+
             surveyBeanArrayList.add(bean);
         }
         cursor.close();
@@ -390,8 +422,8 @@ public class SurveyDAO extends HrdiDBDAO {
     }
 
 
-    public ArrayList<SurveyEtcBean> getSurveyEtc(String surveyID, String etcType) {
-        ArrayList<SurveyEtcBean> etcList = new ArrayList<>();
+    public ArrayList<SurveyDetailEtcBean> getSurveyEtc(String surveyID, String etcType) {
+        ArrayList<SurveyDetailEtcBean> etcList = new ArrayList<>();
         String query = "";
         if ("support".equals(etcType)) {
             query = SurveySupportDB.getSelectSQLAllDetail(surveyID);
@@ -406,14 +438,14 @@ public class SurveyDAO extends HrdiDBDAO {
         Cursor cursor = database.rawQuery(query, null);
         while (cursor.moveToNext()) {
             i = 0;
-            SurveyEtcBean bean = new SurveyEtcBean();
+            SurveyDetailEtcBean bean = new SurveyDetailEtcBean();
             bean.setEtc_id(String.valueOf(cursor.getInt(i++)));
             bean.setSurvey_id(String.valueOf(cursor.getInt(i++)));
             bean.setLand_No(cursor.getString(i++));
             //bean.setCard_no(cursor.getString(i++));
             bean.setDetail(cursor.getString(i++));
 
-            Log.i("SurveyEtcBean", bean.toString());
+            //Log.i("SurveyEtcBean", bean.toString());
             etcList.add(bean);
         }
         cursor.close();
@@ -493,8 +525,21 @@ public class SurveyDAO extends HrdiDBDAO {
             landUseBean.setLabour_Paid(String.valueOf(cursor.getString(i++)));
             landUseBean.setLabour_Time(String.valueOf(cursor.getString(i++)));
 
-            landUseBean.setStart_crop(String.valueOf(cursor.getString(i++)));
-            landUseBean.setEnd_crop(String.valueOf(cursor.getString(i++)));
+
+            try {
+                String oldString = cursor.getString(i++);
+                Date d = new SimpleDateFormat("d/M/yyyy").parse(oldString);
+                String newstring = new SimpleDateFormat("yyyy-MM-dd").format(d);
+                landUseBean.setStart_crop(newstring);
+
+                oldString = cursor.getString(i++);
+                d = new SimpleDateFormat("d/M/yyyy").parse(oldString);
+                newstring = new SimpleDateFormat("yyyy-MM-dd").format(d);
+                landUseBean.setEnd_crop(newstring);
+
+            } catch (Exception e) {
+
+            }
             landUseBean.setPlant_Type(String.valueOf(cursor.getString(i++)));
             landUseBean.setPlant_id(String.valueOf(cursor.getString(i++)));
             landUseBean.setPlant_detail_id(String.valueOf(cursor.getString(i++)));
@@ -531,10 +576,12 @@ public class SurveyDAO extends HrdiDBDAO {
             landUseBean.setHormone_sum2(String.valueOf(cursor.getString(i++)));
             landUseBean.setHormone_sum3(String.valueOf(cursor.getString(i++)));
 
-            landUseBean.setUpdate_Date(String.valueOf(cursor.getString(i++)));
             landUseBean.setUpdate_By(String.valueOf(cursor.getString(i++)));
             landUseBean.setRemark1(String.valueOf(cursor.getString(i++)));
             landUseBean.setRemark2(String.valueOf(cursor.getString(i++)));
+
+            Date date = new Date();
+            landUseBean.setUpdate_Date(dateTimeFormatter.format(date));
 
             landUseBeans.add(landUseBean);
         }
@@ -561,7 +608,7 @@ public class SurveyDAO extends HrdiDBDAO {
                 Date d = new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(oldStringDate);
                 String newstring = new SimpleDateFormat("yyyy-MM-dd").format(d);
                 surveyBean.setSurvey_Date(newstring);
-            }catch(Exception e){
+            } catch (Exception e) {
 
             }
             surveyBean.setLand_No(cursor.getString(i++));

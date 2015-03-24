@@ -29,7 +29,7 @@ import com.hrdi.survey.adapter.EtcListAdapter;
 import com.hrdi.survey.control.SurveyDAO;
 import com.hrdi.survey.model.SurveyActivityBean;
 import com.hrdi.survey.model.SurveyBean;
-import com.hrdi.survey.model.SurveyEtcBean;
+import com.hrdi.survey.model.SurveyDetailEtcBean;
 import com.hrdi.survey.swipemenu.SwipeMenu;
 import com.hrdi.survey.swipemenu.SwipeMenuListView;
 
@@ -172,7 +172,7 @@ public class SurveyEtcFragment extends Fragment implements View.OnClickListener,
     private int showSurveyRemarkList(String surveyID, String etc) {
         int i = 0;
         Log.i("surveyID", "showSurveyRemarkList....." + surveyID);
-        ArrayList<SurveyEtcBean> etcList = surveyDAO.getSurveyEtc(surveyID, etc);
+        ArrayList<SurveyDetailEtcBean> etcList = surveyDAO.getSurveyEtc(surveyID, etc);
         Log.i("surveyList", "showSurveyRemarkList....." + etcList.size());
         if (etcList != null) {
             if (etcList.size() != 0) {
