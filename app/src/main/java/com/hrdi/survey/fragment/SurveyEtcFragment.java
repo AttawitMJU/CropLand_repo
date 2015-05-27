@@ -663,15 +663,17 @@ public class SurveyEtcFragment extends Fragment implements View.OnClickListener,
         if (img_Preview1.getTag() != null) {
             // surveyBean.setPicture1(img_Preview1.getTag().toString());
             surveyBean.setPicture1("IMG_" + landcode + "_1" + ".jpg");
+            Log.i("img_Preview1.getTag()", surveyBean.getPicture1());
         }
         if (img_Preview2.getTag() != null) {
             //surveyBean.setPicture2(img_Preview2.getTag().toString());
-            surveyBean.setPicture1("IMG_" + landcode + "_2" + ".jpg");
+            surveyBean.setPicture2("IMG_" + landcode + "_2" + ".jpg");
         }
         if (img_Preview3.getTag() != null) {
             //surveyBean.setPicture3(img_Preview3.getTag().toString());
-            surveyBean.setPicture1("IMG_" + landcode + "_3" + ".jpg");
+            surveyBean.setPicture3("IMG_" + landcode + "_3" + ".jpg");
         }
+
 
     }
 
@@ -711,6 +713,9 @@ public class SurveyEtcFragment extends Fragment implements View.OnClickListener,
 
             long result = surveyDAO.updateSurveyEtc(surveyBean);
             Log.i("after update ", ""+result );
+
+            SurveyBean surveyBeanXX = surveyDAO.getSurveyByID(surveyBean.getSurvey_id());
+            Log.i("after update ", ""+surveyBeanXX.toString() );
             return String.valueOf(result);
         }
     }

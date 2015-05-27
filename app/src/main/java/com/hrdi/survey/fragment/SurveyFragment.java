@@ -46,6 +46,7 @@ import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -56,8 +57,12 @@ public class SurveyFragment extends Fragment implements View.OnClickListener, Ad
 
     private static final SimpleDateFormat dateFormatter = new SimpleDateFormat(
             "yyyy/MM/dd", Locale.ENGLISH);
+
+    private static final SimpleDateFormat dateFormatterShow = new SimpleDateFormat(
+            "d/M/yyyy", Locale.ENGLISH);
+
     private static final SimpleDateFormat dateTimeFormatter = new SimpleDateFormat(
-            "yyyy/MM/dd/HH:mm:ss", Locale.ENGLISH);
+            "yyyy-MM-dd  HH:mm:ss", Locale.ENGLISH);
 
     public static String survey_id = "";
 
@@ -74,7 +79,7 @@ public class SurveyFragment extends Fragment implements View.OnClickListener, Ad
     Button btn_Save, btn_Next;
     TextClock txt_DataTime;
 
-    ArrayAdapter<MetaBean> cardDataAdapter, docDataAdapter, extProjectDataAdapter, projectAreaDataAdapter, waterDataAdapter;
+    ArrayAdapter<MetaBean> cardDataAdapter, docDataAdapter, extProjectDataAdapter, projectAreaDataAdapter, projectMooBanDataAdapter, waterDataAdapter;
 
     private SurveyDAO surveyDAO;
     private AgriculturistDAO agriculturistDAO;
@@ -176,14 +181,25 @@ public class SurveyFragment extends Fragment implements View.OnClickListener, Ad
     private void setUpdateData(SurveyBean surveyBean) {
         MetaBean metaBean;
         //txt_hidden_id.setText(surveyBean.getSurvey_id());
-        edt_Land_No.setText(surveyBean.getLand_No());
+        Log.i("surveyBeanUpdate#2 ??", surveyBean.toString());
 
-        // Log.i("MetaBean",surveyBean.getExt_Project()+":"+surveyBean.getExt_Project_name());
-        metaBean = new MetaBean(Integer.parseInt(surveyBean.getExt_Project()), surveyBean.getExt_Project_name());
+
+        metaBean = metaDAO.getMetaByType(surveyBean.getProject_Area(), MetaProjectAreaDB.TABLE_NAME);
+        spn_projectArea.setSelection(projectAreaDataAdapter.getPosition(metaBean));
+
+        metaBean = metaDAO.getMetaByType(surveyBean.getExt_Project(), MetaExtProjectDB.TABLE_NAME);
+        Log.i("getExt_Project# ??", metaBean.toString()+"   "+extProjectDataAdapter.getPosition(metaBean));
         spn_extProject.setSelection(extProjectDataAdapter.getPosition(metaBean));
 
-        //่ หมู่บ้าน    spn_Moo
-        //spn_Moo.setText(surveyBean.getMooban());
+        try {
+            metaBean = metaDAO.getMetaByType(surveyBean.getProject_MooBan(), MetaProjectMooDB.TABLE_NAME);
+            Log.i("getProject_MooBan# ??", metaBean.toString() + "   " + projectMooBanDataAdapter.getPosition(metaBean));
+            spn_Moo.setSelection(projectMooBanDataAdapter.getPosition(metaBean));
+        }catch (Exception e){
+
+        }
+        Log.i("getLand_No#2 ??", surveyBean.getLand_No());
+        edt_Land_No.setText(surveyBean.getLand_No());
 
         edt_LATITUDE.setText(surveyBean.getLatlong());
 
@@ -194,6 +210,13 @@ public class SurveyFragment extends Fragment implements View.OnClickListener, Ad
         if (surveyBean.getLand_doc_type() != null) {
             metaBean = new MetaBean(Integer.parseInt(surveyBean.getLand_doc_type()), surveyBean.getLand_doc_type_name());
             spn_LandDoc_Type.setSelection(docDataAdapter.getPosition(metaBean));
+        }
+
+        if (surveyBean.getWater() != null) {
+            metaBean = metaDAO.getMetaByType(surveyBean.getWater(), MetaWaterResourceDB.TABLE_NAME);
+           // Log.i("getWater# ??", surveyBean.getWater() +"  "+ metaBean.toString()+"   "+ waterDataAdapter.getPosition(metaBean));
+            //+"   "+waterDataAdapter.getPosition(metaBean)
+            spn_water.setSelection(waterDataAdapter.getPosition(metaBean));
         }
 
         // สภาพพื้นที่ - ทำปีปัจจุบัน        rdb_Do_Current_Year
@@ -208,23 +231,46 @@ public class SurveyFragment extends Fragment implements View.OnClickListener, Ad
 
         // สภาพพื้นที่ - ปี        edit_Do_Year
         edit_Do_Year.setText(surveyBean.getArea_status_year());
+
+        AgriculturistBean farmer =  agriculturistDAO.getPerson(surveyBean.getCard_no());
         // หมายเลขบัตร        edit_Card_no
-        edit_Card_no.setText(surveyBean.getCard_no());
+        edit_Card_no.setText(surveyBean.getCard_no() + "    " + farmer.getFirstname() + " " + farmer.getLastname());
         // ชื่อ        edit_FirstName
-        edit_FirstName.setText(surveyBean.getFirstName());
+        edit_FirstName.setText(farmer.getFirstname());
         // นามสกุล        edt_LastName
-        edt_LastName.setText(surveyBean.getLastName());
+        edt_LastName.setText(farmer.getLastname());
 
-        edt_CardType.setText(surveyBean.getCard_type_name());
-        // ประเภทบัตร        spn_CardType
-        //Log.i("getCard_type", surveyBean.getCard_type());
-        //if (surveyBean.getCard_type() != null) {
-        //    metaBean = new MetaBean(Integer.parseInt(surveyBean.getCard_type()), surveyBean.getCard_type_name());
-        //    spn_CardType.setSelection(cardDataAdapter.getPosition(metaBean));
-        //}
+        if (farmer.getCard_type() != null) {
+            //MetaBean metaBean = new MetaBean(Integer.parseInt(bean.getCard_type()), null);
+            MetaBean mBean = metaDAO.getMetaByType(farmer.getCard_type(), MetaCardDB.TABLE_NAME);
 
-        // ที่อยู่        edit_Address
-        edit_Address.setText(surveyBean.getAddress());
+            //Log.i("metaBean", "" + metaBean.toString());
+
+            edt_CardType.setText(mBean.toString());
+        }
+        StringBuilder address = new StringBuilder();
+        address.append(farmer.getHome_no());
+        if (farmer.getMoo_no() != null && "".equals(farmer.getMoo_no().trim())) {
+            address.append("  หมู่ ");
+            address.append(farmer.getMoo_no());
+        }
+        if (farmer.getGroup_no() != null && "".equals(farmer.getGroup_no().trim())) {
+            address.append("  กลุ่มหมู่ ");
+            address.append(farmer.getGroup_no());
+        }
+        if (farmer.getTambol_name() != null) {
+            address.append("  ตำบล ");
+            address.append(farmer.getTambol_name());
+        }
+        if (farmer.getAmphur_name() != null) {
+            address.append("  อำเภอ ");
+            address.append(farmer.getAmphur_name());
+        }
+        if (farmer.getProvince_name() != null) {
+            address.append("  จังหวัด ");
+            address.append(farmer.getProvince_name());
+        }
+        edit_Address.setText(address.toString());
 
         // สิทธิการถือครอง
         if ("0".equals(surveyBean.getOwner_Type())) {
@@ -240,11 +286,10 @@ public class SurveyFragment extends Fragment implements View.OnClickListener, Ad
 
         edt_LandUse_History.setText(surveyBean.getHistory());
         edt_Staff.setText(surveyBean.getRemark2());
-        // วันที่บันทึกข้อมูล
-        // surveyBean.setSurvey_Date(txt_DataTime.getText().toString());
+        edt_surveyDate.setText(surveyBean.getSurvey_Date());
 
-        // Update Date
-        surveyBean.setUpdate_Date(txt_DataTime.getText().toString());
+
+        surveyBean.setUpdate_Date( txt_DataTime.getText().toString());
 
     }
 
@@ -361,6 +406,10 @@ public class SurveyFragment extends Fragment implements View.OnClickListener, Ad
         List<MetaBean> extProjectList = metaDAO.getMetaByType(MetaExtProjectDB.getSelectAllSQL());
         extProjectDataAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, extProjectList);
         spn_extProject.setAdapter(extProjectDataAdapter);
+
+        List<MetaBean> projectMooBanList = metaDAO.getMetaByType(MetaProjectMooDB.getSelectAllSQL());
+        projectMooBanDataAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, projectMooBanList);
+        spn_Moo.setAdapter(projectMooBanDataAdapter);
 
         // Spinner แหล่งน้ำ
         List<MetaBean> waterList = metaDAO.getMetaByType(MetaWaterResourceDB.getSelectAllSQL());
@@ -520,27 +569,28 @@ public class SurveyFragment extends Fragment implements View.OnClickListener, Ad
         MetaDAO metaDAO = new MetaDAO(getActivity());
         Spinner spiner = (Spinner) parent;
 
-        ArrayAdapter<MetaBean> dataAdapter;
-        List<MetaBean> metaBeanList;
-        MetaBean metaBean = (MetaBean) parent.getItemAtPosition(position);
-        if (spiner.getId() == R.id.spn_projectArea) {
-            // พื้นที่ --> ศูนย์
-            metaBeanList = metaDAO.getMetaByType(MetaExtProjectDB.getSelectAllSQLRef(metaBean.getItemId()));
-            dataAdapter = new ArrayAdapter<>(getActivity(),
-                    android.R.layout.simple_spinner_item, metaBeanList);
-            spn_extProject.setAdapter(dataAdapter);
+        if(!"update".equals(action)) {
+            //ArrayAdapter<MetaBean> dataAdapter;
+            List<MetaBean> metaBeanList;
+            MetaBean metaBean = (MetaBean) parent.getItemAtPosition(position);
+            if (spiner.getId() == R.id.spn_projectArea) {
+                // พื้นที่ --> ศูนย์
+                metaBeanList = metaDAO.getMetaByType(MetaExtProjectDB.getSelectAllSQLRef(metaBean.getItemId()));
+                extProjectDataAdapter = new ArrayAdapter<>(getActivity(),
+                        android.R.layout.simple_spinner_item, metaBeanList);
+                spn_extProject.setAdapter(extProjectDataAdapter);
 
-        } else if (spiner.getId() == R.id.spn_extProject) {
-            //  ศูนย์ --> หมู่บ้าน
-//Log.i("spn_extProject1",MetaProjectMooDB.getSelectAllSQLRef(metaBean.getItemId()));
-            metaBeanList = metaDAO.getMetaByType(MetaProjectMooDB.getSelectAllSQLRefRemark(String.valueOf(metaBean.getItemId())));
-            dataAdapter = new ArrayAdapter<>(getActivity(),
-                    android.R.layout.simple_spinner_item, metaBeanList);
-            spn_Moo.setAdapter(dataAdapter);
+            } else if (spiner.getId() == R.id.spn_extProject) {
+                //  ศูนย์ --> หมู่บ้าน
+Log.i("***spn_extProject1",MetaProjectMooDB.getSelectAllSQLRefRemark(String.valueOf(metaBean.getItemId())));
+                metaBeanList = metaDAO.getMetaByType(MetaProjectMooDB.getSelectAllSQLRefRemark(String.valueOf(metaBean.getItemId())));
+                projectMooBanDataAdapter = new ArrayAdapter<>(getActivity(),
+                        android.R.layout.simple_spinner_item, metaBeanList);
+                spn_Moo.setAdapter(projectMooBanDataAdapter);
 //Log.i("spn_extProject2",""+metaBean.getItemValue());
-            edt_Land_No.setText(metaBean.getItemValue());
+                edt_Land_No.setText(metaBean.getItemValue());
+            }
         }
-
 
     }
 
@@ -768,7 +818,7 @@ public class SurveyFragment extends Fragment implements View.OnClickListener, Ad
             // Set update ID
             sb.setSurvey_id(surveyBeanUpdate.getSurvey_id());
             sb.setRemark1("waiting");
-            //Log.i(" Update doInBackground", sb.toString());
+           Log.i(" Update1 doInBackground", sb.toString());
             long result = surveyDAO.updateSurvey(sb);
 
             return String.valueOf(result);

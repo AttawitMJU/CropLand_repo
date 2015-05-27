@@ -9,15 +9,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.hrdi.survey.R;
 import com.hrdi.survey.control.AgriculturistDAO;
 import com.hrdi.survey.control.MetaDAO;
+import com.hrdi.survey.control.SurveyDAO;
 import com.hrdi.survey.model.AgriculturistBean;
+import com.hrdi.survey.model.LandUseBean;
 import com.hrdi.survey.model.MetaBean;
+import com.hrdi.survey.model.SurveyBean;
 import com.hrdi.survey.modeldb.AgriculturistDB;
 import com.hrdi.survey.modeldb.MetaAmphoeDB;
 import com.hrdi.survey.modeldb.MetaCardDB;
@@ -61,6 +66,8 @@ public class SetupFragment extends Fragment implements View.OnClickListener {
     // JSON Node names
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_META = "meta_s";
+    private static final String TAG_SURVEY = "surveys";
+
     private static final String TAG_ID = "meta_id";
     private static final String TAG_NAME = "meta_name";
     private static final String TAG_REF = "meta_ref";
@@ -75,24 +82,38 @@ public class SetupFragment extends Fragment implements View.OnClickListener {
             btn_jobsource, btn_extproject,
             btn_province, btn_amphoe, btn_tambol,
             btn_planttype, btn_plant, btn_plantdetail,
-            btn_import_agri,btn_upload_agri,
-            btn_projectarea, btn_moo;
+            btn_import_agri, btn_upload_agri,
+            btn_projectarea, btn_moo, btn_loadSurvey;
+
+    Spinner spn_Project;
+
+    ArrayAdapter<MetaBean> projectDataAdapter;
 
     // Creating JSON Parser object
     JSONParser jParser = new JSONParser();
     ArrayList<MetaBean> metaList;
-    // MetaData JSONArray
+    ArrayList<SurveyBean> surveyList;
+    ArrayList<LandUseBean> landUseList;
+
+
     JSONArray metaJson = null;
+    JSONArray surveyJSON = null;
+    JSONArray landUseJson = null;
+
     String metaType;
+    String projectAreaID;
+
     private MetaDAO metaDAO;
     private ProgressDialog pDialog;
     private AgriculturistDAO agriDAO;
+    private SurveyDAO surveyDAO;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         metaDAO = new MetaDAO(getActivity());
         agriDAO = new AgriculturistDAO(getActivity());
+        surveyDAO = new SurveyDAO(getActivity());
 
     }
 
@@ -104,6 +125,7 @@ public class SetupFragment extends Fragment implements View.OnClickListener {
         findViewsById(rootView);
         setListeners();
         countTableRecord();
+        setListItemAdapter();
         return rootView;
     }
 
@@ -132,6 +154,14 @@ public class SetupFragment extends Fragment implements View.OnClickListener {
         btn_projectarea.setText(getString(R.string.meta_projectarea) + "  (" + metaDAO.countRecord(MetaProjectAreaDB.TABLE_NAME) + ")");
         btn_moo.setText(getString(R.string.meta_mooban) + "  (" + metaDAO.countRecord(MetaProjectMooDB.TABLE_NAME) + ")");
 
+    }
+
+    private void setListItemAdapter() {
+
+        // Spinner พื้นที่โครงการหลวง
+        List<MetaBean> projectAreaList = metaDAO.getMetaByType(MetaExtProjectDB.getSelectAllSQL());
+        projectDataAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, projectAreaList);
+        spn_Project.setAdapter(projectDataAdapter);
     }
 
     private String setMocupData(String source, int total) {
@@ -174,8 +204,13 @@ public class SetupFragment extends Fragment implements View.OnClickListener {
         btn_import_agri = (Button) view.findViewById(R.id.btn_import_agri);
         btn_upload_agri = (Button) view.findViewById(R.id.btn_upload_agri);
 
-        btn_projectarea= (Button) view.findViewById(R.id.btn_projectarea);
+        btn_projectarea = (Button) view.findViewById(R.id.btn_projectarea);
         btn_moo = (Button) view.findViewById(R.id.btn_mooban);
+        //btn_moo.setVisibility(View.GONE);
+
+        btn_loadSurvey = (Button) view.findViewById(R.id.btn_loadSurvey);
+        spn_Project = (Spinner) view.findViewById(R.id.spn_Project);
+
     }
 
     private void setListeners() {
@@ -202,6 +237,7 @@ public class SetupFragment extends Fragment implements View.OnClickListener {
         btn_upload_agri.setOnClickListener(this);
         btn_projectarea.setOnClickListener(this);
         btn_moo.setOnClickListener(this);
+        btn_loadSurvey.setOnClickListener(this);
     }
 
     @Override
@@ -286,7 +322,7 @@ public class SetupFragment extends Fragment implements View.OnClickListener {
                 metaType = "plantdetail";
                 LoadMetaTask task = new LoadMetaTask(getActivity());
                 task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            }else if (view == btn_projectarea) {
+            } else if (view == btn_projectarea) {
                 metaType = "projectarea";
                 LoadMetaTask task = new LoadMetaTask(getActivity());
                 task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -294,11 +330,21 @@ public class SetupFragment extends Fragment implements View.OnClickListener {
                 metaType = "mooban";
                 LoadMetaTask task = new LoadMetaTask(getActivity());
                 task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            }
-            else if (view == btn_import_agri) {
+            } else if (view == btn_import_agri) {
                 LoadAgriTask task = new LoadAgriTask(getActivity());
                 task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+
+            } else if (view == btn_loadSurvey) {
+                try {
+                    projectAreaID = String.valueOf(((MetaBean) spn_Project.getSelectedItem()).getItemId());
+                    LoadSurveyTask task = new LoadSurveyTask(getActivity());
+                    task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                } catch (Exception e) {
+
+                }
             }
+
         } else {
             Toast.makeText(getActivity(), getString(R.string.connection_off),
                     Toast.LENGTH_LONG).show();
@@ -410,8 +456,8 @@ public class SetupFragment extends Fragment implements View.OnClickListener {
             String id = "";
             String name = "";
             String ref = "";
-            String value="";
-            String remark="";
+            String value = "";
+            String remark = "";
 
             int count = -1;
             int statuscode = 0;
@@ -447,7 +493,7 @@ public class SetupFragment extends Fragment implements View.OnClickListener {
                             ref = c.getString(TAG_REF);
                             value = c.getString(TAG_VAL);
                             remark = c.getString(TAG_REMARK);
-                            metaBean = new MetaBean(Integer.parseInt(id), name, ref, value,remark);
+                            metaBean = new MetaBean(Integer.parseInt(id), name, ref, value, remark);
 
                             // adding MetaBean to ArrayList
                             metaList.add(metaBean);
@@ -470,8 +516,8 @@ public class SetupFragment extends Fragment implements View.OnClickListener {
 
 
     /*
-  Background Async Task to Load Agri
-  */
+      Background Async Task to Load Agri
+    */
     class LoadAgriTask extends AsyncTask<String, String, String> {
         private final WeakReference<Activity> activityWeakRef;
 
@@ -507,7 +553,7 @@ public class SetupFragment extends Fragment implements View.OnClickListener {
             int count = -1;
             int statuscode = 0;
             JSONArray agriJson;
-            ArrayList<AgriculturistBean> agriList;
+            ArrayList<AgriculturistBean> agriList = new ArrayList<>();
             AgriculturistBean bean;
 
             try {
@@ -516,12 +562,12 @@ public class SetupFragment extends Fragment implements View.OnClickListener {
                 HttpResponse response = httpclient.execute(httpRequest);
 
                 statuscode = response.getStatusLine().getStatusCode();
-                //Log.i("HttpResponse status ", String.valueOf(statuscode));
+                Log.i("HttpResponse status ", String.valueOf(statuscode));
 
                 if (HttpStatus.SC_OK == statuscode) {
                     // getting JSON string from URL
-                    JSONObject json = jParser.getJSONFromUrl(getString(R.string.url_get_agri), paramsList);
-                    //Log.i("JSONObject url_get_agri", json.toString());
+                    JSONObject json = jParser.getJSONFromUrl(getString(R.string.url_get_agri) + "?min=0&max=2000", paramsList);
+                    //Log.i("***url_get_agri***", json.toString());
                     // Checking for SUCCESS TAG
                     int success = json.getInt(TAG_SUCCESS);
                     //Log.i("JSONObject status ", String.valueOf(success));
@@ -530,7 +576,58 @@ public class SetupFragment extends Fragment implements View.OnClickListener {
                         // MetaData found
                         // Getting Array of MetaData
                         agriJson = json.getJSONArray("agri_s");
-                        agriList = new ArrayList<>();
+
+
+                        // looping through All MetaData
+                        for (int i = 0; i < agriJson.length(); i++) {
+                            JSONObject c = agriJson.getJSONObject(i);
+
+
+                            bean = new AgriculturistBean();
+                            // Storing each json item in variable
+                            bean.setAgriculturist_id(c.getString("Agriculturist_ID"));
+                            bean.setCard_no(c.getString("Card_no"));
+                            bean.setTitle(c.getString("Title"));
+                            bean.setFirstname(c.getString("FirstName"));
+                            bean.setLastname(c.getString("LastName"));
+                            bean.setHome_no(c.getString("Home_no"));
+                            bean.setMoo_no(c.getString("Moo_no"));
+                            bean.setGroup_no(c.getString("Group_no"));
+                            bean.setVillage_no(c.getString("Village_ID"));
+                            bean.setTambol_id(c.getString("Tambol_ID"));
+                            bean.setAmphur_id(c.getString("Amphoe_ID"));
+                            bean.setProvince_id(c.getString("Province_ID"));
+                            bean.setZipcode(c.getString("Zipcode"));
+                            bean.setOccupation1(c.getString("Occupation1"));
+                            bean.setOccupation2(c.getString("Occupation2"));
+                            bean.setFree_time(c.getString("Free_time"));
+                            bean.setMember_all(c.getString("Member_All"));
+                            bean.setMember_type1(c.getString("Menber_Type1"));
+                            bean.setMember_type2(c.getString("Menber_Type2"));
+                            bean.setMember_type3(c.getString("Menber_Type3"));
+                            bean.setIncome_all(c.getString("Incomes_All"));
+                            bean.setIncomes1(c.getString("Incomes1"));
+                            bean.setIncomes2(c.getString("Incomes2"));
+                            bean.setExpenses_all(c.getString("Expenses_All"));
+                            bean.setExpenses1(c.getString("Expenses1"));
+                            bean.setExpenses2(c.getString("Expenses2"));
+
+                            // adding MetaBean to ArrayList
+                            agriList.add(bean);
+                        }
+                    }
+
+                    JSONObject json2 = jParser.getJSONFromUrl(getString(R.string.url_get_agri) + "?min=2000&max=5000", paramsList);
+                    //Log.i("***url_get_agri***", json.toString());
+                    // Checking for SUCCESS TAG
+                    int success2 = json2.getInt(TAG_SUCCESS);
+                    //Log.i("JSONObject status ", String.valueOf(success));
+
+                    if (success2 == 1) {
+                        // MetaData found
+                        // Getting Array of MetaData
+                        agriJson = json2.getJSONArray("agri_s");
+
 
                         // looping through All MetaData
                         for (int i = 0; i < agriJson.length(); i++) {
@@ -570,12 +667,12 @@ public class SetupFragment extends Fragment implements View.OnClickListener {
                             agriList.add(bean);
                         }
 
-
-                        agriDAO.cleanAgriculturist();
-                        //Log.i("metaDAO.importMeta -->", source + metaList.size());
-                        count = agriDAO.importAgriculturist(agriList);
-
                     }
+
+
+                    agriDAO.cleanAgriculturist();
+                    //Log.i("metaDAO.importMeta -->", source + metaList.size());
+                    count = agriDAO.importAgriculturist(agriList);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -604,6 +701,117 @@ public class SetupFragment extends Fragment implements View.OnClickListener {
                             Toast.LENGTH_LONG).show();
                 }
             }
+        }
+
+
+    }
+
+
+    /*
+       Background Async Task to Load Survey Data
+     */
+    class LoadSurveyTask extends AsyncTask<String, String, String> {
+        private final WeakReference<Activity> activityWeakRef;
+
+        public LoadSurveyTask(Activity context) {
+            this.activityWeakRef = new WeakReference<Activity>(context);
+        }
+
+        /**
+         * Before starting background thread Show Progress Dialog
+         */
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(getActivity());
+            pDialog.setMessage("Loading Survey Data. Please wait...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+            pDialog.show();
+        }
+
+
+        @Override
+        protected String doInBackground(String... params) {
+            String result = getSurvey();
+
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            // dismiss the dialog after getting all MetaData
+            pDialog.dismiss();
+            if (activityWeakRef.get() != null
+                    && !activityWeakRef.get().isFinishing()) {
+
+                if (!"-1".equals(s)) {
+
+                    //txt_hidden_id.setText(String.valueOf(s));
+                    Toast.makeText(activityWeakRef.get(), "บันทึกข้อมูลเรียบร้อย ",
+                            Toast.LENGTH_LONG).show();
+
+                } else {
+                    Toast.makeText(activityWeakRef.get(), "ไม่พบข้อมูล/" + getString(R.string.connection_off),
+                            Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+
+        private String getSurvey() {
+            List<NameValuePair> paramsList = new ArrayList<>();
+
+            long count = -1;
+            int statuscode = 0;
+
+            try {
+                HttpGet httpRequest = new HttpGet(getString(R.string.url_get_survey));
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpResponse response = httpclient.execute(httpRequest);
+
+                statuscode = response.getStatusLine().getStatusCode();
+                //Log.e("statuscode ", String.valueOf(statuscode));
+
+                if (HttpStatus.SC_OK == statuscode) {
+                    // getting JSON string from URL
+                    JSONObject json = jParser.getJSONFromUrl(getString(R.string.url_get_survey) + "?id=" + projectAreaID, paramsList);
+                    // Checking for SUCCESS TAG
+                    int success = json.getInt(TAG_SUCCESS);
+
+                    if (success == 1) {
+                        // SurveyData found
+                        // Getting Array of Survey Data
+                        surveyJSON = json.getJSONArray(TAG_SURVEY);
+
+                        // looping through All  Survey Data
+                        SurveyBean bean;
+                        JSONObject obj;
+
+                        for (int i = 0; i < surveyJSON.length(); i++) {
+                            obj = surveyJSON.getJSONObject(i);
+
+                            bean = new SurveyBean();
+                            bean.setSurvey_id(obj.getString("survey_id"));
+                            bean.setLand_No(obj.getString("land_no"));
+                            bean.setCard_no(obj.getString("card_no"));
+                            bean.setProject_Area(obj.getString("project_area"));
+                            bean.setExt_Project(obj.getString("project"));
+                            bean.setProject_MooBan(obj.getString("project_mooban"));
+
+                            surveyList.add(bean);
+                            count++;
+                        }
+
+                        surveyDAO.addSurveyTemp(surveyList);
+
+
+                    }
+                    Log.i("count", "" + count);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return String.valueOf(count);
         }
 
 

@@ -8,6 +8,7 @@ import android.util.Log;
 import com.hrdi.survey.modeldb.AgriculturistDB;
 import com.hrdi.survey.modeldb.LandDB;
 import com.hrdi.survey.modeldb.LandUseDB;
+import com.hrdi.survey.modeldb.LandUseTempDB;
 import com.hrdi.survey.modeldb.MetaAmphoeDB;
 import com.hrdi.survey.modeldb.MetaCardDB;
 import com.hrdi.survey.modeldb.MetaDocDB;
@@ -34,12 +35,13 @@ import com.hrdi.survey.modeldb.SurveyActivityDB;
 import com.hrdi.survey.modeldb.SurveyDB;
 import com.hrdi.survey.modeldb.SurveyProblemDB;
 import com.hrdi.survey.modeldb.SurveySupportDB;
+import com.hrdi.survey.modeldb.SurveyTempDB;
 import com.hrdi.survey.modeldb.SurveyWantDB;
 import com.hrdi.survey.modeldb.UserDB;
 
 public class DBHelper extends SQLiteOpenHelper {
     private static final String DB_NAME = "HRDI_Lite";
-    private static final int DB_VERSION = 3;
+    private static final int DB_VERSION = 4;
     private static DBHelper instance;
 
     public DBHelper(Context context) {
@@ -71,7 +73,7 @@ public class DBHelper extends SQLiteOpenHelper {
              try {
 
                  // db.execSQL("ALTER TABLE foo ADD COLUMN new_column INTEGER DEFAULT 0");
-                 dropAllTable(db);
+                 // dropAllTable(db);
                  createAllTable(db);
 
              } catch (Exception e) {
@@ -118,6 +120,9 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(SurveySupportDB.getCreateSQL());
         db.execSQL(SurveyWantDB.getCreateSQL());
         db.execSQL(SurveyProblemDB.getCreateSQL());
+
+        db.execSQL(SurveyTempDB.getCreateSQL());
+        db.execSQL(LandUseTempDB.getCreateSQL());
     }
 
     private void dropAllTable(SQLiteDatabase db) {
@@ -156,6 +161,9 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(SurveySupportDB.getDropSQL());
         db.execSQL(SurveyWantDB.getDropSQL());
         db.execSQL(SurveyProblemDB.getDropSQL());
+
+        db.execSQL(SurveyTempDB.getDropSQL());
+        db.execSQL(LandUseTempDB.getDropSQL());
     }
 
 

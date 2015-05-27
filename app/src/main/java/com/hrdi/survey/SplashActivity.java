@@ -1,6 +1,7 @@
 package com.hrdi.survey;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.util.Log;
 import android.view.Window;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hrdi.survey.control.AgriculturistDAO;
 import com.hrdi.survey.control.MetaDAO;
@@ -24,6 +26,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,9 +48,11 @@ public class SplashActivity extends Activity {
     private static final String TAG_VAL = "meta_val";
     private static final String TAG_REMARK = "meta_remark";
 
+    private ProgressDialog pDialog;
 
     // Creating JSON Parser object
     JSONParser jParser = new JSONParser();
+    JSONParser jParser2 = new JSONParser();
     ArrayList<MetaBean> metaList;
     ArrayList<AgriculturistBean> agriList;
     JSONArray metaJson = null;
@@ -69,9 +74,13 @@ public class SplashActivity extends Activity {
         TextView txt_loading = (TextView) findViewById(R.id.txt_loading);
 
 
+        LoadAgriTask task = new LoadAgriTask();
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
         // Start your loading
         loadingTask = new LoadingTask(progressBar, txt_loading);
         loadingTask.execute(getString(R.string.url_get_meta));
+
 
 
     }
@@ -298,7 +307,8 @@ public class SplashActivity extends Activity {
 
             int count = -1;
             int statuscode = 0;
-
+            JSONArray agriJson;
+            ArrayList<AgriculturistBean> agriList = new ArrayList<>();
             AgriculturistBean bean;
 
             try {
@@ -307,12 +317,12 @@ public class SplashActivity extends Activity {
                 HttpResponse response = httpclient.execute(httpRequest);
 
                 statuscode = response.getStatusLine().getStatusCode();
-                //Log.i("HttpResponse status ", String.valueOf(statuscode));
+                Log.i("HttpResponse status ", String.valueOf(statuscode));
 
                 if (HttpStatus.SC_OK == statuscode) {
                     // getting JSON string from URL
-                    JSONObject json = jParser.getJSONFromUrl(getString(R.string.url_get_agri) , paramsList);
-                    //Log.i("JSONObject url_get_agri", json.toString());
+                    JSONObject json = jParser.getJSONFromUrl(getString(R.string.url_get_agri) + "?min=0&max=2000", paramsList);
+                    //Log.i("***url_get_agri***", json.toString());
                     // Checking for SUCCESS TAG
                     int success = json.getInt(TAG_SUCCESS);
                     //Log.i("JSONObject status ", String.valueOf(success));
@@ -321,8 +331,60 @@ public class SplashActivity extends Activity {
                         // MetaData found
                         // Getting Array of MetaData
                         agriJson = json.getJSONArray("agri_s");
-                        agriList = new ArrayList<>();
 
+
+                        // looping through All MetaData
+                        for (int i = 0; i < agriJson.length(); i++) {
+                            JSONObject c = agriJson.getJSONObject(i);
+
+
+                            bean = new AgriculturistBean();
+                            // Storing each json item in variable
+                            bean.setAgriculturist_id(c.getString("Agriculturist_ID"));
+                            bean.setCard_no(c.getString("Card_no"));
+                            bean.setTitle(c.getString("Title"));
+                            bean.setFirstname(c.getString("FirstName"));
+                            bean.setLastname(c.getString("LastName"));
+                            bean.setHome_no(c.getString("Home_no"));
+                            bean.setMoo_no(c.getString("Moo_no"));
+                            bean.setGroup_no(c.getString("Group_no"));
+                            bean.setVillage_no(c.getString("Village_ID"));
+                            bean.setTambol_id(c.getString("Tambol_ID"));
+                            bean.setAmphur_id(c.getString("Amphoe_ID"));
+                            bean.setProvince_id(c.getString("Province_ID"));
+                            bean.setZipcode(c.getString("Zipcode"));
+                            bean.setOccupation1(c.getString("Occupation1"));
+                            bean.setOccupation2(c.getString("Occupation2"));
+                            bean.setFree_time(c.getString("Free_time"));
+                            bean.setMember_all(c.getString("Member_All"));
+                            bean.setMember_type1(c.getString("Menber_Type1"));
+                            bean.setMember_type2(c.getString("Menber_Type2"));
+                            bean.setMember_type3(c.getString("Menber_Type3"));
+                            bean.setIncome_all(c.getString("Incomes_All"));
+                            bean.setIncomes1(c.getString("Incomes1"));
+                            bean.setIncomes2(c.getString("Incomes2"));
+                            bean.setExpenses_all(c.getString("Expenses_All"));
+                            bean.setExpenses1(c.getString("Expenses1"));
+                            bean.setExpenses2(c.getString("Expenses2"));
+
+                            // adding MetaBean to ArrayList
+                            agriList.add(bean);
+                        }
+                    }
+
+                    JSONObject json2 = jParser.getJSONFromUrl(getString(R.string.url_get_agri) + "?min=2000&max=5000", paramsList);
+                    //Log.i("***url_get_agri***", json.toString());
+                    // Checking for SUCCESS TAG
+                    int success2 = json2.getInt(TAG_SUCCESS);
+                    //Log.i("JSONObject status ", String.valueOf(success));
+
+                    if (success2 == 1) {
+                        // MetaData found
+                        // Getting Array of MetaData
+                        agriJson = json2.getJSONArray("agri_s");
+
+
+                        // looping through All MetaData
                         for (int i = 0; i < agriJson.length(); i++) {
                             JSONObject c = agriJson.getJSONObject(i);
 
@@ -360,12 +422,12 @@ public class SplashActivity extends Activity {
                             agriList.add(bean);
                         }
 
-
-                        agriDAO.cleanAgriculturist();
-                        //Log.i("metaDAO.importMeta -->", source + metaList.size());
-                        count = agriDAO.importAgriculturist(agriList);
-
                     }
+
+
+                    agriDAO.cleanAgriculturist();
+                    //Log.i("metaDAO.importMeta -->", source + metaList.size());
+                    count = agriDAO.importAgriculturist(agriList);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -373,6 +435,179 @@ public class SplashActivity extends Activity {
             return String.valueOf(count);
         }
 
+
     }
+
+
+    /*
+   Background Async Task to Load Agri
+ */
+    class LoadAgriTask extends AsyncTask<String, String, String> {
+       // private final WeakReference<Activity> activityWeakRef;
+
+        public LoadAgriTask() {
+
+        }
+
+        /**
+         * Before starting background thread Show Progress Dialog
+         */
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+        }
+
+
+        @Override
+        protected String doInBackground(String... params) {
+            String result = updateAgri();
+
+
+            return result;
+        }
+
+        private String updateAgri() {
+            List<NameValuePair> paramsList = new ArrayList<>();
+
+            int count = -1;
+            int statuscode = 0;
+            JSONArray agriJson,agriJson2;
+            ArrayList<AgriculturistBean> agriList = new ArrayList<>();
+            AgriculturistBean bean;
+
+            try {
+                HttpGet httpRequest = new HttpGet(getString(R.string.url_get_agri));
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpResponse response = httpclient.execute(httpRequest);
+
+                statuscode = response.getStatusLine().getStatusCode();
+                Log.i("HttpResponse status ", String.valueOf(statuscode));
+
+                if (HttpStatus.SC_OK == statuscode) {
+                    // getting JSON string from URL
+                    JSONObject json = jParser.getJSONFromUrl(getString(R.string.url_get_agri) + "?min=0&max=1500", paramsList);
+                    //Log.i("***url_get_agri***", json.toString());
+                    // Checking for SUCCESS TAG
+                    int success = json.getInt(TAG_SUCCESS);
+                    //Log.i("JSONObject status ", String.valueOf(success));
+
+                    if (success == 1) {
+                        // MetaData found
+                        // Getting Array of MetaData
+                        agriJson = json.getJSONArray("agri_s");
+
+
+                        // looping through All MetaData
+                        for (int i = 0; i < agriJson.length(); i++) {
+                            JSONObject c = agriJson.getJSONObject(i);
+
+
+                            bean = new AgriculturistBean();
+                            // Storing each json item in variable
+                            bean.setAgriculturist_id(c.getString("Agriculturist_ID"));
+                            bean.setCard_no(c.getString("Card_no"));
+                            bean.setTitle(c.getString("Title"));
+                            bean.setFirstname(c.getString("FirstName"));
+                            bean.setLastname(c.getString("LastName"));
+                            bean.setHome_no(c.getString("Home_no"));
+                            bean.setMoo_no(c.getString("Moo_no"));
+                            bean.setGroup_no(c.getString("Group_no"));
+                            bean.setVillage_no(c.getString("Village_ID"));
+                            bean.setTambol_id(c.getString("Tambol_ID"));
+                            bean.setAmphur_id(c.getString("Amphoe_ID"));
+                            bean.setProvince_id(c.getString("Province_ID"));
+                            bean.setZipcode(c.getString("Zipcode"));
+                            bean.setOccupation1(c.getString("Occupation1"));
+                            bean.setOccupation2(c.getString("Occupation2"));
+                            bean.setFree_time(c.getString("Free_time"));
+                            bean.setMember_all(c.getString("Member_All"));
+                            bean.setMember_type1(c.getString("Menber_Type1"));
+                            bean.setMember_type2(c.getString("Menber_Type2"));
+                            bean.setMember_type3(c.getString("Menber_Type3"));
+                            bean.setIncome_all(c.getString("Incomes_All"));
+                            bean.setIncomes1(c.getString("Incomes1"));
+                            bean.setIncomes2(c.getString("Incomes2"));
+                            bean.setExpenses_all(c.getString("Expenses_All"));
+                            bean.setExpenses1(c.getString("Expenses1"));
+                            bean.setExpenses2(c.getString("Expenses2"));
+
+                            // adding MetaBean to ArrayList
+                            agriList.add(bean);
+                        }
+                    }
+
+                    JSONObject json2 = jParser2.getJSONFromUrl(getString(R.string.url_get_agri) + "?min=1500&max=5000", paramsList);
+                    //Log.i("***url_get_agri***", json.toString());
+                    // Checking for SUCCESS TAG
+                    int success2 = json2.getInt(TAG_SUCCESS);
+                    //Log.i("JSONObject status ", String.valueOf(success));
+
+                    if (success2 == 1) {
+                        // MetaData found
+                        // Getting Array of MetaData
+                        agriJson2 = json2.getJSONArray("agri_s");
+
+
+                        // looping through All MetaData
+                        for (int i = 0; i < agriJson2.length(); i++) {
+                            JSONObject c = agriJson2.getJSONObject(i);
+
+
+                            bean = new AgriculturistBean();
+                            // Storing each json item in variable
+                            bean.setAgriculturist_id(c.getString("Agriculturist_ID"));
+                            bean.setCard_no(c.getString("Card_no"));
+                            bean.setTitle(c.getString("Title"));
+                            bean.setFirstname(c.getString("FirstName"));
+                            bean.setLastname(c.getString("LastName"));
+                            bean.setHome_no(c.getString("Home_no"));
+                            bean.setMoo_no(c.getString("Moo_no"));
+                            bean.setGroup_no(c.getString("Group_no"));
+                            bean.setVillage_no(c.getString("Village_ID"));
+                            bean.setTambol_id(c.getString("Tambol_ID"));
+                            bean.setAmphur_id(c.getString("Amphoe_ID"));
+                            bean.setProvince_id(c.getString("Province_ID"));
+                            bean.setZipcode(c.getString("Zipcode"));
+                            bean.setOccupation1(c.getString("Occupation1"));
+                            bean.setOccupation2(c.getString("Occupation2"));
+                            bean.setFree_time(c.getString("Free_time"));
+                            bean.setMember_all(c.getString("Member_All"));
+                            bean.setMember_type1(c.getString("Menber_Type1"));
+                            bean.setMember_type2(c.getString("Menber_Type2"));
+                            bean.setMember_type3(c.getString("Menber_Type3"));
+                            bean.setIncome_all(c.getString("Incomes_All"));
+                            bean.setIncomes1(c.getString("Incomes1"));
+                            bean.setIncomes2(c.getString("Incomes2"));
+                            bean.setExpenses_all(c.getString("Expenses_All"));
+                            bean.setExpenses1(c.getString("Expenses1"));
+                            bean.setExpenses2(c.getString("Expenses2"));
+
+                            // adding MetaBean to ArrayList
+                            agriList.add(bean);
+                        }
+
+                    }
+
+
+                    agriDAO.cleanAgriculturist();
+                    //Log.i("metaDAO.importMeta -->", source + metaList.size());
+                    count = agriDAO.importAgriculturist(agriList);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return String.valueOf(count);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            // dismiss the dialog after getting all MetaData
+
+        }
+
+
+    }
+
 
 }

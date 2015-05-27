@@ -63,6 +63,9 @@
     <string name="title_activity_camera_photo_capture">CameraPhotoCapture</string>
     <string name="connection_off">ไม่สามารถเชื่อมต่อเครือข่ายได้</string>
 
+    <string name="success">บันทึกข้อมูลเรียบร้อย</string>
+    <string name="fail">ไม่สามารถบันทึกข้อมูล</string>
+
     <string name="meta_card">ประเภทบัตร</string>
     <string name="meta_doc">เอกสารสิทธิ์</string>
     <string name="meta_water">แหล่งน้ำใช้</string>
@@ -90,7 +93,7 @@
     <string name="act_want">ข้อมูลความต้องการการส่งเสริมและสนับสนุนจากหน่วยงานอื่น</string>
 
 
-    <!-- Test Server-->
+    <!-- Test Server
     <string name="url_get_meta">http://202.28.37.64:8082/hrdi/hrdi_lite/get_meta.php</string>
     <string name="url_get_agri">http://202.28.37.64:8082/hrdi/hrdi_lite/get_agri.php</string>
     <string name="url_send_survey">http://202.28.37.64:8082/hrdi/hrdi_lite/send_survey.php</string>
@@ -99,16 +102,16 @@
     <string name="url_send_detailetc">http://202.28.37.64:8082/hrdi/hrdi_lite/send_detailetc.php</string>
 
     <string name="url_upload">http://202.28.37.64:8082/hrdi/hrdi_lite/uploadFile.php</string>
-
-    <!-- HRDI Server
+    -->
+    <!-- HRDI Server-->
     <string name="url_get_meta">http://growercrops.hrdi.or.th/hrdi_lite/get_meta.php</string>
     <string name="url_get_agri">http://growercrops.hrdi.or.th/hrdi_lite/get_agri.php</string>
+    <string name="url_get_survey">http://growercrops.hrdi.or.th/hrdi_lite/get_survey.php</string>
     <string name="url_send_survey">http://growercrops.hrdi.or.th/hrdi_lite/send_survey.php</string>
     <string name="url_send_landuse">http://growercrops.hrdi.or.th/hrdi_lite/send_landuse.php</string>
     <string name="url_send_activity">http://growercrops.hrdi.or.th/hrdi_lite/send_act.php</string>
     <string name="url_send_detailetc">http://growercrops.hrdi.or.th/hrdi_lite/send_detailetc.php</string>
-
-
     <string name="url_upload">http://growercrops.hrdi.or.th/hrdi_lite/uploadFile.php</string>
--->
+
+
 </resources>

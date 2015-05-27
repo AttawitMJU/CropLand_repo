@@ -17,6 +17,7 @@ import com.hrdi.survey.modeldb.SurveyActivityDB;
 import com.hrdi.survey.modeldb.SurveyDB;
 import com.hrdi.survey.modeldb.SurveyProblemDB;
 import com.hrdi.survey.modeldb.SurveySupportDB;
+import com.hrdi.survey.modeldb.SurveyTempDB;
 import com.hrdi.survey.modeldb.SurveyWantDB;
 import com.hrdi.survey.util.JSONParser;
 
@@ -59,6 +60,21 @@ public class SurveyDAO extends HrdiDBDAO {
         return newID;
     }
 
+    public long addSurveyTemp(ArrayList<SurveyBean> surveys) {
+        long result = 0;
+        SurveyBean sb;
+        if (surveys != null) {
+            for (int i = 0; i < surveys.size(); i++) {
+                sb = surveys.get(i);
+                ContentValues values = putSurveyTempValues(sb);
+                // Inserting Row
+                result += database.insert(SurveyTempDB.TABLE_NAME, null, values);
+                // database.close(); // Closing database connection
+            }
+        }
+        return result;
+    }
+
     private ContentValues putSurveyValues(SurveyBean survey) {
         ContentValues values = new ContentValues();
 
@@ -98,6 +114,20 @@ public class SurveyDAO extends HrdiDBDAO {
         values.put(SurveyDB.UPDATE_DATE, survey.getUpdate_Date());
         values.put(SurveyDB.REMARK1, survey.getRemark1());
         values.put(SurveyDB.REMARK2, survey.getRemark2());
+        return values;
+    }
+
+    private ContentValues putSurveyTempValues(SurveyBean survey) {
+        ContentValues values = new ContentValues();
+
+        values.put(SurveyDB.SURVEY_ID, survey.getSurvey_id());
+        values.put(SurveyDB.PROJECT_AREA, survey.getProject_Area());
+        values.put(SurveyDB.EXT_PROJECT, survey.getExt_Project());
+        values.put(SurveyDB.PROJECT_MOOBAN, survey.getProject_MooBan());
+
+        values.put(SurveyDB.LAND_NO, survey.getLand_No());
+        values.put(SurveyDB.CARD_NO, survey.getCard_no());
+
         return values;
     }
 
@@ -318,25 +348,18 @@ public class SurveyDAO extends HrdiDBDAO {
 
     public long updateSurveyEtc(SurveyBean survey) {
 
+        //Log.i("PICTURE1",survey.getPicture1());
+
         ContentValues values = new ContentValues();
 
-        //values.put(SurveyDB.OWNER_TYPE, survey.getOwner_Type());
-        //values.put(SurveyDB.OWNER_TYPE_DETAIL, survey.getOwner_Type_Detail());
-        //values.put(SurveyDB.INSTITUTE_SUPPORT, survey.getInstitute_Support());
-        //values.put(SurveyDB.WATER, survey.getWater());
-        //values.put(SurveyDB.WATER_PERIOD, survey.getWater_Period());
-        //values.put(SurveyDB.WATER_USE, survey.getWater_Use());
-        //values.put(SurveyDB.SOIL_MOISTURE, survey.getSoil_moisture());
-        //values.put(SurveyDB.TEMPERATURE, survey.getTemperature());
-        //values.put(SurveyDB.HASACTIVITY, survey.getHasActivity());
+        //if (survey.getPicture1() != null)
+            values.put(SurveyDB.PICTURE1, survey.getPicture1());
+        //if (survey.getPicture2() != null)
+            values.put(SurveyDB.PICTURE2, survey.getPicture2());
+        //if (survey.getPicture3() != null)
+            values.put(SurveyDB.PICTURE3, survey.getPicture3());
 
-        //values.put(SurveyDB.HASOTHERSUPPORT, survey.getHasOtherSupport());
-
-        values.put(SurveyDB.PICTURE1, survey.getPicture1());
-        values.put(SurveyDB.PICTURE2, survey.getPicture2());
-        values.put(SurveyDB.PICTURE3, survey.getPicture3());
-
-
+        Log.i("values", values.toString());
         // Update Data with Survey_ID
         long result = database.update(SurveyDB.TABLE_NAME, values,
                 WHERE_ID_EQUALS,
@@ -477,8 +500,13 @@ public class SurveyDAO extends HrdiDBDAO {
             surveyBean.setExt_Project_name(metaDAO.getMetaByType(surveyBean.getExt_Project(), MetaExtProjectDB.TABLE_NAME).getItemName());
 
             surveyBean.setProject_MooBan(cursor.getString(i++));
-            surveyBean.setProject_MooBan_Name(metaDAO.getMetaByType(surveyBean.getProject_MooBan(), MetaProjectMooDB.TABLE_NAME).getItemName());
+            try {
+                if (surveyBean.getProject_MooBan() != null) {
+                    surveyBean.setProject_MooBan_Name(metaDAO.getMetaByType(surveyBean.getProject_MooBan(), MetaProjectMooDB.TABLE_NAME).getItemName());
+                }
+            } catch (Exception e) {
 
+            }
 
             surveyBean.setArea_status(cursor.getString(i++));
             surveyBean.setCard_no(cursor.getString(i++));
@@ -713,21 +741,34 @@ public class SurveyDAO extends HrdiDBDAO {
             surveyBean.setSurvey_Date(cursor.getString(i++));
             surveyBean.setLand_No(cursor.getString(i++));
             surveyBean.setLatlong(cursor.getString(i++));
-            surveyBean.setExt_Project(cursor.getString(i++));
-            surveyBean.setMooban(cursor.getString(i++));            //5
+
+            surveyBean.setProject_Area(cursor.getString(i++));
+            surveyBean.setExt_Project(cursor.getString(i++));        //5
+            surveyBean.setProject_MooBan(cursor.getString(i++));
+
             surveyBean.setLand_doc_type(cursor.getString(i++));
             surveyBean.setArea_status(cursor.getString(i++));
             surveyBean.setArea_status_year(cursor.getString(i++));
 
-            surveyBean.setCard_no(cursor.getString(i++));
-            surveyBean.setCard_type(cursor.getString(i++));     //10
-            surveyBean.setFirstName(cursor.getString(i++));
-            surveyBean.setLastName(cursor.getString(i++));
-
-            surveyBean.setAddress(cursor.getString(i++));
+            surveyBean.setCard_no(cursor.getString(i++));           //10
             surveyBean.setOwner_Type(cursor.getString(i++));
-            surveyBean.setOwner_Type_Detail(cursor.getString(i++));  //15
+            surveyBean.setOwner_Type_Detail(cursor.getString(i++));
             surveyBean.setHistory(cursor.getString(i++));
+            surveyBean.setHasOtherSupport(cursor.getString(i++));
+            surveyBean.setInstitute_Support(cursor.getString(i++)); //15
+
+            surveyBean.setWater(cursor.getString(i++));
+            surveyBean.setWater_Period(cursor.getString(i++));
+            surveyBean.setWater_Use(cursor.getString(i++));
+            surveyBean.setSoil_moisture(cursor.getString(i++));
+            surveyBean.setTemperature(cursor.getString(i++));       //20
+
+            surveyBean.setHasActivity(cursor.getString(i++));
+            surveyBean.setPicture1(cursor.getString(i++));
+            surveyBean.setPicture2(cursor.getString(i++));
+            surveyBean.setPicture3(cursor.getString(i++));
+
+            surveyBean.setUpdate_By(cursor.getString(i++));         //25
             surveyBean.setRemark1(cursor.getString(i++));
             surveyBean.setRemark2(cursor.getString(i++));
 

@@ -54,11 +54,17 @@ import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class SurveyDataListFragment extends Fragment
         implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, View.OnClickListener {
+
+    private static final SimpleDateFormat dateTimeFormatter = new SimpleDateFormat(
+            "yyyy-MM-dd  HH:mm:ss", Locale.ENGLISH);
 
     public static final String ARG_ITEM_ID = "employee_list";
     public static final int MEDIA_TYPE_IMAGE = 1;
@@ -351,13 +357,25 @@ public class SurveyDataListFragment extends Fragment
             if (activityWeakRef.get() != null
                     && !activityWeakRef.get().isFinishing()) {
 
-                if (!"-1".equals(s)) {
+                if ("success".equals(s)) {
                     //txt_hidden_id.setText(String.valueOf(s));
-                    Toast.makeText(activityWeakRef.get(), "บันทึกข้อมูลเรียบร้อย ",
+                    Toast.makeText(activityWeakRef.get(), getString(R.string.success),
                             Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(activityWeakRef.get(), getString(R.string.connection_off),
+                    Toast.makeText(activityWeakRef.get(), getString(R.string.fail),
                             Toast.LENGTH_LONG).show();
+                }
+                ArrayList<SurveyBean> surveyList = surveyDAO.getSurveyList2Show(status);
+                surveyListShow = surveyList;
+                if (surveyList != null) {
+                    if (surveyList.size() != 0) {
+                        surveyListAdapter = new SurveyListAdapter(activity, surveyList);
+                        surveyListView.setAdapter(surveyListAdapter);
+                    } else {
+
+                        Toast.makeText(activity, "No Survey Records",
+                                Toast.LENGTH_LONG).show();
+                    }
                 }
             }
         }
@@ -410,8 +428,9 @@ public class SurveyDataListFragment extends Fragment
         */
         private String sendData() {
             jsonParser = new JSONParser();
-            int count = 0;
+            //int count = 0;
             int statuscode = 0;
+            String returnValue = "";
             String lastID = "";
             Log.i("========", "================");
             Log.i("==surveyListSend==", "" + surveyListSend.size());
@@ -431,7 +450,7 @@ public class SurveyDataListFragment extends Fragment
                     for (SurveyBean sb : surveyListSend) {
 
                         Log.i("========", "================");
-                        Log.i("surveyListSend i=", " " + count + "   id=" + sb.getSurvey_id());
+                        Log.i("surveyListSend","  id=" + sb.getSurvey_id());
                         Log.i("SurveyBean", sb.toString());
 
                         paramsSurvey = surveyDAO.setSurvey2Parameter(sb);
@@ -460,28 +479,33 @@ public class SurveyDataListFragment extends Fragment
 
                                 surveyDAO.updateStatus(sb, KEY_SUCCESS);
 
-                                Log.i("sendLandUseData", "  " + lastID);
+
                                 //********************
                                 // 2. Land Use data
                                 //********************
+                                Log.i("sendLandUseData", "  " + lastID);
                                 sendLandUseData(lastID, sb.getSurvey_id());
 
 
                                 //********************
                                 // 3. Activity Data
                                 //********************
+                                Log.i("sendActivityData", "  " + lastID);
                                 sendActivityData(lastID, sb.getSurvey_id());
 
 
                                 //********************
                                 // 4. Support Data
                                 //********************
+                                Log.i("detailEtcData support", "  " + lastID);
                                 sendDetailEtcData(lastID, sb.getSurvey_id(), "support");
+                                Log.i("detailEtcData want", "  " + lastID);
                                 sendDetailEtcData(lastID, sb.getSurvey_id(), "want");
+                                Log.i("detailEtcData problem", "  " + lastID);
                                 sendDetailEtcData(lastID, sb.getSurvey_id(), "problem");
                             }
                         }
-
+Log.i("sb.getPicture1()",""+sb.getPicture1());
                         if (sb.getPicture1() != null) {
                             uploadFile(getString(R.string.url_upload), sb.getLand_No(), 1);
                         }
@@ -491,15 +515,15 @@ public class SurveyDataListFragment extends Fragment
                         if (sb.getPicture3() != null) {
                             uploadFile(getString(R.string.url_upload), sb.getLand_No(), 3);
                         }
-                        count++;
+                        //count++;
 
                     }
                 }
-
+                returnValue = "success";
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            return String.valueOf(count);
+            return returnValue;
         }
 
         private String uploadFile(String url_Upload, String landCode, int no) {
@@ -703,7 +727,7 @@ public class SurveyDataListFragment extends Fragment
             try {
 
                 statuscode = checkServerStatus(getString(R.string.url_send_activity));
-                // Log.i("statuscode", "" + statuscode+" "+getString(R.string.url_send_survey));
+                 Log.i("statuscode", "" + statuscode+" "+getString(R.string.url_send_activity));
                 if (HttpStatus.SC_OK == statuscode) {
 
                     HttpClient httpclient = new DefaultHttpClient();
@@ -768,6 +792,9 @@ public class SurveyDataListFragment extends Fragment
                     for (SurveyDetailEtcBean bean : beans) {
 
                         bean.setSurvey_id(lastID);      // Update new ID  from MSSQL
+
+                        Date date = new Date();
+                        bean.setUpdate_Date(dateTimeFormatter.format(date));
 
                         paramsDetailEtc = surveyDAO.setDetailEtc2Parameter(bean);
                         Log.i("paramsDetailEtc", paramsDetailEtc.toString());

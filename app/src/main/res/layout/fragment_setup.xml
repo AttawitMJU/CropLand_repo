@@ -171,39 +171,7 @@
                     android:id="@+id/btn_extproject"
                     android:layout_weight="1"
                     android:textColor="@android:color/white" />
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/meta_province"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="10dp"
-                    android:layout_marginStart="5dp"
-                    android:background="@drawable/corner_radius"
-                    android:id="@+id/btn_province"
-                    android:layout_weight="1"
-                    android:textColor="@android:color/white" />
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/meta_amphoe"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="10dp"
-                    android:layout_marginStart="5dp"
-                    android:background="@drawable/corner_radius"
-                    android:id="@+id/btn_amphoe"
-                    android:layout_weight="1"
-                    android:textColor="@android:color/white" />
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/meta_tambol"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="10dp"
-                    android:layout_marginStart="5dp"
-                    android:background="@drawable/corner_radius"
-                    android:id="@+id/btn_tambol"
-                    android:layout_weight="1"
-                    android:textColor="@android:color/white" />
+
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -215,6 +183,52 @@
                     android:id="@+id/btn_mooban"
                     android:layout_weight="1"
                     android:textColor="@android:color/white" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="40dp"
+                android:layout_marginTop="5dp">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/meta_province"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:background="@drawable/corner_radius"
+                    android:id="@+id/btn_province"
+                    android:layout_weight="1"
+                    android:textColor="@android:color/white" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/meta_amphoe"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:layout_marginStart="5dp"
+                    android:background="@drawable/corner_radius"
+                    android:id="@+id/btn_amphoe"
+                    android:layout_weight="1"
+                    android:textColor="@android:color/white" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/meta_tambol"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:layout_marginStart="5dp"
+                    android:background="@drawable/corner_radius"
+                    android:id="@+id/btn_tambol"
+                    android:layout_weight="1"
+                    android:textColor="@android:color/white" />
+
+
             </LinearLayout>
 
             <LinearLayout
@@ -336,6 +350,38 @@
                     android:layout_height="wrap_content"
                     android:text="ข้อมูลพื้นที่แปลง"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="พื้นที่โครงการ"
+                    android:id="@+id/textView9"
+                    android:layout_weight="1"
+                    android:gravity="right" />
+
+                <Spinner
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/spn_Project"
+                    android:layout_weight="3" />
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Load"
+                    android:id="@+id/btn_loadSurvey"
+                    android:layout_weight="1"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:background="@drawable/corner_radius"
+                    android:textColor="@android:color/white"/>
             </LinearLayout>
 
             <LinearLayout
