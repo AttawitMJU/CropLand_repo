@@ -153,7 +153,7 @@ public class SurveyDAO extends HrdiDBDAO {
 
     public long addSurveyEtc(SurveyDetailEtcBean survey, String etcType) {
 
-        Log.i("addSurveyEtc", "addSurveyEtc...." + etcType);
+        //Log.i("addSurveyEtc", "addSurveyEtc...." + etcType);
         ContentValues values;
         long newID = 0;
 
@@ -228,7 +228,7 @@ public class SurveyDAO extends HrdiDBDAO {
         params.add(new BasicNameValuePair(SurveyDB.REMARK1, survey.getRemark1()));
         params.add(new BasicNameValuePair(SurveyDB.REMARK2, survey.getRemark2()));
 
-        Log.i("params", params.toString());
+        //Log.i("params", params.toString());
 
         return params;
     }
@@ -243,7 +243,7 @@ public class SurveyDAO extends HrdiDBDAO {
         params.add(new BasicNameValuePair(LandUseDB.LAND_NO, bean.getLand_No()));
         params.add(new BasicNameValuePair(LandUseDB.CARD_NO, bean.getCard_no()));
         params.add(new BasicNameValuePair(LandUseDB.SURVEY_DATE, bean.getSurvey_Date()));
-        params.add(new BasicNameValuePair(LandUseDB.PLANT_TYPE, bean.getPlant_Type()));
+
         params.add(new BasicNameValuePair(LandUseDB.PLANT_YEAR, bean.getPlant_Year()));
         params.add(new BasicNameValuePair(LandUseDB.AREA, bean.getArea()));
         params.add(new BasicNameValuePair(LandUseDB.HAVEST_STATUS, bean.getHarvest_Status()));
@@ -264,6 +264,8 @@ public class SurveyDAO extends HrdiDBDAO {
         params.add(new BasicNameValuePair(LandUseDB.LABOUR_TIME, bean.getLabour_Time()));
         params.add(new BasicNameValuePair(LandUseDB.START_CROP, bean.getStart_crop()));
         params.add(new BasicNameValuePair(LandUseDB.END_CROP, bean.getEnd_crop()));
+
+        params.add(new BasicNameValuePair(LandUseDB.PLANT_TYPE, bean.getPlant_Type()));
         params.add(new BasicNameValuePair(LandUseDB.PLANT_ID, bean.getPlant_id()));
         params.add(new BasicNameValuePair(LandUseDB.PLANT_DETAIL_ID, bean.getPlant_detail_id()));
         // ปุ๋ย
@@ -359,7 +361,7 @@ public class SurveyDAO extends HrdiDBDAO {
         //if (survey.getPicture3() != null)
             values.put(SurveyDB.PICTURE3, survey.getPicture3());
 
-        Log.i("values", values.toString());
+        //Log.i("values", values.toString());
         // Update Data with Survey_ID
         long result = database.update(SurveyDB.TABLE_NAME, values,
                 WHERE_ID_EQUALS,
@@ -419,7 +421,7 @@ public class SurveyDAO extends HrdiDBDAO {
     public ArrayList<SurveyActivityBean> getSurveyAcitvity(String surveyID) {
         ArrayList<SurveyActivityBean> surveyBeanArrayList = new ArrayList<>();
         String query = SurveyActivityDB.getSelectSQLAllDetail(surveyID);
-        Log.i("query", query);
+        //Log.i("query", query);
         int i;
         Cursor cursor = database.rawQuery(query, null);
         while (cursor.moveToNext()) {
@@ -456,7 +458,7 @@ public class SurveyDAO extends HrdiDBDAO {
             query = SurveyWantDB.getSelectSQLAllDetail(surveyID);
         }
 
-        Log.i("query", query);
+        //Log.i("query", query);
         int i;
         Cursor cursor = database.rawQuery(query, null);
         while (cursor.moveToNext()) {
@@ -530,28 +532,30 @@ public class SurveyDAO extends HrdiDBDAO {
             LandUseBean landUseBean = new LandUseBean();
 
             i = 0;
-            landUseBean.setSurvey_ID(String.valueOf(cursor.getInt(i++)));
+            landUseBean.setSurvey_ID(String.valueOf(cursor.getInt(i++)));       //0
             landUseBean.setLand_No(String.valueOf(cursor.getString(i++)));
             landUseBean.setCard_no(String.valueOf(cursor.getString(i++)));
+
             landUseBean.setPlant_Year(String.valueOf(cursor.getString(i++)));
+
             landUseBean.setArea(String.valueOf(cursor.getString(i++)));
-            landUseBean.setHarvest_Status(String.valueOf(cursor.getString(i++)));
+            landUseBean.setHarvest_Status(String.valueOf(cursor.getString(i++)));       //5
             landUseBean.setSeeds(String.valueOf(cursor.getString(i++)));
             landUseBean.setHas_Hire(String.valueOf(cursor.getString(i++)));
             landUseBean.setLabour(String.valueOf(cursor.getString(i++)));
             landUseBean.setFuel(String.valueOf(cursor.getString(i++)));
-            landUseBean.setOther_Paid(String.valueOf(cursor.getString(i++)));
+            landUseBean.setOther_Paid(String.valueOf(cursor.getString(i++)));       //10
             landUseBean.setProduct_Use(String.valueOf(cursor.getString(i++)));
             landUseBean.setProduct_Sale(String.valueOf(cursor.getString(i++)));
             landUseBean.setPrice(String.valueOf(cursor.getString(i++)));
             landUseBean.setIncome_Year(String.valueOf(cursor.getString(i++)));
-            landUseBean.setMarket(String.valueOf(cursor.getString(i++)));
+            landUseBean.setMarket(String.valueOf(cursor.getString(i++)));       //15
 
             landUseBean.setEmploy_Type(String.valueOf(cursor.getString(i++)));
             landUseBean.setEmploy_From(String.valueOf(cursor.getString(i++)));
             landUseBean.setLabour_Total(String.valueOf(cursor.getString(i++)));
             landUseBean.setLabour_Paid(String.valueOf(cursor.getString(i++)));
-            landUseBean.setLabour_Time(String.valueOf(cursor.getString(i++)));
+            landUseBean.setLabour_Time(String.valueOf(cursor.getString(i++)));  //20
 
 
             try {
@@ -559,18 +563,22 @@ public class SurveyDAO extends HrdiDBDAO {
                 Date d = new SimpleDateFormat("d/M/yyyy").parse(oldString);
                 String newstring = new SimpleDateFormat("yyyy-MM-dd").format(d);
                 landUseBean.setStart_crop(newstring);
-
-                oldString = cursor.getString(i++);
-                d = new SimpleDateFormat("d/M/yyyy").parse(oldString);
-                newstring = new SimpleDateFormat("yyyy-MM-dd").format(d);
-                landUseBean.setEnd_crop(newstring);
-
             } catch (Exception e) {
 
             }
+            try {
+                String oldString = cursor.getString(i++);
+                Date d = new SimpleDateFormat("d/M/yyyy").parse(oldString);
+                String newstring = new SimpleDateFormat("yyyy-MM-dd").format(d);
+                landUseBean.setEnd_crop(newstring);
+            } catch (Exception e) {
+
+            }
+
+
             landUseBean.setPlant_Type(String.valueOf(cursor.getString(i++)));
             landUseBean.setPlant_id(String.valueOf(cursor.getString(i++)));
-            landUseBean.setPlant_detail_id(String.valueOf(cursor.getString(i++)));
+            landUseBean.setPlant_detail_id(String.valueOf(cursor.getString(i++)));  //25
 
             landUseBean.setFertilizer1(String.valueOf(cursor.getString(i++)));
             landUseBean.setFertilizer2(String.valueOf(cursor.getString(i++)));
@@ -611,6 +619,11 @@ public class SurveyDAO extends HrdiDBDAO {
             Date date = new Date();
             landUseBean.setUpdate_Date(dateTimeFormatter.format(date));
 
+
+            //Log.i("get planttype", landUseBean.getPlant_Type());
+            //Log.i("get plant",landUseBean.getPlant_id());
+            //Log.i("get plantDetail",landUseBean.getPlant_detail_id());
+
             landUseBeans.add(landUseBean);
         }
         cursor.close();
@@ -623,7 +636,7 @@ public class SurveyDAO extends HrdiDBDAO {
 
         String query = SurveyDB.getSelectSQLByStatus(status);
         int i;
-        Log.i("query===", query);
+        //Log.i("query===", query);
         Cursor cursor = database.rawQuery(query, null);
         while (cursor.moveToNext()) {
             i = 0;
@@ -680,7 +693,7 @@ public class SurveyDAO extends HrdiDBDAO {
             Date date = new Date();
             surveyBean.setUpdate_Date(dateTimeFormatter.format(date));
 
-            Log.i("getSurveyList cursor", surveyBean.toString());
+            //Log.i("getSurveyList cursor", surveyBean.toString());
             surveyBeanArrayList.add(surveyBean);
         }
         cursor.close();

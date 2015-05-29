@@ -163,6 +163,25 @@ public class AgriculturistDB {
 
         return sql.toString();
     }
+
+    public static String getSelectByIDCard(String id) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT ");
+        sql.append(AGRICULTURIST_ID);
+        sql.append(" , ");
+        sql.append(CARD_NO);
+
+        sql.append(" FROM ");
+        sql.append(TABLE_NAME);
+        sql.append(" WHERE ");
+        sql.append(CARD_NO);
+        sql.append(" = '");
+        sql.append(id);
+        sql.append("'");
+
+        return sql.toString();
+    }
+
     public static String getSelectSQL(String id) {
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT DISTINCT ");
@@ -226,7 +245,7 @@ public class AgriculturistDB {
         sql.append("=");
         sql.append(MetaProvinceDB.TABLE_NAME);
         sql.append(".");
-        sql.append(MetaProvinceDB.META_ID);
+        sql.append(MetaProvinceDB.META_VALUE);
 
         sql.append(" LEFT JOIN ");
         sql.append(MetaAmphoeDB.TABLE_NAME);

@@ -317,7 +317,7 @@ public class LandUseDB {
         StringBuilder sql = new StringBuilder();
 
         sql.append("SELECT ");
-        sql.append(LandUseDB.SURVEY_ID);
+        sql.append(LandUseDB.SURVEY_ID);    //0
         sql.append(",");
 
         sql.append(LandUseDB.LAND_NO);
@@ -328,7 +328,7 @@ public class LandUseDB {
         sql.append(",");
         sql.append(LandUseDB.AREA);
         sql.append(",");
-        sql.append(LandUseDB.HAVEST_STATUS);
+        sql.append(LandUseDB.HAVEST_STATUS);    //5
         sql.append(",");
         sql.append(LandUseDB.SEEDS);
         sql.append(",");
@@ -338,7 +338,7 @@ public class LandUseDB {
         sql.append(",");
         sql.append(LandUseDB.FUEL);
         sql.append(",");
-        sql.append(LandUseDB.OTHER_PAID);
+        sql.append(LandUseDB.OTHER_PAID);     //10
         sql.append(",");
         sql.append(LandUseDB.PRODUCT_USE);
         sql.append(",");
@@ -348,7 +348,7 @@ public class LandUseDB {
         sql.append(",");
         sql.append(LandUseDB.INCOME_YEAR);
         sql.append(",");
-        sql.append(LandUseDB.MARKET);
+        sql.append(LandUseDB.MARKET);     //15
         sql.append(",");
         sql.append(LandUseDB.EMPLOY_TYPE);
         sql.append(",");
@@ -358,7 +358,7 @@ public class LandUseDB {
         sql.append(",");
         sql.append(LandUseDB.LABOUR_PAID);
         sql.append(",");
-        sql.append(LandUseDB.LABOUR_TIME);
+        sql.append(LandUseDB.LABOUR_TIME); //20
         sql.append(",");
 
         sql.append(LandUseDB.START_CROP);
@@ -369,7 +369,7 @@ public class LandUseDB {
         sql.append(",");
         sql.append(LandUseDB.PLANT_ID);
         sql.append(",");
-        sql.append(LandUseDB.PLANT_DETAIL_ID);
+        sql.append(LandUseDB.PLANT_DETAIL_ID); //25
         sql.append(",");
 
         sql.append(LandUseDB.FERTILIZER1);

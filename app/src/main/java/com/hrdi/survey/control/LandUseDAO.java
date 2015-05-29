@@ -55,6 +55,7 @@ public class LandUseDAO extends HrdiDBDAO {
 
             values.put(LandUseDB.START_CROP, landUse.getStart_crop());
             values.put(LandUseDB.END_CROP, landUse.getEnd_crop());
+
             values.put(LandUseDB.PLANT_TYPE, landUse.getPlant_Type());
             values.put(LandUseDB.PLANT_ID, landUse.getPlant_id());
             values.put(LandUseDB.PLANT_DETAIL_ID, landUse.getPlant_detail_id());
@@ -96,6 +97,13 @@ public class LandUseDAO extends HrdiDBDAO {
             values.put(LandUseDB.REMARK2, landUse.getRemark2());
 
 
+            //values.put(LandUseDB.PLANT_TYPE, landUse.getPlant_Type());
+            //values.put(LandUseDB.PLANT_ID, landUse.getPlant_id());
+            //values.put(LandUseDB.PLANT_DETAIL_ID, landUse.getPlant_detail_id());
+            //Log.i("values PLANT_TYPE", values.getAsString(LandUseDB.PLANT_TYPE));
+            //Log.i("values PLANT_ID", values.getAsString(LandUseDB.PLANT_ID));
+            //Log.i("values PLANT_DETAIL_ID", values.getAsString(LandUseDB.PLANT_DETAIL_ID));
+
             // Inserting Row
             newID = database.insert(LandUseDB.TABLE_NAME, null, values);
             // database.close(); // Closing database connection
@@ -108,13 +116,13 @@ public class LandUseDAO extends HrdiDBDAO {
     public ArrayList<LandUseBean> getLandUseList(String surveyID) {
 
 
-        Log.i("getLandUseList --> ", "Start");
+        //Log.i("getLandUseList --> ", "Start");
 
         ArrayList<LandUseBean> landUseBeans = new ArrayList<>();
 
         String query = LandUseDB.getSelectAllSQL(surveyID);
 
-        Log.i("LandUseDB query --> ", LandUseDB.getSelectAllSQL(surveyID));
+        //Log.i("LandUseDB query --> ", LandUseDB.getSelectAllSQL(surveyID));
 
         Cursor cursor = database.rawQuery(query, null);
         while (cursor.moveToNext()) {
@@ -136,20 +144,20 @@ public class LandUseDAO extends HrdiDBDAO {
 
             landUseBeans.add(landUseBean);
         }
-        Log.i("landUseBeans --> ", "" + landUseBeans.size());
+        //Log.i("landUseBeans --> ", "" + landUseBeans.size());
         return landUseBeans;
     }
 
     public ArrayList<LandUseBean> getLandUseListbyLandCode(String landNo) {
 
 
-        Log.i("getLandUseList --> ", "Start");
+        //Log.i("getLandUseList --> ", "Start");
 
         ArrayList<LandUseBean> landUseBeans = new ArrayList<>();
 
         String query = LandUseDB.getSelectAllSQLbyLandCode(landNo);
 
-        Log.i("LandUseDB query --> ", LandUseDB.getSelectAllSQLbyLandCode(landNo));
+        //Log.i("LandUseDB query --> ", LandUseDB.getSelectAllSQLbyLandCode(landNo));
 
         Cursor cursor = database.rawQuery(query, null);
         while (cursor.moveToNext()) {
@@ -171,7 +179,7 @@ public class LandUseDAO extends HrdiDBDAO {
 
             landUseBeans.add(landUseBean);
         }
-        Log.i("landUseBeans --> ", "" + landUseBeans.size());
+        //Log.i("landUseBeans --> ", "" + landUseBeans.size());
         return landUseBeans;
     }
 }

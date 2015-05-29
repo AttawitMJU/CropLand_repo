@@ -57,7 +57,7 @@ public class AgriculturistDAO extends HrdiDBDAO {
 
             }
             cursor.close();
-            Log.i("AgriculturistBean", bean.toString());
+            //Log.i("AgriculturistBean", bean.toString());
             return bean;
 
         } catch (Exception e) {
@@ -129,6 +129,7 @@ public class AgriculturistDAO extends HrdiDBDAO {
 
     }
 
+
     public long addPersonSQLite(AgriculturistBean bean) {
 
         ContentValues values = new ContentValues();
@@ -188,9 +189,13 @@ public class AgriculturistDAO extends HrdiDBDAO {
         while (i < list.size()) {
             bean = (AgriculturistBean) list.get(i);
 
-            addPersonSQLite( bean);
 
-            i++;
+            //if(getPerson(bean.getCard_no())==null) {
+
+                addPersonSQLite(bean);
+
+                i++;
+            //}
         }
 
         return i;

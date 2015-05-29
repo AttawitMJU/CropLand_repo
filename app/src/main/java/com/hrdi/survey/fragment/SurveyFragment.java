@@ -165,12 +165,12 @@ public class SurveyFragment extends Fragment implements View.OnClickListener, Ad
             surveyBeanUpdateID = bundle.getString("surveyBeanUpdateID");
             action = bundle.getString("action");
 
-            Log.i("ID ??", surveyBeanUpdateID);
-            Log.i("action ??", action);
+            //Log.i("ID ??", surveyBeanUpdateID);
+            //Log.i("action ??", action);
 
             if ("update".equals(action)) {
                 surveyBeanUpdate = surveyDAO.getSurveyByID(surveyBeanUpdateID);
-                Log.i("surveyBeanUpdate ??", surveyBeanUpdate.toString());
+                //Log.i("surveyBeanUpdate ??", surveyBeanUpdate.toString());
                 setUpdateData(surveyBeanUpdate);
             }
         }
@@ -181,24 +181,24 @@ public class SurveyFragment extends Fragment implements View.OnClickListener, Ad
     private void setUpdateData(SurveyBean surveyBean) {
         MetaBean metaBean;
         //txt_hidden_id.setText(surveyBean.getSurvey_id());
-        Log.i("surveyBeanUpdate#2 ??", surveyBean.toString());
+        //Log.i("surveyBeanUpdate#2 ??", surveyBean.toString());
 
 
         metaBean = metaDAO.getMetaByType(surveyBean.getProject_Area(), MetaProjectAreaDB.TABLE_NAME);
         spn_projectArea.setSelection(projectAreaDataAdapter.getPosition(metaBean));
 
         metaBean = metaDAO.getMetaByType(surveyBean.getExt_Project(), MetaExtProjectDB.TABLE_NAME);
-        Log.i("getExt_Project# ??", metaBean.toString()+"   "+extProjectDataAdapter.getPosition(metaBean));
+        //Log.i("getExt_Project# ??", metaBean.toString()+"   "+extProjectDataAdapter.getPosition(metaBean));
         spn_extProject.setSelection(extProjectDataAdapter.getPosition(metaBean));
 
         try {
             metaBean = metaDAO.getMetaByType(surveyBean.getProject_MooBan(), MetaProjectMooDB.TABLE_NAME);
-            Log.i("getProject_MooBan# ??", metaBean.toString() + "   " + projectMooBanDataAdapter.getPosition(metaBean));
+            //Log.i("getProject_MooBan# ??", metaBean.toString() + "   " + projectMooBanDataAdapter.getPosition(metaBean));
             spn_Moo.setSelection(projectMooBanDataAdapter.getPosition(metaBean));
         }catch (Exception e){
 
         }
-        Log.i("getLand_No#2 ??", surveyBean.getLand_No());
+        //Log.i("getLand_No#2 ??", surveyBean.getLand_No());
         edt_Land_No.setText(surveyBean.getLand_No());
 
         edt_LATITUDE.setText(surveyBean.getLatlong());

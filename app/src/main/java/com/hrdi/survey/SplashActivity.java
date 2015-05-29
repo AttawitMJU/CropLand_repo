@@ -74,8 +74,8 @@ public class SplashActivity extends Activity {
         TextView txt_loading = (TextView) findViewById(R.id.txt_loading);
 
 
-        LoadAgriTask task = new LoadAgriTask();
-        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        //LoadAgriTask task = new LoadAgriTask();
+        //task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         // Start your loading
         loadingTask = new LoadingTask(progressBar, txt_loading);
@@ -317,7 +317,7 @@ public class SplashActivity extends Activity {
                 HttpResponse response = httpclient.execute(httpRequest);
 
                 statuscode = response.getStatusLine().getStatusCode();
-                Log.i("HttpResponse status ", String.valueOf(statuscode));
+                //Log.i("HttpResponse status ", String.valueOf(statuscode));
 
                 if (HttpStatus.SC_OK == statuscode) {
                     // getting JSON string from URL
@@ -482,7 +482,7 @@ public class SplashActivity extends Activity {
                 HttpResponse response = httpclient.execute(httpRequest);
 
                 statuscode = response.getStatusLine().getStatusCode();
-                Log.i("HttpResponse status ", String.valueOf(statuscode));
+                //Log.i("HttpResponse status ", String.valueOf(statuscode));
 
                 if (HttpStatus.SC_OK == statuscode) {
                     // getting JSON string from URL

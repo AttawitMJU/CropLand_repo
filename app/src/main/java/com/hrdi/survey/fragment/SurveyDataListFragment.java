@@ -298,7 +298,7 @@ public class SurveyDataListFragment extends Fragment
 
     private void openSurvey(SurveyBean surveyBean) {
 
-        Log.i("openSurvey ....", surveyBean.getSurvey_id());
+        //Log.i("openSurvey ....", surveyBean.getSurvey_id());
         SurveyFragment fragment = new SurveyFragment();
 
         if (fragment != null) {
@@ -432,12 +432,12 @@ public class SurveyDataListFragment extends Fragment
             int statuscode = 0;
             String returnValue = "";
             String lastID = "";
-            Log.i("========", "================");
-            Log.i("==surveyListSend==", "" + surveyListSend.size());
+            //Log.i("========", "================");
+            //Log.i("==surveyListSend==", "" + surveyListSend.size());
             try {
 
                 statuscode = checkServerStatus(getString(R.string.url_send_survey));
-                Log.i("HttpResponse statuscode", "" + statuscode);
+                //Log.i("HttpResponse statuscode", "" + statuscode);
 
                 if (HttpStatus.SC_OK == statuscode) {
 
@@ -449,9 +449,9 @@ public class SurveyDataListFragment extends Fragment
                     //********************
                     for (SurveyBean sb : surveyListSend) {
 
-                        Log.i("========", "================");
-                        Log.i("surveyListSend","  id=" + sb.getSurvey_id());
-                        Log.i("SurveyBean", sb.toString());
+                        //Log.i("========", "================");
+                        //Log.i("surveyListSend","  id=" + sb.getSurvey_id());
+                        //Log.i("SurveyBean", sb.toString());
 
                         paramsSurvey = surveyDAO.setSurvey2Parameter(sb);
                         //Log.i("paramsSurvey sb", sb.toString());
@@ -461,14 +461,14 @@ public class SurveyDataListFragment extends Fragment
                         HttpResponse response = httpclient.execute(httpPost);
 
                         String line = httpResponse2String(response);
-                        Log.e("HttpResponse Line", line);
+                        //Log.e("HttpResponse Line", line);
                         // getting JSON string from URL
                         JSONObject json = new JSONObject(line);
 
                         // jsonParser.getJSONFromUrl(getString(R.string.url_send_survey), paramsSurvey);
-                        Log.i("========", "================");
-                        Log.i("json-->", "" + json.toString());
-                        Log.i("========", "================");
+                        //Log.i("========", "================");
+                        //Log.i("json-->", "" + json.toString());
+                        //Log.i("========", "================");
                         // Checking for SUCCESS TAG
                         if (json.getString(KEY_SUCCESS) != null) {
                             String res = json.getString(KEY_SUCCESS);
@@ -483,29 +483,28 @@ public class SurveyDataListFragment extends Fragment
                                 //********************
                                 // 2. Land Use data
                                 //********************
-                                Log.i("sendLandUseData", "  " + lastID);
+                                //Log.i("sendLandUseData", "  " + lastID);
                                 sendLandUseData(lastID, sb.getSurvey_id());
 
 
                                 //********************
                                 // 3. Activity Data
                                 //********************
-                                Log.i("sendActivityData", "  " + lastID);
+                                // Log.i("sendActivityData", "  " + lastID);
                                 sendActivityData(lastID, sb.getSurvey_id());
 
 
                                 //********************
                                 // 4. Support Data
                                 //********************
-                                Log.i("detailEtcData support", "  " + lastID);
+                                //Log.i("detailEtcData support", "  " + lastID);
                                 sendDetailEtcData(lastID, sb.getSurvey_id(), "support");
-                                Log.i("detailEtcData want", "  " + lastID);
+                                //Log.i("detailEtcData want", "  " + lastID);
                                 sendDetailEtcData(lastID, sb.getSurvey_id(), "want");
-                                Log.i("detailEtcData problem", "  " + lastID);
+                               // Log.i("detailEtcData problem", "  " + lastID);
                                 sendDetailEtcData(lastID, sb.getSurvey_id(), "problem");
                             }
                         }
-Log.i("sb.getPicture1()",""+sb.getPicture1());
                         if (sb.getPicture1() != null) {
                             uploadFile(getString(R.string.url_upload), sb.getLand_No(), 1);
                         }
@@ -541,16 +540,16 @@ Log.i("sb.getPicture1()",""+sb.getPicture1());
             String resMessage = "";
 
             try {
-                Log.i("getOutputMediaFile ", landCode + "  " + no);
+                //Log.i("getOutputMediaFile ", landCode + "  " + no);
 
                 File file = getOutputMediaFile(landCode, 1, no);
 
-                Log.i("file.isFile() ", landCode + "  " + file.isFile());
+                //Log.i("file.isFile() ", landCode + "  " + file.isFile());
 
                 if (file.isFile()) {
 
-                    Log.i("File getName ", file.getName());
-                    Log.i("File getPath", file.getPath());
+                    //Log.i("File getName ", file.getName());
+                    //Log.i("File getPath", file.getPath());
                     // open a URL connection to the server php
                     FileInputStream fileInputStream = new FileInputStream(file);
                     URL url = new URL(url_Upload);
@@ -578,7 +577,7 @@ Log.i("sb.getPicture1()",""+sb.getPicture1());
                     buffer = new byte[bufferSize];
 
                     // Read file
-                    Log.i("Read file ", "" + bufferSize);
+                    //Log.i("Read file ", "" + bufferSize);
 
                     bytesRead = fileInputStream.read(buffer, 0, bufferSize);
 
@@ -594,6 +593,8 @@ Log.i("sb.getPicture1()",""+sb.getPicture1());
 
                     // Response Code and  Message
                     resCode = conn.getResponseCode();
+                    //Log.i("resCode ", "" + resCode);
+
                     if (resCode == HttpURLConnection.HTTP_OK) {
                         InputStream is = conn.getInputStream();
                         ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -606,11 +607,10 @@ Log.i("sb.getPicture1()",""+sb.getPicture1());
                         bos.close();
 
                         resMessage = new String(result);
-
+                        //Log.i("**** resMessage=", resMessage.toString());
                     }
 
-                    Log.i("**** resCode=", Integer.toString(resCode));
-                    Log.i("**** resMessage=", resMessage.toString());
+
 
                     fileInputStream.close();
                     outputStream.flush();
@@ -647,8 +647,8 @@ Log.i("sb.getPicture1()",""+sb.getPicture1());
                 mediaFile = new File(mediaStorageDir.getPath() + File.separator
                         + "IMG_" + landcode + "_" + i + ".jpg");
 
-                Log.i("MEDIA_TYPE_IMAGE-->", mediaStorageDir.getPath() + File.separator
-                        + "IMG_" + landcode + "_" + i + ".jpg");
+                //Log.i("MEDIA_TYPE_IMAGE-->", mediaStorageDir.getPath() + File.separator
+                //        + "IMG_" + landcode + "_" + i + ".jpg");
 
             } else if (type == MEDIA_TYPE_VIDEO) {
                 mediaFile = new File(mediaStorageDir.getPath() + File.separator
@@ -667,8 +667,8 @@ Log.i("sb.getPicture1()",""+sb.getPicture1());
             JSONParser jsonParser = new JSONParser();
             int statuscode;
             ArrayList<LandUseBean> landUseBeans = surveyDAO.getLandUseInSurvey(surveyID);
-            Log.i("---", "---");
-            Log.i(" ArrayList<LandUseBean>", "" + landUseBeans.size());
+            //Log.i("---", "---");
+            //Log.i(" ArrayList<LandUseBean>", "" + landUseBeans.size());
             try {
 
                 statuscode = checkServerStatus(getString(R.string.url_send_landuse));
@@ -682,10 +682,10 @@ Log.i("sb.getPicture1()",""+sb.getPicture1());
                     for (LandUseBean bean : landUseBeans) {
 
                         bean.setSurvey_ID(lastID);      // Update new ID  from MSSQL
-                        Log.i("LandUseBean to server", bean.toString());
+                        //Log.i("LandUseBean to server", bean.toString());
 
                         paramsLandUse = surveyDAO.setLandUse2Parameter(bean);
-                        Log.i("paramsLandUse to server", paramsLandUse.toString());
+                        //Log.i("paramsLandUse to server", paramsLandUse.toString());
 
 
                         httpPost.setEntity(new UrlEncodedFormEntity(paramsLandUse, "UTF-8"));
@@ -693,7 +693,7 @@ Log.i("sb.getPicture1()",""+sb.getPicture1());
                         HttpResponse response = httpclient.execute(httpPost);
 
                         String line = httpResponse2String(response);
-                        Log.i("httpResponse2String -->", line);
+                        //Log.i("httpResponse2String -->", line);
 
                         // getting JSON string from URL
                         JSONObject json = new JSONObject(line);
@@ -722,12 +722,12 @@ Log.i("sb.getPicture1()",""+sb.getPicture1());
             JSONParser jsonParser = new JSONParser();
             int statuscode;
             ArrayList<SurveyActivityBean> beans = surveyDAO.getSurveyAcitvity(surveyID);
-            Log.i("---", "---");
-            Log.i("<SurveyActivityBean>", "" + beans.size());
+            //Log.i("---", "---");
+            //Log.i("<SurveyActivityBean>", "" + beans.size());
             try {
 
                 statuscode = checkServerStatus(getString(R.string.url_send_activity));
-                 Log.i("statuscode", "" + statuscode+" "+getString(R.string.url_send_activity));
+                //Log.i("statuscode", "" + statuscode+" "+getString(R.string.url_send_activity));
                 if (HttpStatus.SC_OK == statuscode) {
 
                     HttpClient httpclient = new DefaultHttpClient();
@@ -739,7 +739,7 @@ Log.i("sb.getPicture1()",""+sb.getPicture1());
                         bean.setSurvey_id(lastID);      // Update new ID  from MSSQL
 
                         paramsActivity = surveyDAO.setActivity2Parameter(bean);
-                        Log.i("paramsActivity", paramsActivity.toString());
+                        //Log.i("paramsActivity", paramsActivity.toString());
 
 
                         httpPost.setEntity(new UrlEncodedFormEntity(paramsActivity, "UTF-8"));
@@ -747,7 +747,7 @@ Log.i("sb.getPicture1()",""+sb.getPicture1());
                         HttpResponse response = httpclient.execute(httpPost);
 
                         String line = httpResponse2String(response);
-                        Log.i("httpResponse2String -->", line);
+                        //Log.i("httpResponse2String -->", line);
 
                         // getting JSON string from URL
                         JSONObject json = new JSONObject(line);
@@ -777,8 +777,8 @@ Log.i("sb.getPicture1()",""+sb.getPicture1());
             JSONParser jsonParser = new JSONParser();
             int statuscode;
             ArrayList<SurveyDetailEtcBean> beans = surveyDAO.getSurveyEtc(surveyID, etcType);
-            Log.i("---", "---");
-            Log.i("<SurveyDetailEtcBean>", "" + beans.size());
+            //Log.i("---", "---");
+            //Log.i("<SurveyDetailEtcBean>", "" + beans.size());
             try {
 
                 statuscode = checkServerStatus(getString(R.string.url_send_detailetc));
@@ -797,7 +797,7 @@ Log.i("sb.getPicture1()",""+sb.getPicture1());
                         bean.setUpdate_Date(dateTimeFormatter.format(date));
 
                         paramsDetailEtc = surveyDAO.setDetailEtc2Parameter(bean);
-                        Log.i("paramsDetailEtc", paramsDetailEtc.toString());
+                        //Log.i("paramsDetailEtc", paramsDetailEtc.toString());
 
 
                         httpPost.setEntity(new UrlEncodedFormEntity(paramsDetailEtc, "UTF-8"));
@@ -805,7 +805,7 @@ Log.i("sb.getPicture1()",""+sb.getPicture1());
                         HttpResponse response = httpclient.execute(httpPost);
 
                         String line = httpResponse2String(response);
-                        Log.i("httpResponse2String -->", line);
+                        //Log.i("httpResponse2String -->", line);
 
                         // getting JSON string from URL
                         JSONObject json = new JSONObject(line);

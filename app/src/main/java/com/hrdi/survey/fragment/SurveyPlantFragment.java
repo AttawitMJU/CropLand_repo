@@ -23,7 +23,6 @@ import com.hrdi.survey.control.LandUseDAO;
 import com.hrdi.survey.control.MetaDAO;
 import com.hrdi.survey.model.LandUseBean;
 import com.hrdi.survey.model.MetaBean;
-import com.hrdi.survey.model.SurveyBean;
 import com.hrdi.survey.modeldb.MetaFertilizerCodeDB;
 import com.hrdi.survey.modeldb.MetaFertilizerDB;
 import com.hrdi.survey.modeldb.MetaHormoneDB;
@@ -36,6 +35,7 @@ import com.hrdi.survey.modeldb.MetaPlantDetailDB;
 import com.hrdi.survey.modeldb.MetaPlantTypeDB;
 
 import java.lang.ref.WeakReference;
+import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.List;
 
@@ -57,7 +57,8 @@ public class SurveyPlantFragment extends Fragment implements View.OnClickListene
             edt_fuel, edt_other_paid,
             edt_amount1, edt_amount2, edt_amount3, edt_price1, edt_price2, edt_price3,
             edt_hormone_amount1, edt_hormone_amount2, edt_hormone_amount3,
-            edt_hormone_price1, edt_hormone_price2, edt_hormone_price3;
+            edt_hormone_price1, edt_hormone_price2, edt_hormone_price3,
+            edt_sum_f1, edt_sum_f2, edt_sum_f3, edt_sum_h1, edt_sum_h2, edt_sum_h3;
     private Spinner spn_plantType, spn_plant, spn_plant_detail,
             spn_jobactivity, spn_jobsource, spn_market,
             spn_fertilizer1, spn_fertilizer_code1,
@@ -93,8 +94,8 @@ public class SurveyPlantFragment extends Fragment implements View.OnClickListene
         // Get parameter
         Bundle bundle = this.getArguments();
         surveyID = bundle.getString("surveyID");
-        landcode= bundle.getString("landcode");
-        cardno= bundle.getString("cardno");
+        landcode = bundle.getString("landcode");
+        cardno = bundle.getString("cardno");
         //surveyBean = bundle.getParcelable("surveyBean");
         //Log.i("surveyBean Plant", surveyBean.toString());
         //-----------------
@@ -151,6 +152,13 @@ public class SurveyPlantFragment extends Fragment implements View.OnClickListene
         edt_hormone_price2 = (EditText) view.findViewById(R.id.edt_hormone_price2);
         edt_hormone_price3 = (EditText) view.findViewById(R.id.edt_hormone_price3);
 
+        edt_sum_f1 = (EditText) view.findViewById(R.id.edt_sum_f1);
+        edt_sum_f2 = (EditText) view.findViewById(R.id.edt_sum_f2);
+        edt_sum_f3 = (EditText) view.findViewById(R.id.edt_sum_f3);
+        edt_sum_h1 = (EditText) view.findViewById(R.id.edt_sum_h1);
+        edt_sum_h2 = (EditText) view.findViewById(R.id.edt_sum_h2);
+        edt_sum_h3 = (EditText) view.findViewById(R.id.edt_sum_h3);
+
         spn_plantType = (Spinner) view.findViewById(R.id.spn_plantType);
         spn_plant = (Spinner) view.findViewById(R.id.spn_plant);
         spn_plant_detail = (Spinner) view.findViewById(R.id.spn_plant_detail);
@@ -184,6 +192,32 @@ public class SurveyPlantFragment extends Fragment implements View.OnClickListene
         spn_hormonetype1.setOnItemSelectedListener(this);
         spn_hormonetype2.setOnItemSelectedListener(this);
         spn_hormonetype3.setOnItemSelectedListener(this);
+
+        edt_seed.setOnClickListener(this);
+        edt_unit_price.setOnClickListener(this);
+        edt_sum_seed.setOnClickListener(this);
+
+
+        edt_amount1.setOnClickListener(this);
+        edt_amount2.setOnClickListener(this);
+        edt_amount3.setOnClickListener(this);
+        edt_price1.setOnClickListener(this);
+        edt_price2.setOnClickListener(this);
+        edt_price3.setOnClickListener(this);
+        edt_hormone_amount1.setOnClickListener(this);
+        edt_hormone_amount2.setOnClickListener(this);
+        edt_hormone_amount3.setOnClickListener(this);
+        edt_hormone_price1.setOnClickListener(this);
+        edt_hormone_price2.setOnClickListener(this);
+        edt_hormone_price3.setOnClickListener(this);
+
+        edt_sum_f1.setOnClickListener(this);
+        edt_sum_f2.setOnClickListener(this);
+        edt_sum_f3.setOnClickListener(this);
+        edt_sum_h1.setOnClickListener(this);
+        edt_sum_h2.setOnClickListener(this);
+        edt_sum_h3.setOnClickListener(this);
+
 
     }
 
@@ -367,7 +401,39 @@ public class SurveyPlantFragment extends Fragment implements View.OnClickListene
             }, mYear, mMonth, mDay);
             mDatePicker.setTitle("Select date");
             mDatePicker.show();
+        } else if (view == edt_seed || view == edt_unit_price || view == edt_sum_seed) {
+            autoSum(edt_seed, edt_unit_price, edt_sum_seed);
+        } else if (view == edt_amount1 || view == edt_price1 || view == edt_sum_f1) {
+            autoSum(edt_amount1, edt_price1, edt_sum_f1);
+        } else if (view == edt_amount2 || view == edt_price2 || view == edt_sum_f2) {
+            autoSum(edt_amount2, edt_price2, edt_sum_f2);
+        } else if (view == edt_amount3 || view == edt_price3 || view == edt_sum_f3) {
+            autoSum(edt_amount3, edt_price3, edt_sum_f3);
+        } else if (view == edt_hormone_amount1 || view == edt_hormone_price1 || view == edt_sum_h1) {
+            autoSum(edt_hormone_amount1, edt_hormone_price1, edt_sum_h1);
         }
+
+    }
+
+    private void autoSum(EditText t1, EditText t2, EditText t3) {
+        DecimalFormat df = new DecimalFormat("#.##");
+        if (!t1.getText().toString().isEmpty() && !t2.getText().toString().isEmpty()) {
+            t3.setText(
+                    "" + df.format(Double.valueOf(t1.getText().toString()) *
+                            Double.valueOf(t2.getText().toString()))
+            );
+        } else if (!t1.getText().toString().isEmpty() && !t3.getText().toString().isEmpty()) {
+            t2.setText(
+                    "" + df.format(Double.valueOf(t3.getText().toString()) /
+                            Double.valueOf(t1.getText().toString()))
+            );
+        } else if (!t2.getText().toString().isEmpty() && !t3.getText().toString().isEmpty()) {
+            t1.setText(
+                    "" + df.format(Double.valueOf(t3.getText().toString()) /
+                            Double.valueOf(t2.getText().toString()))
+            );
+        }
+
     }
 
     private LandUseBean getGUI2Bean() {
@@ -401,6 +467,7 @@ public class SurveyPlantFragment extends Fragment implements View.OnClickListene
 
         landUse.setStart_crop(edt_crop_time1.getText().toString());
         landUse.setEnd_crop(edt_crop_time2.getText().toString());
+
         landUse.setPlant_Type(String.valueOf(((MetaBean) spn_plantType.getSelectedItem()).getItemId()));
         landUse.setPlant_id(String.valueOf(((MetaBean) spn_plant.getSelectedItem()).getItemId()));
         landUse.setPlant_detail_id(String.valueOf(((MetaBean) spn_plant_detail.getSelectedItem()).getItemId()));
@@ -417,9 +484,9 @@ public class SurveyPlantFragment extends Fragment implements View.OnClickListene
         landUse.setFertilizer_price1(edt_price1.getText().toString());
         landUse.setFertilizer_price2(edt_price2.getText().toString());
         landUse.setFertilizer_price3(edt_price3.getText().toString());
-        landUse.setFertilizer_sum1(null);
-        landUse.setFertilizer_sum2(null);
-        landUse.setFertilizer_sum3(null);
+        landUse.setFertilizer_sum1(edt_sum_f1.getText().toString());
+        landUse.setFertilizer_sum2(edt_sum_f2.getText().toString());
+        landUse.setFertilizer_sum3(edt_sum_f3.getText().toString());
 
         landUse.setHormone_type1(String.valueOf(((MetaBean) spn_hormonetype1.getSelectedItem()).getItemId()));
         landUse.setHormone_type2(String.valueOf(((MetaBean) spn_hormonetype2.getSelectedItem()).getItemId()));
@@ -433,13 +500,17 @@ public class SurveyPlantFragment extends Fragment implements View.OnClickListene
         landUse.setHormone_price1(edt_hormone_price1.getText().toString());
         landUse.setHormone_price2(edt_hormone_price2.getText().toString());
         landUse.setHormone_price3(edt_hormone_price3.getText().toString());
-        landUse.setHormone_sum1(null);
-        landUse.setHormone_sum2(null);
-        landUse.setHormone_sum3(null);
+        landUse.setHormone_sum1(edt_sum_h1.getText().toString());
+        landUse.setHormone_sum2(edt_sum_h2.getText().toString());
+        landUse.setHormone_sum3(edt_sum_h3.getText().toString());
         // landUse.setUpdate_Date();
         // landUse.setUpdate_By();
         // landUse.setRemark1();
         // landUse.setRemark2());
+
+        //Log.i("set planttype", landUse.getPlant_Type());
+        //Log.i("set plant",landUse.getPlant_id());
+        //Log.i("set plantDetail",landUse.getPlant_detail_id());
 
         return landUse;
     }
